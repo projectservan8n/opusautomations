@@ -137,17 +137,19 @@ body {
     .nav-menu {
         position: fixed;
         top: 0;
-        right: -100%;
-        width: 100%;
+        right: -75%;
+        width: 75%;
         height: 100vh;
-        background: rgba(10, 10, 10, 0.95);
-        backdrop-filter: blur(25px);
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(20px);
+        border-left: 1px solid rgba(255, 255, 255, 0.2);
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        padding: 2rem;
+        padding: 2rem 1rem;
         transition: right 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         z-index: 1000;
+        box-shadow: -10px 0 30px rgba(0, 0, 0, 0.3);
     }
     
     .nav-menu.active {
@@ -155,30 +157,67 @@ body {
     }
     
     .nav-link {
-        font-size: 1.75rem !important;
-        margin: 2rem 0 !important;
-        padding: 0 !important;
+        font-size: 1.2rem !important;
+        margin: 0 !important;
+        padding: 1rem 0 !important;
         border-radius: 0 !important;
         transition: all 0.3s ease !important;
         text-align: center !important;
-        width: auto !important;
+        width: 100% !important;
         max-width: none !important;
         background: none !important;
         border: none !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.15) !important;
         color: #ffffff !important;
         text-decoration: none !important;
         display: block !important;
-        font-weight: 300 !important;
+        font-weight: 400 !important;
         letter-spacing: 0.5px !important;
     }
 
+    .nav-link:last-child {
+        border-bottom: none !important;
+    }
+
     .nav-link:hover, .nav-link.active {
-        background: none !important;
-        color: #8b5cf6 !important;
+        background: rgba(139, 92, 246, 0.2) !important;
+        color: #ffffff !important;
         transform: none !important;
         box-shadow: none !important;
-        font-weight: 400 !important;
     }
+
+    /* Slide page content left when menu is open */
+    body.menu-open .navbar,
+    body.menu-open .products-hero,
+    body.menu-open .products,
+    body.menu-open .implementation-process,
+    body.menu-open .footer {
+        transform: translateX(-25%);
+        transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    body:not(.menu-open) .navbar,
+    body:not(.menu-open) .products-hero,
+    body:not(.menu-open) .products,
+    body:not(.menu-open) .implementation-process,
+    body:not(.menu-open) .footer {
+        transform: translateX(0);
+        transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    /* Add overlay for the remaining 1/4 of screen */
+    body.menu-open::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 25%;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+        backdrop-filter: blur(5px);
+    }
+}
     
     .nav-toggle.active .bar:nth-child(1) {
         transform: rotate(45deg) translate(5px, 5px);
