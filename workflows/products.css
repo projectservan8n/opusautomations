@@ -496,7 +496,7 @@ body.menu-open {
 
 .product-badge {
     position: absolute;
-    top: -10px;
+    top: -12px;
     left: 30px;
     background: linear-gradient(135deg, #ec4899, #f97316);
     color: white;
@@ -504,13 +504,16 @@ body.menu-open {
     border-radius: 1rem;
     font-size: 0.875rem;
     font-weight: 600;
+    z-index: 10;
+    box-shadow: 0 4px 12px rgba(236, 72, 153, 0.3);
 }
 
 .product-tagline {
     font-style: italic;
     color: #a855f7;
-    margin: 0.5rem 0;
+    margin: 1rem 0 0.5rem 0; /* Added top margin to clear badge */
     font-size: 1.125rem;
+    line-height: 1.4;
 }
 
 .product-description {
@@ -518,6 +521,19 @@ body.menu-open {
     color: #d1d5db;
     margin: 1rem 0 2rem 0;
     line-height: 1.7;
+}
+
+/* Product Content Container */
+.product-content {
+    padding-top: 1rem; /* Add padding to ensure badge doesn't overlap */
+}
+
+.product-content h3 {
+    margin-bottom: 0.75rem;
+    margin-top: 0.5rem; /* Small margin to clear badge */
+    font-size: 1.75rem;
+    color: #8b5cf6;
+    line-height: 1.3;
 }
 
 .product-stats {
@@ -722,6 +738,7 @@ body.menu-open {
     margin: 4rem 0;
 }
 
+/* Service Badge Fixes for Main Site Product Cards */
 .product-card {
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02));
     backdrop-filter: blur(15px);
@@ -731,6 +748,7 @@ body.menu-open {
     transition: all 0.4s ease;
     position: relative;
     overflow: hidden;
+    margin-top: 1rem; /* Space for any badges */
 }
 
 .product-card::before {
@@ -758,7 +776,8 @@ body.menu-open {
 .product-card.premium-card {
     border-color: rgba(236, 72, 153, 0.4);
     background: linear-gradient(135deg, rgba(236, 72, 153, 0.08), rgba(236, 72, 153, 0.02));
-    padding: 3rem;
+    padding: 3rem 2.5rem 2.5rem 2.5rem; /* Extra top padding */
+    margin-top: 1.5rem; /* More space for premium cards */
 }
 
 .product-card.premium-card::before {
@@ -768,6 +787,21 @@ body.menu-open {
 .product-card.premium-card:hover {
     border-color: rgba(236, 72, 153, 0.6);
     box-shadow: 0 25px 50px rgba(236, 72, 153, 0.2);
+}
+
+/* Fix premium card badge if it exists */
+.product-card .product-badge {
+    position: absolute;
+    top: -12px;
+    left: 20px;
+    background: linear-gradient(135deg, #ec4899, #f97316);
+    color: white;
+    padding: 0.4rem 0.8rem;
+    border-radius: 1rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    z-index: 10;
+    box-shadow: 0 4px 12px rgba(236, 72, 153, 0.3);
 }
 
 .product-icon {
@@ -1167,27 +1201,43 @@ body.menu-open {
         font-size: 1rem;
     }
     
+    /* Mobile responsiveness fixes */
     .featured-product {
-        padding: 1.5rem;
+        padding: 2rem 1.5rem 1.5rem 1.5rem; /* Extra top padding for badge */
         gap: 2rem;
         margin-bottom: 2rem;
     }
     
     .product-badge {
         left: 15px;
+        top: -10px;
         padding: 0.4rem 0.8rem;
         font-size: 0.8rem;
+        z-index: 10;
+    }
+
+    .product-content {
+        padding-top: 1.5rem; /* More padding on mobile */
+    }
+
+    .product-content h3 {
+        margin-top: 1rem; /* More space on mobile */
+        font-size: 1.4rem;
+        line-height: 1.2;
     }
     
     .product-tagline {
         font-size: 1rem;
         text-align: center;
+        margin: 1rem 0 0.5rem 0; /* Better spacing */
+        line-height: 1.3;
     }
     
     .product-description {
         font-size: 1rem;
         text-align: center;
         margin: 1rem 0 1.5rem 0;
+        line-height: 1.6;
     }
     
     .product-stats {
@@ -1213,13 +1263,22 @@ body.menu-open {
         margin: 2rem 0;
     }
     
+    /* Mobile product card fixes */
     .product-card {
-        padding: 1.5rem;
-        margin: 0;
+        padding: 2rem 1.5rem 1.5rem 1.5rem; /* Extra top padding */
+        margin: 1rem 0; /* Consistent margin */
     }
     
     .product-card.premium-card {
-        padding: 2rem 1.5rem;
+        padding: 2.5rem 1.5rem 1.5rem 1.5rem; /* More top padding for premium */
+        margin: 1.5rem 0; /* More margin for premium */
+    }
+
+    .product-card .product-badge {
+        left: 10px;
+        top: -10px;
+        padding: 0.3rem 0.6rem;
+        font-size: 0.75rem;
     }
     
     .product-icon {
