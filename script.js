@@ -19,6 +19,8 @@ document.addEventListener('DOMContentLoaded', function() {
 // Floating Particles Animation
 function initParticles() {
     const particlesContainer = document.getElementById('particles');
+    if (!particlesContainer) return;
+    
     const particleCount = 50;
     
     function createParticle() {
@@ -59,28 +61,32 @@ function initNavigation() {
     const navToggle = document.getElementById('nav-toggle');
     const navMenu = document.getElementById('nav-menu');
     
-    // Mobile menu toggle
-    navToggle.addEventListener('click', function() {
-        navMenu.classList.toggle('active');
-        navToggle.classList.toggle('active');
-    });
-    
-    // Close menu when clicking nav links
-    const navLinks = document.querySelectorAll('.nav-link');
-    navLinks.forEach(link => {
-        link.addEventListener('click', function() {
-            navMenu.classList.remove('active');
-            navToggle.classList.remove('active');
+    if (navToggle && navMenu) {
+        // Mobile menu toggle
+        navToggle.addEventListener('click', function() {
+            navMenu.classList.toggle('active');
+            navToggle.classList.toggle('active');
         });
-    });
+        
+        // Close menu when clicking nav links
+        const navLinks = document.querySelectorAll('.nav-link');
+        navLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                navMenu.classList.remove('active');
+                navToggle.classList.remove('active');
+            });
+        });
+    }
     
     // Navbar scroll effect
     window.addEventListener('scroll', function() {
         const navbar = document.querySelector('.navbar');
-        if (window.scrollY > 100) {
-            navbar.style.background = 'rgba(10, 10, 10, 0.95)';
-        } else {
-            navbar.style.background = 'rgba(10, 10, 10, 0.9)';
+        if (navbar) {
+            if (window.scrollY > 100) {
+                navbar.style.background = 'rgba(10, 10, 10, 0.95)';
+            } else {
+                navbar.style.background = 'rgba(10, 10, 10, 0.9)';
+            }
         }
     });
 }
@@ -88,6 +94,7 @@ function initNavigation() {
 // Contact Form Functionality
 function initContactForm() {
     const contactForm = document.getElementById('contactForm');
+    if (!contactForm) return;
     
     contactForm.addEventListener('submit', function(e) {
         e.preventDefault();
@@ -97,7 +104,9 @@ function initContactForm() {
         const data = Object.fromEntries(formData);
         
         // Basic validation
-        if (!validateForm(data)) {
+        const errors = validateForm(data);
+        if (errors.length > 0) {
+            showNotification(errors.join('<br>'), 'error');
             return;
         }
         
@@ -107,18 +116,42 @@ function initContactForm() {
         submitBtn.textContent = 'Sending...';
         submitBtn.disabled = true;
         
-        // Simulate form submission (replace with actual endpoint)
-        setTimeout(() => {
-            // Reset form
-            contactForm.reset();
-            
-            // Show success message
-            showNotification('Thank you! We\'ll respond within 48 hours.', 'success');
-            
+        // Send to server
+        fetch('/api/contact', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(result => {
+            if (result.success) {
+                // Reset form
+                contactForm.reset();
+                
+                // Show success message
+                showNotification(result.message || 'Thank you! We\'ll respond within 48 hours.', 'success');
+                
+                // Track analytics
+                trackEvent('form_submit', {
+                    form_type: 'contact',
+                    company_size: data.revenue,
+                    manual_hours: data.operations
+                });
+            } else {
+                showNotification(result.message || 'Sorry, there was an error. Please try again.', 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Form submission error:', error);
+            showNotification('Sorry, there was an error sending your message. Please try again.', 'error');
+        })
+        .finally(() => {
             // Reset button
             submitBtn.textContent = originalText;
             submitBtn.disabled = false;
-        }, 2000);
+        });
     });
 }
 
@@ -127,11 +160,13 @@ function validateForm(data) {
     const errors = [];
     
     if (!data.name || data.name.trim().length < 2) {
-        errors.push('Please enter your full name');
+        errors.push('Please enter your full name (minimum 2 characters)');
     }
     
-    if (!data.email || !isValidEmail(data.email)) {
-        errors.push('Please enter a valid business email');
+    // Enhanced email validation
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!data.email || !emailRegex.test(data.email)) {
+        errors.push('Please enter a valid business email address');
     }
     
     if (!data.company || data.company.trim().length < 2) {
@@ -139,25 +174,14 @@ function validateForm(data) {
     }
     
     if (!data.revenue) {
-        errors.push('Please select your revenue range');
+        errors.push('Please select your company size/stage');
     }
     
     if (!data.operations) {
-        errors.push('Please select your operations spend');
+        errors.push('Please select weekly hours on manual work');
     }
     
-    if (errors.length > 0) {
-        showNotification(errors.join('<br>'), 'error');
-        return false;
-    }
-    
-    return true;
-}
-
-// Email Validation
-function isValidEmail(email) {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
+    return errors;
 }
 
 // Notification System
@@ -248,11 +272,13 @@ function initSmoothScrolling() {
 // Scroll to Contact Function
 function scrollToContact() {
     const contactSection = document.getElementById('contact');
-    const offsetTop = contactSection.offsetTop - 80;
-    window.scrollTo({
-        top: offsetTop,
-        behavior: 'smooth'
-    });
+    if (contactSection) {
+        const offsetTop = contactSection.offsetTop - 80;
+        window.scrollTo({
+            top: offsetTop,
+            behavior: 'smooth'
+        });
+    }
 }
 
 // Schedule Call Function
@@ -286,7 +312,109 @@ function initAnimations() {
     });
 }
 
-// Add CSS animations for scroll effects
+// Analytics and Performance Tracking
+function initAnalytics() {
+    // Track page load time
+    window.addEventListener('load', function() {
+        const loadTime = performance.timing.loadEventEnd - performance.timing.navigationStart;
+        console.log('Page load time:', loadTime + 'ms');
+    });
+    
+    // Track scroll depth
+    let maxScroll = 0;
+    window.addEventListener('scroll', function() {
+        const scrollPercent = Math.round((window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100);
+        if (scrollPercent > maxScroll) {
+            maxScroll = scrollPercent;
+        }
+    });
+    
+    // Track form interactions
+    const formInputs = document.querySelectorAll('#contactForm input, #contactForm select, #contactForm textarea');
+    formInputs.forEach(input => {
+        input.addEventListener('focus', function() {
+            trackEvent('form_field_focus', { field: this.name });
+        });
+    });
+    
+    // Track CTA clicks
+    document.querySelectorAll('.btn-primary').forEach(btn => {
+        btn.addEventListener('click', function() {
+            trackEvent('cta_click', {
+                button_text: this.textContent.trim(),
+                page: window.location.pathname
+            });
+        });
+    });
+}
+
+// Track Events Function
+function trackEvent(eventName, properties = {}) {
+    // Send to server analytics endpoint
+    fetch('/api/analytics', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            event: eventName,
+            data: properties,
+            timestamp: new Date().toISOString(),
+            url: window.location.href,
+            userAgent: navigator.userAgent
+        })
+    }).catch(err => console.log('Analytics error:', err));
+    
+    // Google Analytics 4 event tracking (if available)
+    if (typeof gtag !== 'undefined') {
+        gtag('event', eventName, properties);
+    }
+}
+
+// Initialize analytics
+initAnalytics();
+
+// Utility Functions
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
+// Optimize scroll performance
+const optimizedScrollHandler = debounce(function() {
+    // Handle scroll events here if needed
+}, 16); // ~60fps
+
+window.addEventListener('scroll', optimizedScrollHandler);
+
+// Error Handling
+window.addEventListener('error', function(e) {
+    console.error('JavaScript error:', e.error);
+    
+    // Track error
+    trackEvent('javascript_error', {
+        message: e.message,
+        filename: e.filename,
+        lineno: e.lineno,
+        colno: e.colno
+    });
+});
+
+// Unhandled promise rejection handler
+window.addEventListener('unhandledrejection', function(e) {
+    console.error('Unhandled promise rejection:', e.reason);
+    showNotification('An unexpected error occurred. Please try again.', 'error');
+    e.preventDefault();
+});
+
+// Add CSS animations
 const style = document.createElement('style');
 style.textContent = `
     @keyframes slideInRight {
@@ -369,67 +497,3 @@ style.textContent = `
     }
 `;
 document.head.appendChild(style);
-
-// Analytics and Performance Tracking
-function initAnalytics() {
-    // Track page load time
-    window.addEventListener('load', function() {
-        const loadTime = performance.timing.loadEventEnd - performance.timing.navigationStart;
-        console.log('Page load time:', loadTime + 'ms');
-    });
-    
-    // Track scroll depth
-    let maxScroll = 0;
-    window.addEventListener('scroll', function() {
-        const scrollPercent = Math.round((window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100);
-        if (scrollPercent > maxScroll) {
-            maxScroll = scrollPercent;
-        }
-    });
-    
-    // Track form interactions
-    const formInputs = document.querySelectorAll('#contactForm input, #contactForm select, #contactForm textarea');
-    formInputs.forEach(input => {
-        input.addEventListener('focus', function() {
-            console.log('Form field focused:', this.name);
-        });
-    });
-}
-
-// Initialize analytics
-initAnalytics();
-
-// Utility Functions
-function debounce(func, wait) {
-    let timeout;
-    return function executedFunction(...args) {
-        const later = () => {
-            clearTimeout(timeout);
-            func(...args);
-        };
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-    };
-}
-
-// Optimize scroll performance
-const optimizedScrollHandler = debounce(function() {
-    // Handle scroll events here
-}, 16); // ~60fps
-
-window.addEventListener('scroll', optimizedScrollHandler);
-
-// Error Handling
-window.addEventListener('error', function(e) {
-    console.error('JavaScript error:', e.error);
-    // You could send this to an error tracking service
-});
-
-// Service Worker Registration (for future PWA features)
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', function() {
-        // navigator.serviceWorker.register('/sw.js')
-        //     .then(registration => console.log('SW registered'))
-        //     .catch(error => console.log('SW registration failed'));
-    });
-}
