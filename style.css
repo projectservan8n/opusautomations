@@ -1,4 +1,148 @@
-/* Reset and Base Styles */
+.consultation-benefits {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background: rgba(139, 92, 246, 0.1);
+    border-radius: 0.5rem;
+    border-left: 4px solid #8b5cf6;
+}
+
+.consultation-benefits h4 {
+    color: #8b5cf6;
+    margin: 0 0 1rem 0;
+    font-size: 1rem;
+}
+
+.consultation-benefits ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.consultation-benefits li {
+    padding: 0.5rem 0;
+    color: #d1d5db;
+    position: relative;
+    padding-left: 1.5rem;
+}
+
+.consultation-benefits li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: #10b981;
+    font-weight: bold;
+}/* Case Study Enhancements */
+.case-cta {
+    margin-top: 2rem;
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.consultation-mockup {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(139, 92, 246, 0.3);
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow: 0 25px 50px rgba(139, 92, 246, 0.2);
+}
+
+.consultation-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.consultation-step {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(139, 92, 246, 0.2);
+    transition: all 0.3s ease;
+}
+
+.consultation-step.active {
+    background: rgba(139, 92, 246, 0.2);
+    border-color: #8b5cf6;
+}
+
+.step-number {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #8b5cf6, #a855f7);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 0.875rem;
+}
+
+.step-info h4 {
+    margin: 0 0 0.25rem 0;
+    font-size: 0.875rem;
+    color: #d1d5db;
+}
+
+.step-info p {
+    margin: 0;
+    font-size: 0.75rem;
+    color: #9ca3af;
+}
+
+.roi-calculator {
+    background: rgba(139, 92, 246, 0.1);
+    border-radius: 0.5rem;
+    padding: 1rem;
+}
+
+.roi-calculator h4 {
+    margin: 0 0 0.75rem 0;
+    color: #8b5cf6;
+    font-size: 0.875rem;
+}
+
+.calculator-input,
+.calculator-result {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem 0;
+    font-size: 0.75rem;
+}
+
+.calculator-result {
+    border-top: 1px solid rgba(139, 92, 246, 0.3);
+    margin-top: 0.5rem;
+}
+
+.calc-value {
+    color: #8b5cf6;
+    font-weight: 600;
+}
+
+.savings-amount {
+    color: #10b981;
+    font-weight: 700;
+    font-size: 0.875rem;
+}/* Services CTA */
+.services-cta {
+    text-align: center;
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(139, 92, 246, 0.2);
+}
+
+.services-cta p {
+    font-size: 1.125rem;
+    color: #d1d5db;
+    margin-bottom: 1.5rem;
+}/* Reset and Base Styles */
 * {
     margin: 0;
     padding: 0;
@@ -155,6 +299,8 @@ body {
 .btn-secondary:hover {
     background: #8b5cf6;
     color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(139, 92, 246, 0.3);
 }
 
 .btn-full {
@@ -223,11 +369,35 @@ body {
     flex-wrap: wrap;
 }
 
-.automation-demo {
+.consultation-demo {
     display: flex;
     align-items: center;
     gap: 2rem;
     justify-content: center;
+}
+
+.time-cost {
+    margin-top: 1rem;
+    text-align: center;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(139, 92, 246, 0.2);
+}
+
+.cost-number {
+    display: block;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #ef4444;
+}
+
+.cost-number.success {
+    color: #10b981;
+}
+
+.cost-label {
+    font-size: 0.75rem;
+    color: #9ca3af;
+    margin-top: 0.25rem;
 }
 
 .demo-card {
@@ -694,6 +864,12 @@ body {
     border: 1px solid rgba(139, 92, 246, 0.2);
     border-radius: 1rem;
     padding: 2rem;
+}
+
+.calendly-inline-widget-container {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(139, 92, 246, 0.2);
 }
 
 .form-group {
