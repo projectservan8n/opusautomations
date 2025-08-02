@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Opus Automations - AI-Powered Business Automation</title>
+    <meta name="description" content="Custom automation solutions for growing businesses. Save 25+ hours weekly with AI-powered workflows, data integration, and process optimization.">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+</head>
+<body>
+    <!-- Floating particles background -->
+    <div class="particles-container" id="particles"></div>
+    
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <span class="logo-text">Opus Automations</span>
+            </div>
+            <div class="nav-menu" id="nav-menu">
+                <a href="#services" class="nav-link">Services</a>
+                <a href="#case-studies" class="nav-link">Case Studies</a>
+                <a href="#about" class="nav-link">About</a>
+                <a href="#contact" class="nav-link">Contact</a>
+            </div>
+            <div class="nav-toggle" id="nav-toggle">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-container">
+            <div class="hero-content">
+                <h1 class="hero-title">
+                    <span class="gradient-text">AI-Powered Automation</span><br>
+                    for Growing Businesses
+                </h1>
+                <p class="hero-subtitle">
+                    Save 25+ hours weekly and reduce errors by 90% with custom automation solutions. 
+                    From material management to AI workflows - we build systems that scale with your business.
+                </p>
+                <div class="hero-stats">
+                    <div class="stat">
+                        <span class="stat-number">25+</span>
+                        <span class="stat-label">Hours Saved Weekly</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">90%</span>
+                        <span class="stat-label">Error Reduction</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">$100K+</span>
+                        <span class="stat-label">Annual Savings</span>
+                    </div>
+                </div>
+                <div class="hero-cta">
+                    <button class="btn btn-primary" onclick="scrollToContact()">Get Your Free Consultation</button>
+                    <a href="/workflows/material-management/" class="btn btn-secondary">View Case Study</a>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="automation-demo">
+                    <div class="demo-card" style="animation-delay: 0s;">
+                        <h3>Manual Process</h3>
+                        <div class="process-steps">
+                            <div class="step error">Spreadsheet tracking</div>
+                            <div class="step error">Manual orders</div>
+                            <div class="step error">Phone calls</div>
+                            <div class="step error">Human errors</div>
+                        </div>
+                    </div>
+                    <div class="arrow">→</div>
+                    <div class="demo-card" style="animation-delay: 0.5s;">
+                        <h3>Automated System</h3>
+                        <div class="process-steps">
+                            <div class="step success">AI-powered selection</div>
+                            <div class="step success">Instant supplier orders</div>
+                            <div class="step success">Real-time tracking</div>
+                            <div class="step success">Zero errors</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="services">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Our <span class="gradient-text">Automation Services</span></h2>
+                <p class="section-subtitle">Custom solutions designed for businesses spending $10K+ monthly on operations</p>
+            </div>
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="service-icon">🔄</div>
+                    <h3>Workflow Automation</h3>
+                    <p>Streamline repetitive tasks and connect your systems for seamless operations.</p>
+                    <div class="service-price">Starting at $5,000</div>
+                    <ul class="service-features">
+                        <li>Process mapping & optimization</li>
+                        <li>System integrations</li>
+                        <li>Custom workflow design</li>
+                    </ul>
+                </div>
+                <div class="service-card featured">
+                    <div class="service-badge">Most Popular</div>
+                    <div class="service-icon">📊</div>
+                    <h3>Data Integration</h3>
+                    <p>Connect all your business systems for real-time insights and automated reporting.</p>
+                    <div class="service-price">Starting at $8,000</div>
+                    <ul class="service-features">
+                        <li>API integrations</li>
+                        <li>Real-time dashboards</li>
+                        <li>Automated reporting</li>
+                    </ul>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">🤖</div>
+                    <h3>AI & Machine Learning</h3>
+                    <p>Leverage AI for predictive analytics, smart recommendations, and intelligent automation.</p>
+                    <div class="service-price">Starting at $15,000</div>
+                    <ul class="service-features">
+                        <li>Predictive analytics</li>
+                        <li>Smart recommendations</li>
+                        <li>Intelligent processing</li>
+                    </ul>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">💻</div>
+                    <h3>Custom Applications</h3>
+                    <p>Tailored software solutions that fit your exact business requirements.</p>
+                    <div class="service-price">Starting at $12,000</div>
+                    <ul class="service-features">
+                        <li>Custom development</li>
+                        <li>Mobile-responsive design</li>
+                        <li>Cloud deployment</li>
+                    </ul>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">⚡</div>
+                    <h3>Process Optimization</h3>
+                    <p>Analyze and improve your existing workflows for maximum efficiency.</p>
+                    <div class="service-price">Starting at $3,000</div>
+                    <ul class="service-features">
+                        <li>Process analysis</li>
+                        <li>Bottleneck identification</li>
+                        <li>Efficiency improvements</li>
+                    </ul>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">🛠️</div>
+                    <h3>Maintenance & Support</h3>
+                    <p>Ongoing optimization and support to keep your systems running perfectly.</p>
+                    <div class="service-price">$500-$5,000/month</div>
+                    <ul class="service-features">
+                        <li>24/7 monitoring</li>
+                        <li>Regular optimizations</li>
+                        <li>Priority support</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Work Section -->
+    <section id="case-studies" class="featured-work">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Featured <span class="gradient-text">Case Study</span></h2>
+                <p class="section-subtitle">See how we transformed a $3M electrical contractor's material management</p>
+            </div>
+            <div class="case-study-hero">
+                <div class="case-content">
+                    <h3>Material Management Automation</h3>
+                    <p class="case-description">
+                        A commercial electrical contractor was spending 20+ hours weekly managing material orders across 
+                        multiple suppliers using spreadsheets. Our AI-powered system reduced this to 2 hours while 
+                        eliminating 90% of ordering errors.
+                    </p>
+                    <div class="case-results">
+                        <div class="result">
+                            <span class="result-number">$8,400</span>
+                            <span class="result-label">Monthly Savings</span>
+                        </div>
+                        <div class="result">
+                            <span class="result-number">18</span>
+                            <span class="result-label">Hours Saved Weekly</span>
+                        </div>
+                        <div class="result">
+                            <span class="result-number">1,400%</span>
+                            <span class="result-label">ROI in Year 1</span>
+                        </div>
+                    </div>
+                    <div class="case-features">
+                        <div class="feature">✅ Visual material selection interface</div>
+                        <div class="feature">✅ AI-powered smart recommendations</div>
+                        <div class="feature">✅ Instant supplier order automation</div>
+                        <div class="feature">✅ Real-time tracking & notifications</div>
+                        <div class="feature">✅ ServiceM8 integration</div>
+                        <div class="feature">✅ Mobile-first responsive design</div>
+                    </div>
+                    <a href="/workflows/material-management/" class="btn btn-primary">View Full Case Study</a>
+                </div>
+                <div class="case-visual">
+                    <div class="app-mockup">
+                        <div class="mockup-header">
+                            <div class="mockup-controls">
+                                <span></span><span></span><span></span>
+                            </div>
+                            <span class="mockup-title">Material Management System</span>
+                        </div>
+                        <div class="mockup-content">
+                            <div class="material-grid">
+                                <div class="material-card selected">
+                                    <div class="material-image"></div>
+                                    <div class="material-info">
+                                        <h4>12 AWG THHN Wire</h4>
+                                        <p>$45.99 / 500ft</p>
+                                    </div>
+                                </div>
+                                <div class="material-card">
+                                    <div class="material-image"></div>
+                                    <div class="material-info">
+                                        <h4>20A Circuit Breaker</h4>
+                                        <p>$12.50 / each</p>
+                                    </div>
+                                </div>
+                                <div class="material-card selected">
+                                    <div class="material-image"></div>
+                                    <div class="material-info">
+                                        <h4>1" EMT Conduit</h4>
+                                        <p>$8.75 / 10ft</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="order-summary">
+                                <h4>Your Order</h4>
+                                <div class="order-item">12 AWG Wire × 2</div>
+                                <div class="order-item">1" Conduit × 5</div>
+                                <button class="order-btn">Send to Supplier</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about">
+        <div class="container">
+            <div class="about-content">
+                <div class="about-text">
+                    <h2 class="section-title">Why Choose <span class="gradient-text">Opus Automations</span></h2>
+                    <p>
+                        We specialize in custom automation solutions for growing businesses with complex operational needs. 
+                        Unlike one-size-fits-all software, we build systems that adapt to your unique workflows.
+                    </p>
+                    <div class="about-features">
+                        <div class="about-feature">
+                            <div class="feature-icon">🎯</div>
+                            <div class="feature-content">
+                                <h4>Tailored Solutions</h4>
+                                <p>Every system is custom-built for your specific business requirements</p>
+                            </div>
+                        </div>
+                        <div class="about-feature">
+                            <div class="feature-icon">🚀</div>
+                            <div class="feature-content">
+                                <h4>Proven Results</h4>
+                                <p>Our clients save $100K+ annually with 1,400% ROI in the first year</p>
+                            </div>
+                        </div>
+                        <div class="about-feature">
+                            <div class="feature-icon">🛡️</div>
+                            <div class="feature-content">
+                                <h4>Ongoing Support</h4>
+                                <p>Continuous optimization and 48-hour response guarantee</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-stats">
+                    <div class="stat-card">
+                        <h3>$500K-$5M</h3>
+                        <p>Target business ARR</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>$10K+</h3>
+                        <p>Monthly operations spend</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>48 Hours</h3>
+                        <p>Response guarantee</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Ready to <span class="gradient-text">Transform Your Business?</span></h2>
+                <p class="section-subtitle">Get your free consultation and see how automation can save you $100K+ annually</p>
+            </div>
+            <div class="contact-content">
+                <div class="contact-info">
+                    <h3>Get Started Today</h3>
+                    <p>
+                        Schedule a discovery call to discuss your automation needs. We'll analyze your current 
+                        workflows and provide a custom quote within 48 hours.
+                    </p>
+                    <div class="contact-details">
+                        <div class="contact-item">
+                            <span class="contact-icon">📧</span>
+                            <span>tony@opusautomations.com</span>
+                        </div>
+                        <div class="contact-item">
+                            <span class="contact-icon">🌐</span>
+                            <span>opusautomations.com</span>
+                        </div>
+                        <div class="contact-item">
+                            <span class="contact-icon">⏱️</span>
+                            <span>48-hour response guarantee</span>
+                        </div>
+                    </div>
+                </div>
+                <form class="contact-form" id="contactForm">
+                    <div class="form-group">
+                        <label for="name">Full Name</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Business Email</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="company">Company Name</label>
+                        <input type="text" id="company" name="company" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="revenue">Annual Revenue Range</label>
+                        <select id="revenue" name="revenue" required>
+                            <option value="">Select range...</option>
+                            <option value="500k-1m">$500K - $1M</option>
+                            <option value="1m-2m">$1M - $2M</option>
+                            <option value="2m-5m">$2M - $5M</option>
+                            <option value="5m+">$5M+</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="operations">Monthly Operations Spend</label>
+                        <select id="operations" name="operations" required>
+                            <option value="">Select range...</option>
+                            <option value="5k-10k">$5K - $10K</option>
+                            <option value="10k-25k">$10K - $25K</option>
+                            <option value="25k-50k">$25K - $50K</option>
+                            <option value="50k+">$50K+</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="challenge">Biggest Operational Challenge</label>
+                        <textarea id="challenge" name="challenge" rows="4" 
+                                placeholder="Describe your biggest time-consuming manual process..."></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-full">
+                        Get My Free Consultation
+                    </button>
+                    <p class="form-note">We'll respond within 48 hours with a custom automation plan</p>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <span class="logo-text">Opus Automations</span>
+                    <p>AI-Powered Business Automation</p>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-section">
+                        <h4>Services</h4>
+                        <a href="#services">Workflow Automation</a>
+                        <a href="#services">Data Integration</a>
+                        <a href="#services">AI Solutions</a>
+                        <a href="#services">Custom Apps</a>
+                    </div>
+                    <div class="footer-section">
+                        <h4>Resources</h4>
+                        <a href="/workflows/material-management/">Case Studies</a>
+                        <a href="#about">About Us</a>
+                        <a href="#contact">Contact</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Opus Automations. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
