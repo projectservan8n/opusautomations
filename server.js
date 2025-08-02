@@ -22,7 +22,7 @@ app.use(helmet({
             defaultSrc: ["'self'"],
             styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
             scriptSrc: ["'self'", "'unsafe-inline'", "https://twemoji.maxcdn.com", "https://cdn.jsdelivr.net"],
-            fontSrc: ["'self'", "https://fonts.gstatic.com"],
+            fontSrc: ["'self'", "https://fonts.gstatic.com", "https://github.com"],
             imgSrc: ["'self'", "data:", "https:", "https://twemoji.maxcdn.com"],
             connectSrc: ["'self'"]
         }
