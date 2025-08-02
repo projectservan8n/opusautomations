@@ -155,9 +155,9 @@ body {
     border-radius: 2px;
 }
 
-/* Mobile Navigation Styles - Instagram-style Side Menu (FIXED) */
+/* Mobile Navigation Styles - INSTAGRAM STYLE ONLY */
 @media (max-width: 768px) {
-    /* Ensure body padding on mobile */
+    /* Body adjustments */
     body {
         padding-top: 70px !important;
     }
@@ -167,16 +167,17 @@ body {
         padding-top: 1rem;
     }
     
+    /* Show hamburger toggle */
     .nav-toggle {
-        display: flex;
+        display: flex !important;
     }
 
-    /* Instagram-style side menu - CORRECTED */
+    /* INSTAGRAM-STYLE SIDE MENU - ONLY THIS STYLE */
     .nav-menu {
         position: fixed !important;
         top: 0 !important;
-        right: -320px !important; /* Start off-screen with exact width */
-        width: 320px !important; /* Fixed width like Instagram */
+        right: -320px !important;
+        width: 320px !important;
         height: 100vh !important;
         background: rgba(10, 10, 10, 0.98) !important;
         backdrop-filter: blur(30px) !important;
@@ -184,37 +185,41 @@ body {
         flex-direction: column !important;
         justify-content: flex-start !important;
         align-items: stretch !important;
-        padding: 0 !important; /* Remove all padding initially */
+        padding: 0 !important;
+        margin: 0 !important;
         transition: right 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
         z-index: 9998 !important;
         border-left: 1px solid rgba(139, 92, 246, 0.2) !important;
         box-shadow: -5px 0 25px rgba(0, 0, 0, 0.4) !important;
         overflow-y: auto !important;
+        border-radius: 0 !important;
     }
     
+    /* Menu slides in when active */
     .nav-menu.active {
         right: 0 !important;
     }
 
-    /* Menu header */
+    /* Menu Header - "Menu" text at top */
     .nav-menu::before {
-        content: 'Menu';
-        display: block;
-        padding: 2rem 1.5rem 1rem 1.5rem;
-        font-size: 1.5rem;
-        font-weight: 700;
-        color: #8b5cf6;
-        letter-spacing: 0.5px;
-        border-bottom: 1px solid rgba(139, 92, 246, 0.1);
-        margin-bottom: 1rem;
+        content: 'Menu' !important;
+        display: block !important;
+        padding: 2rem 1.5rem 1rem 1.5rem !important;
+        font-size: 1.5rem !important;
+        font-weight: 700 !important;
+        color: #8b5cf6 !important;
+        letter-spacing: 0.5px !important;
+        border-bottom: 1px solid rgba(139, 92, 246, 0.1) !important;
+        margin: 0 !important;
+        background: none !important;
+        position: static !important;
+        left: auto !important;
+        top: auto !important;
+        width: auto !important;
+        height: auto !important;
     }
     
-    /* Menu items container */
-    .nav-menu {
-        padding-top: 0 !important;
-    }
-    
-    /* Individual menu items */
+    /* Navigation Links - Instagram Style */
     .nav-link {
         font-size: 1.1rem !important;
         margin: 0 !important;
@@ -223,7 +228,7 @@ body {
         transition: all 0.2s ease !important;
         text-align: left !important;
         width: 100% !important;
-        background: none !important;
+        background: transparent !important;
         border: none !important;
         border-bottom: 1px solid rgba(139, 92, 246, 0.08) !important;
         color: #ffffff !important;
@@ -234,16 +239,21 @@ body {
         letter-spacing: 0.3px !important;
         position: relative !important;
         min-height: 60px !important;
+        max-width: none !important;
+        transform: none !important;
+        box-shadow: none !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
     }
 
-    /* Add proper spacing for the first menu item */
+    /* First menu item spacing */
     .nav-link:first-child {
-        margin-top: 80px !important; /* Space for menu header */
+        margin-top: 0 !important;
+        border-top: none !important;
     }
 
-    /* Menu item icons */
+    /* Icons before each menu item */
     .nav-link::before {
-        content: '';
         width: 24px !important;
         height: 24px !important;
         margin-right: 1rem !important;
@@ -252,28 +262,36 @@ body {
         justify-content: center !important;
         font-size: 16px !important;
         opacity: 0.8 !important;
+        background: none !important;
+        border: none !important;
+        position: static !important;
     }
 
-    /* Specific icons for each menu item */
-    .nav-link[href*="services"]::before {
-        content: '🔧';
+    /* Specific menu item icons */
+    .nav-link[href*="services"]::before,
+    .nav-link[href^="/#services"]::before {
+        content: '🔧' !important;
     }
 
     .nav-link[href*="workflows"]::before,
-    .nav-link[href="/workflows"]::before {
-        content: '📦';
+    .nav-link[href="/workflows"]::before,
+    .nav-link[href^="/workflows"]::before {
+        content: '📦' !important;
     }
 
-    .nav-link[href*="case-studies"]::before {
-        content: '📊';
+    .nav-link[href*="case-studies"]::before,
+    .nav-link[href^="/#case-studies"]::before {
+        content: '📊' !important;
     }
 
-    .nav-link[href*="about"]::before {
-        content: '👤';
+    .nav-link[href*="about"]::before,
+    .nav-link[href^="/#about"]::before {
+        content: '👤' !important;
     }
 
-    .nav-link[href*="contact"]::before {
-        content: '📧';
+    .nav-link[href*="contact"]::before,
+    .nav-link[href^="/#contact"]::before {
+        content: '📧' !important;
     }
 
     /* Remove last border */
@@ -281,50 +299,56 @@ body {
         border-bottom: none !important;
     }
 
-    /* Hover and active states */
+    /* Hover state */
     .nav-link:hover {
         background: rgba(139, 92, 246, 0.1) !important;
         color: #ffffff !important;
+        transform: none !important;
+        box-shadow: none !important;
     }
 
+    /* Active state - current page */
     .nav-link.active {
         background: rgba(139, 92, 246, 0.15) !important;
         color: #8b5cf6 !important;
         font-weight: 500 !important;
         border-left: 3px solid #8b5cf6 !important;
+        transform: none !important;
+        box-shadow: none !important;
     }
 
     .nav-link.active::before {
         opacity: 1 !important;
     }
     
-    /* Overlay when menu is open */
+    /* Dark overlay when menu is open */
     body.menu-open::before {
-        content: '';
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: calc(100% - 320px);
-        height: 100vh;
-        background: rgba(0, 0, 0, 0.5);
-        z-index: 9997;
-        backdrop-filter: blur(2px);
+        content: '' !important;
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: calc(100% - 320px) !important;
+        height: 100vh !important;
+        background: rgba(0, 0, 0, 0.5) !important;
+        z-index: 9997 !important;
+        backdrop-filter: blur(2px) !important;
+        display: block !important;
     }
     
     /* Hamburger animation */
     .nav-toggle.active .bar:nth-child(1) {
-        transform: rotate(45deg) translate(5px, 5px);
+        transform: rotate(45deg) translate(5px, 5px) !important;
     }
     
     .nav-toggle.active .bar:nth-child(2) {
-        opacity: 0;
+        opacity: 0 !important;
     }
     
     .nav-toggle.active .bar:nth-child(3) {
-        transform: rotate(-45deg) translate(7px, -6px);
+        transform: rotate(-45deg) translate(7px, -6px) !important;
     }
 
-    /* Ensure navbar stays fixed */
+    /* Fixed navbar */
     .navbar {
         position: fixed !important;
         top: 0 !important;
@@ -333,10 +357,13 @@ body {
     }
 
     .nav-container {
-        position: relative !important;
-        z-index: 9999 !important;
         height: 70px !important;
         align-items: center !important;
+    }
+
+    /* REMOVE ANY OTHER MENU STYLES */
+    .nav-menu::after {
+        display: none !important;
     }
 }
 
