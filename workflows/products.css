@@ -3,6 +3,12 @@
 
 /* Products Page Specific Styles */
 
+/* Override logo for products page */
+.logo-image {
+    height: 40px;
+    width: auto;
+}
+
 /* Products Hero */
 .products-hero {
     min-height: 80vh;
