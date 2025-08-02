@@ -155,11 +155,11 @@ body {
     border-radius: 2px;
 }
 
-/* Mobile Navigation Styles - Instagram-style Side Menu */
+/* Mobile Navigation Styles - Instagram-style Side Menu (FIXED) */
 @media (max-width: 768px) {
     /* Ensure body padding on mobile */
     body {
-        padding-top: 70px !important; /* Slightly less on mobile */
+        padding-top: 70px !important;
     }
     
     .hero {
@@ -171,43 +171,61 @@ body {
         display: flex;
     }
 
-    /* Instagram-style side menu */
+    /* Instagram-style side menu - CORRECTED */
     .nav-menu {
         position: fixed !important;
-        top: 0 !important; /* Start from very top */
-        right: -100% !important; /* Hidden off-screen */
-        width: 75% !important; /* 3/4 of screen width */
-        max-width: 320px !important; /* Maximum width */
-        height: 100vh !important; /* Full viewport height */
-        background: rgba(10, 10, 10, 0.98) !important; /* Dark theme background */
+        top: 0 !important;
+        right: -320px !important; /* Start off-screen with exact width */
+        width: 320px !important; /* Fixed width like Instagram */
+        height: 100vh !important;
+        background: rgba(10, 10, 10, 0.98) !important;
         backdrop-filter: blur(30px) !important;
         -webkit-backdrop-filter: blur(30px) !important;
         flex-direction: column !important;
-        justify-content: flex-start !important; /* Start from top */
-        align-items: stretch !important; /* Full width items */
-        padding: 100px 0 2rem 0 !important; /* Top padding to clear navbar */
-        transition: right 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important; /* Smooth slide */
+        justify-content: flex-start !important;
+        align-items: stretch !important;
+        padding: 0 !important; /* Remove all padding initially */
+        transition: right 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
         z-index: 9998 !important;
         border-left: 1px solid rgba(139, 92, 246, 0.2) !important;
         box-shadow: -5px 0 25px rgba(0, 0, 0, 0.4) !important;
+        overflow-y: auto !important;
     }
     
     .nav-menu.active {
-        right: 0 !important; /* Slide in */
+        right: 0 !important;
+    }
+
+    /* Menu header */
+    .nav-menu::before {
+        content: 'Menu';
+        display: block;
+        padding: 2rem 1.5rem 1rem 1.5rem;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #8b5cf6;
+        letter-spacing: 0.5px;
+        border-bottom: 1px solid rgba(139, 92, 246, 0.1);
+        margin-bottom: 1rem;
     }
     
-    /* Menu items styling - Instagram-like */
+    /* Menu items container */
+    .nav-menu {
+        padding-top: 0 !important;
+    }
+    
+    /* Individual menu items */
     .nav-link {
         font-size: 1.1rem !important;
         margin: 0 !important;
-        padding: 1rem 1.5rem !important;
+        padding: 1.2rem 1.5rem !important;
         border-radius: 0 !important;
         transition: all 0.2s ease !important;
-        text-align: left !important; /* Left aligned like Instagram */
+        text-align: left !important;
         width: 100% !important;
         background: none !important;
         border: none !important;
-        border-bottom: 1px solid rgba(139, 92, 246, 0.1) !important; /* Subtle dividers */
+        border-bottom: 1px solid rgba(139, 92, 246, 0.08) !important;
         color: #ffffff !important;
         text-decoration: none !important;
         display: flex !important;
@@ -215,54 +233,47 @@ body {
         font-weight: 400 !important;
         letter-spacing: 0.3px !important;
         position: relative !important;
+        min-height: 60px !important;
     }
 
-    /* Add icons to menu items */
+    /* Add proper spacing for the first menu item */
+    .nav-link:first-child {
+        margin-top: 80px !important; /* Space for menu header */
+    }
+
+    /* Menu item icons */
     .nav-link::before {
         content: '';
-        width: 20px !important;
-        height: 20px !important;
+        width: 24px !important;
+        height: 24px !important;
         margin-right: 1rem !important;
-        background-size: contain !important;
-        background-repeat: no-repeat !important;
-        background-position: center !important;
-        opacity: 0.7 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        font-size: 16px !important;
+        opacity: 0.8 !important;
     }
 
-    /* Menu item icons using CSS */
+    /* Specific icons for each menu item */
     .nav-link[href*="services"]::before {
         content: '🔧';
-        font-size: 16px !important;
-        width: auto !important;
-        height: auto !important;
     }
 
-    .nav-link[href*="workflows"]::before {
+    .nav-link[href*="workflows"]::before,
+    .nav-link[href="/workflows"]::before {
         content: '📦';
-        font-size: 16px !important;
-        width: auto !important;
-        height: auto !important;
     }
 
     .nav-link[href*="case-studies"]::before {
         content: '📊';
-        font-size: 16px !important;
-        width: auto !important;
-        height: auto !important;
     }
 
     .nav-link[href*="about"]::before {
         content: '👤';
-        font-size: 16px !important;
-        width: auto !important;
-        height: auto !important;
     }
 
     .nav-link[href*="contact"]::before {
         content: '📧';
-        font-size: 16px !important;
-        width: auto !important;
-        height: auto !important;
     }
 
     /* Remove last border */
@@ -270,32 +281,37 @@ body {
         border-bottom: none !important;
     }
 
-    .nav-link:hover, .nav-link.active {
+    /* Hover and active states */
+    .nav-link:hover {
+        background: rgba(139, 92, 246, 0.1) !important;
+        color: #ffffff !important;
+    }
+
+    .nav-link.active {
         background: rgba(139, 92, 246, 0.15) !important;
         color: #8b5cf6 !important;
-        transform: none !important; /* No transform for cleaner look */
-        box-shadow: none !important;
         font-weight: 500 !important;
-        border-left: 3px solid #8b5cf6 !important; /* Active indicator */
+        border-left: 3px solid #8b5cf6 !important;
     }
 
     .nav-link.active::before {
         opacity: 1 !important;
     }
     
-    /* Overlay for rest of screen */
-    .nav-menu.active::after {
+    /* Overlay when menu is open */
+    body.menu-open::before {
         content: '';
         position: fixed;
         top: 0;
         left: 0;
-        width: 25%;
+        width: calc(100% - 320px);
         height: 100vh;
-        background: rgba(0, 0, 0, 0.4);
-        z-index: -1;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 9997;
         backdrop-filter: blur(2px);
     }
     
+    /* Hamburger animation */
     .nav-toggle.active .bar:nth-child(1) {
         transform: rotate(45deg) translate(5px, 5px);
     }
@@ -321,18 +337,6 @@ body {
         z-index: 9999 !important;
         height: 70px !important;
         align-items: center !important;
-    }
-
-    /* Add menu header */
-    .nav-menu::before {
-        content: 'Menu';
-        position: absolute;
-        top: 30px;
-        left: 1.5rem;
-        font-size: 1.2rem;
-        font-weight: 600;
-        color: #8b5cf6;
-        letter-spacing: 0.5px;
     }
 }
 
