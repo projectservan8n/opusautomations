@@ -3,7 +3,7 @@ const path = require('path');
 const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
-const nodemailer = require('nodemailer');
+const axios = require('axios');
 require('dotenv').config();
 
 // Add startup logging
@@ -54,25 +54,6 @@ app.use(express.static(path.join(__dirname), {
     etag: true
 }));
 
-// Email configuration (make optional for Railway deployment)
-let transporter = null;
-try {
-    if (process.env.EMAIL_USER && process.env.GMAIL_APP_PASSWORD) {
-        transporter = nodemailer.createTransporter({
-            service: 'gmail',
-            auth: {
-                user: process.env.EMAIL_USER,
-                pass: process.env.GMAIL_APP_PASSWORD
-            }
-        });
-        console.log('📧 Email transporter configured');
-    } else {
-        console.log('⚠️  Email not configured - contact form will log only');
-    }
-} catch (error) {
-    console.log('⚠️  Email configuration failed:', error.message);
-}
-
 // Routes
 
 // Health check
@@ -83,11 +64,194 @@ app.get('/health', (req, res) => {
         uptime: Math.floor(process.uptime()),
         memory: process.memoryUsage(),
         environment: process.env.NODE_ENV || 'development',
-        email_configured: !!transporter
+        n8n_configured: !!process.env.N8N_WEBHOOK_URL
     };
     
     console.log('Health check requested:', healthData);
     res.status(200).json(healthData);
+});
+
+// Contact form submission - proxy to n8n
+app.post('/api/contact', contactLimiter, async (req, res) => {
+    try {
+        const { name, email, company, revenue, operations, challenge } = req.body;
+        
+        // Basic validation
+        if (!name || !email || !company || !revenue || !operations) {
+            return res.status(400).json({ 
+                success: false, 
+                message: 'All required fields must be filled' 
+            });
+        }
+        
+        // Email validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            return res.status(400).json({ 
+                success: false, 
+                message: 'Invalid email address' 
+            });
+        }
+        
+        // Add metadata
+        const webhookData = {
+            ...req.body,
+            timestamp: new Date().toISOString(),
+            ip: req.ip,
+            userAgent: req.get('User-Agent'),
+            headers: req.headers
+        };
+        
+        // Send to n8n webhook
+        const n8nWebhookUrl = process.env.N8N_WEBHOOK_URL || 'https://your-n8n-instance.com/webhook/opus-contact-form';
+        
+        console.log('📤 Sending to n8n webhook:', { name, email, company });
+        
+        const response = await axios.post(n8nWebhookUrl, webhookData, {
+            timeout: 10000,
+            headers: {
+                'Content-Type': 'application/json',
+                'User-Agent': 'Opus-Automations-Server'
+            }
+        });
+        
+        console.log('✅ n8n response:', response.status);
+        
+        // Return n8n response or default success
+        res.status(200).json(response.data || { 
+            success: true, 
+            message: 'Thank you! We\'ll respond within 48 hours.' 
+        });
+        
+    } catch (error) {
+        console.error('❌ Contact form error:', error.message);
+        
+        // Fallback - log locally if n8n is down
+        console.log('📝 Fallback logging:', req.body);
+        
+        res.status(200).json({ 
+            success: true, 
+            message: 'Thank you! We\'ll respond within 48 hours.',
+            note: 'Request logged for manual follow-up'
+        });
+    }
+});
+
+// Analytics endpoint (for future use)
+app.post('/api/analytics', (req, res) => {
+    try {
+        const { event, data } = req.body;
+        
+        // Log analytics event
+        console.log('Analytics event:', event, data);
+        
+        // Future: forward to n8n analytics workflow
+        
+        res.status(200).json({ success: true });
+    } catch (error) {
+        console.error('Analytics error:', error);
+        res.status(500).json({ success: false });
+    }
+});
+
+// Webhook endpoint for material management (future client systems)
+app.post('/api/webhook/material-order', express.raw({ type: 'application/json' }), async (req, res) => {
+    try {
+        const orderData = JSON.parse(req.body);
+        
+        console.log('📦 Material order received:', orderData);
+        
+        // Forward to n8n material management workflow
+        if (process.env.N8N_MATERIAL_WEBHOOK_URL) {
+            const response = await axios.post(process.env.N8N_MATERIAL_WEBHOOK_URL, orderData);
+            return res.status(200).json(response.data);
+        }
+        
+        // Fallback response
+        res.status(200).json({ 
+            success: true, 
+            orderId: orderData.orderId || Date.now(),
+            status: 'received',
+            note: 'Will be processed by n8n workflow'
+        });
+        
+    } catch (error) {
+        console.error('Webhook error:', error);
+        res.status(400).json({ success: false, error: 'Invalid webhook data' });
+    }
+});
+
+// Serve main routes
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+// Serve products/workflows page
+app.get('/workflows/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'workflows', 'index.html'));
+});
+
+// Serve material management case study (future expansion)
+app.get('/workflows/material-management/', (req, res) => {
+    // For now, redirect to products page with anchor
+    res.redirect('/workflows/#products');
+});
+
+app.get('/workflows/material-management/demo', (req, res) => {
+    // Future: serve actual material management demo
+    res.json({ 
+        message: 'Material Management Demo coming soon',
+        contact: 'tony@opusautomations.com'
+    });
+});
+
+// API documentation endpoint
+app.get('/api/docs', (req, res) => {
+    res.json({
+        name: 'Opus Automations API',
+        version: '1.0.0',
+        endpoints: {
+            'POST /api/contact': 'Submit contact form (proxied to n8n)',
+            'POST /api/analytics': 'Track analytics events',
+            'POST /api/webhook/material-order': 'Material order webhook',
+            'GET /health': 'Health check'
+        },
+        n8n_integration: !!process.env.N8N_WEBHOOK_URL,
+        documentation: 'Contact tony@opusautomations.com for API access'
+    });
+});
+
+// 404 handler
+app.use((req, res) => {
+    res.status(404).sendFile(path.join(__dirname, 'index.html'));
+});
+
+// Error handler
+app.use((error, req, res, next) => {
+    console.error('Server error:', error);
+    res.status(500).json({ 
+        success: false, 
+        message: 'Internal server error' 
+    });
+});
+
+// Graceful shutdown
+process.on('SIGTERM', () => {
+    console.log('SIGTERM received, shutting down gracefully');
+    process.exit(0);
+});
+
+process.on('SIGINT', () => {
+    console.log('SIGINT received, shutting down gracefully');
+    process.exit(0);
+});
+
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`🚀 Opus Automations server running on port ${PORT}`);
+    console.log(`🔗 n8n webhook: ${process.env.N8N_WEBHOOK_URL ? 'Configured' : 'Not configured'}`);
+    console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
+    console.log(`🔗 Health check: http://localhost:${PORT}/health`);
+    console.log('✅ Server startup complete');
 });
 
 // Contact form submission
