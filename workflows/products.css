@@ -5,8 +5,10 @@
 
 /* Override logo for products page */
 .logo-image {
-    height: 40px;
+    height: 32px;
     width: auto;
+    max-width: 180px;
+    object-fit: contain;
 }
 
 /* Products Hero */
