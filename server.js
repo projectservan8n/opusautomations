@@ -11,9 +11,12 @@ console.log('🚀 Starting Opus Automations server...');
 console.log('📍 Current directory:', __dirname);
 console.log('🔧 Node version:', process.version);
 console.log('🌍 Environment:', process.env.NODE_ENV || 'development');
+console.log('🔌 Port from env:', process.env.PORT);
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+console.log('🎯 Server will listen on port:', PORT);
 
 // Security and middleware
 app.use(helmet({
@@ -246,12 +249,34 @@ process.on('SIGINT', () => {
     process.exit(0);
 });
 
-app.listen(PORT, '0.0.0.0', () => {
+// Handle uncaught exceptions
+process.on('uncaughtException', (error) => {
+    console.error('Uncaught Exception:', error);
+    process.exit(1);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+    console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+    process.exit(1);
+});
+
+const server = app.listen(PORT, '0.0.0.0', () => {
     console.log(`🚀 Opus Automations server running on port ${PORT}`);
     console.log(`🔗 n8n webhook: ${process.env.N8N_WEBHOOK_URL ? 'Configured' : 'Not configured'}`);
     console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
     console.log(`🔗 Health check: http://localhost:${PORT}/health`);
     console.log('✅ Server startup complete');
+});
+
+server.on('error', (error) => {
+    if (error.code === 'EADDRINUSE') {
+        console.error(`❌ Port ${PORT} is already in use!`);
+        console.error('💡 Try a different port or kill the process using this port');
+        process.exit(1);
+    } else {
+        console.error('❌ Server error:', error);
+        process.exit(1);
+    }
 });
 
 // Contact form submission
