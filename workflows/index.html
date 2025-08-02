@@ -22,7 +22,7 @@
             </div>
             <div class="nav-menu" id="nav-menu">
                 <a href="/#services" class="nav-link">Consulting</a>
-                <a href="/workflows/" class="nav-link active">Products</a>
+                <a href="/workflows" class="nav-link active">Products</a>
                 <a href="/#case-studies" class="nav-link">Case Studies</a>
                 <a href="/#about" class="nav-link">About</a>
                 <a href="/#contact" class="nav-link">Contact</a>
@@ -322,6 +322,182 @@
         </div>
     </footer>
 
-    <script src="../script.js"></script>
+    <script>
+        // Shared particles and navigation code for workflows page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize particles
+            initParticles();
+            
+            // Initialize navigation
+            initNavigation();
+            
+            // Initialize smooth scrolling
+            initSmoothScrolling();
+        });
+
+        // Floating Particles Animation
+        function initParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 50;
+            
+            function createParticle() {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                // Random starting position
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDuration = (Math.random() * 20 + 10) + 's';
+                particle.style.animationDelay = Math.random() * 20 + 's';
+                
+                // Random size
+                const size = Math.random() * 4 + 2;
+                particle.style.width = size + 'px';
+                particle.style.height = size + 'px';
+                
+                particlesContainer.appendChild(particle);
+                
+                // Remove particle after animation
+                setTimeout(() => {
+                    if (particle.parentNode) {
+                        particle.parentNode.removeChild(particle);
+                    }
+                }, 40000);
+            }
+            
+            // Create initial particles
+            for (let i = 0; i < particleCount; i++) {
+                setTimeout(createParticle, Math.random() * 2000);
+            }
+            
+            // Continuously create new particles
+            setInterval(createParticle, 400);
+        }
+
+        // Navigation Functionality
+        function initNavigation() {
+            const navToggle = document.getElementById('nav-toggle');
+            const navMenu = document.getElementById('nav-menu');
+            
+            if (navToggle && navMenu) {
+                // Mobile menu toggle
+                navToggle.addEventListener('click', function() {
+                    navMenu.classList.toggle('active');
+                    navToggle.classList.toggle('active');
+                });
+                
+                // Close menu when clicking nav links
+                const navLinks = document.querySelectorAll('.nav-link');
+                navLinks.forEach(link => {
+                    link.addEventListener('click', function() {
+                        navMenu.classList.remove('active');
+                        navToggle.classList.remove('active');
+                    });
+                });
+            }
+            
+            // Navbar scroll effect
+            window.addEventListener('scroll', function() {
+                const navbar = document.querySelector('.navbar');
+                if (window.scrollY > 100) {
+                    navbar.style.background = 'rgba(10, 10, 10, 0.95)';
+                } else {
+                    navbar.style.background = 'rgba(10, 10, 10, 0.9)';
+                }
+            });
+        }
+
+        // Smooth Scrolling
+        function initSmoothScrolling() {
+            // Smooth scroll for navigation links
+            const navLinks = document.querySelectorAll('.nav-link[href^="#"]');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+                    
+                    if (targetElement) {
+                        const offsetTop = targetElement.offsetTop - 80; // Account for fixed navbar
+                        window.scrollTo({
+                            top: offsetTop,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+        }
+
+        // Add CSS animations for particles
+        const style = document.createElement('style');
+        style.textContent = `
+            .particle {
+                position: absolute;
+                width: 4px;
+                height: 4px;
+                background: linear-gradient(45deg, #8b5cf6, #a855f7);
+                border-radius: 50%;
+                opacity: 0.6;
+                animation: float 20s infinite linear;
+            }
+
+            @keyframes float {
+                0% {
+                    transform: translateY(100vh) translateX(0);
+                    opacity: 0;
+                }
+                10% {
+                    opacity: 0.6;
+                }
+                90% {
+                    opacity: 0.6;
+                }
+                100% {
+                    transform: translateY(-100px) translateX(100px);
+                    opacity: 0;
+                }
+            }
+
+            /* Mobile menu styles */
+            @media (max-width: 768px) {
+                .nav-menu {
+                    position: fixed;
+                    top: 70px;
+                    right: -100%;
+                    width: 100%;
+                    height: calc(100vh - 70px);
+                    background: rgba(10, 10, 10, 0.95);
+                    backdrop-filter: blur(10px);
+                    flex-direction: column;
+                    justify-content: flex-start;
+                    align-items: center;
+                    padding-top: 3rem;
+                    transition: right 0.3s ease;
+                    border-left: 1px solid rgba(139, 92, 246, 0.2);
+                }
+                
+                .nav-menu.active {
+                    right: 0;
+                }
+                
+                .nav-link {
+                    font-size: 1.2rem;
+                    margin: 1rem 0;
+                }
+                
+                .nav-toggle.active .bar:nth-child(1) {
+                    transform: rotate(45deg) translate(5px, 5px);
+                }
+                
+                .nav-toggle.active .bar:nth-child(2) {
+                    opacity: 0;
+                }
+                
+                .nav-toggle.active .bar:nth-child(3) {
+                    transform: rotate(-45deg) translate(7px, -6px);
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
 </body>
 </html>
