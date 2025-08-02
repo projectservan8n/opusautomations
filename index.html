@@ -62,7 +62,7 @@
                 </div>
                 <div class="hero-cta">
                     <a href="https://calendly.com/tony-opusautomations/30min" class="btn btn-primary" target="_blank">Book Free Strategy Call</a>
-                    <button class="btn btn-secondary" onclick="scrollToContact()">Get Custom Assessment</button>
+                    <button class="btn btn-secondary" onclick="openAssessmentModal()">Get Custom Assessment</button>
                 </div>
             </div>
             <div class="hero-visual">
@@ -229,7 +229,9 @@
                         <div class="feature">✅ Responsive web interface</div>
                     </div>
                     <div class="case-cta">
-                        <a href="/workflows" class="btn btn-primary">View Full Case Study</a>
+                        <button class="btn btn-secondary" disabled style="opacity: 0.6; cursor: not-allowed;">
+                            Case Study Available Soon
+                        </button>
                         <a href="https://calendly.com/tony-opusautomations/30min" class="btn btn-secondary" target="_blank">Discuss Your Project</a>
                     </div>
                 </div>
@@ -468,6 +470,73 @@
             </div>
         </div>
     </footer>
+
+    <!-- Assessment Modal -->
+    <div id="assessmentModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Quick Automation Assessment</h3>
+                <span class="modal-close" onclick="closeAssessmentModal()">&times;</span>
+            </div>
+            <form id="assessmentForm" class="assessment-form">
+                <div class="form-group">
+                    <label>What's your biggest time-consuming manual process?</label>
+                    <select name="process" required>
+                        <option value="">Select process...</option>
+                        <option value="data-entry">Data entry and spreadsheets</option>
+                        <option value="customer-communication">Customer communication</option>
+                        <option value="inventory-ordering">Inventory/ordering management</option>
+                        <option value="reporting">Report generation</option>
+                        <option value="scheduling">Scheduling and coordination</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>How many hours per week does this consume?</label>
+                    <select name="hours" required>
+                        <option value="">Select hours...</option>
+                        <option value="5-10">5-10 hours</option>
+                        <option value="10-20">10-20 hours</option>
+                        <option value="20-40">20-40 hours</option>
+                        <option value="40+">40+ hours</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>What's your annual revenue range?</label>
+                    <select name="revenue" required>
+                        <option value="">Select range...</option>
+                        <option value="100k-500k">$100K - $500K</option>
+                        <option value="500k-2m">$500K - $2M</option>
+                        <option value="2m-10m">$2M - $10M</option>
+                        <option value="10m-50m">$10M - $50M</option>
+                        <option value="50m+">$50M+</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Your email for results:</label>
+                    <input type="email" name="email" required placeholder="your@email.com">
+                </div>
+                <div class="assessment-result" id="assessmentResult" style="display: none;">
+                    <h4>Your Automation Potential:</h4>
+                    <div class="result-stats">
+                        <div class="result-item">
+                            <span class="result-label">Potential Annual Savings:</span>
+                            <span class="result-value" id="savingsAmount">$0</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">ROI Timeline:</span>
+                            <span class="result-value" id="roiTimeline">0 months</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">Automation Complexity:</span>
+                            <span class="result-value" id="complexity">Medium</span>
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary btn-full">Get My Assessment</button>
+            </form>
+        </div>
+    </div>
 
     <script src="script.js"></script>
 </body>
