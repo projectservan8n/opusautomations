@@ -282,6 +282,39 @@ app.get('/workflows/', (req, res) => {
     res.sendFile(path.join(__dirname, 'workflows', 'index.html'));
 });
 
+// Serve individual sections from main page with anchors
+app.get('/case-studies', (req, res) => {
+    res.redirect('/#case-studies');
+});
+
+app.get('/case-studies/', (req, res) => {
+    res.redirect('/#case-studies');
+});
+
+app.get('/about', (req, res) => {
+    res.redirect('/#about');
+});
+
+app.get('/about/', (req, res) => {
+    res.redirect('/#about');
+});
+
+app.get('/contact', (req, res) => {
+    res.redirect('/#contact');
+});
+
+app.get('/contact/', (req, res) => {
+    res.redirect('/#contact');
+});
+
+app.get('/services', (req, res) => {
+    res.redirect('/#services');
+});
+
+app.get('/services/', (req, res) => {
+    res.redirect('/#services');
+});
+
 // Serve material management case study (future expansion)
 app.get('/workflows/material-management', (req, res) => {
     // For now, redirect to workflows page with anchor
