@@ -573,7 +573,7 @@ function calculateAssessment(data) {
 }
 
 function showAssessmentResults(results) {
-    document.getElementById('savingsAmount').textContent = `${results.savings.toLocaleString()}`;
+    document.getElementById('savingsAmount').textContent = `$${results.savings.toLocaleString()}`;
     document.getElementById('roiTimeline').textContent = `${results.roiMonths} months`;
     document.getElementById('complexity').textContent = results.complexity;
     document.getElementById('assessmentResult').style.display = 'block';
