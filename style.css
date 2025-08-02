@@ -762,8 +762,30 @@ body {
     color: #9ca3af;
 }
 
-.contact-icon {
-    font-size: 1.25rem;
+/* Twemoji emoji styling */
+img.emoji {
+    height: 1em;
+    width: 1em;
+    margin: 0 0.05em 0 0.1em;
+    vertical-align: -0.1em;
+    display: inline !important;
+}
+
+/* Service icon emojis */
+.service-icon img.emoji,
+.product-icon img.emoji {
+    height: 2.5rem !important;
+    width: 2.5rem !important;
+    margin: 0 !important;
+    vertical-align: baseline !important;
+}
+
+/* Contact icon emojis */
+.contact-icon img.emoji {
+    height: 1.25rem !important;
+    width: 1.25rem !important;
+    margin-right: 0.5rem !important;
+    vertical-align: middle !important;
 }
 
 .contact-form {
