@@ -21,10 +21,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Initialize Twemoji
 function initTwemoji() {
-    // Simple approach - just try to parse immediately
     try {
         if (window.twemoji) {
-            twemoji.parse(document.body);
+            twemoji.parse(document.body, {
+                folder: 'svg',
+                ext: '.svg',
+                className: 'emoji'
+            });
             console.log('✅ Twemoji initialized successfully');
         } else {
             console.log('❌ Twemoji not available');
