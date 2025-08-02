@@ -14,9 +14,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Initialize animations
     initAnimations();
-    
-    // Initialize Twemoji - Force Apple-style emojis
-    initTwemoji();
 });
 
 // Initialize Twemoji
