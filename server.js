@@ -48,16 +48,30 @@ const contactLimiter = rateLimit({
     message: 'Too many contact form submissions, please try again later.'
 });
 
-// Static files
+// Static files with no caching for development
 app.use(express.static(path.join(__dirname), {
-    maxAge: '1d',
-    etag: true
+    maxAge: 0,
+    etag: false,
+    lastModified: false,
+    setHeaders: (res, path) => {
+        res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+        res.setHeader('Pragma', 'no-cache');
+        res.setHeader('Expires', '0');
+        res.setHeader('Surrogate-Control', 'no-store');
+    }
 }));
 
-// Serve workflows directory
+// Serve workflows directory with no caching
 app.use('/workflows', express.static(path.join(__dirname, 'workflows'), {
-    maxAge: '1d',
-    etag: true
+    maxAge: 0,
+    etag: false,
+    lastModified: false,
+    setHeaders: (res, path) => {
+        res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+        res.setHeader('Pragma', 'no-cache');
+        res.setHeader('Expires', '0');
+        res.setHeader('Surrogate-Control', 'no-store');
+    }
 }));
 
 // Routes
