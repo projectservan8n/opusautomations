@@ -15,7 +15,7 @@
     "production": {
       "variables": {
         "NODE_ENV": "production",
-        "PORT": "$PORT"
+        "PORT": "8080"
       }
     }
   }
