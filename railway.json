@@ -2,14 +2,14 @@
   "$schema": "https://railway.app/railway.schema.json",
   "build": {
     "builder": "NIXPACKS",
-    "buildCommand": "npm install --production"
+    "buildCommand": "npm ci --only=production"
   },
   "deploy": {
     "startCommand": "npm start",
     "healthcheckPath": "/health",
-    "healthcheckTimeout": 100,
+    "healthcheckTimeout": 300,
     "restartPolicyType": "ON_FAILURE",
-    "restartPolicyMaxRetries": 10
+    "restartPolicyMaxRetries": 3
   },
   "environments": {
     "production": {
@@ -17,15 +17,6 @@
         "NODE_ENV": "production",
         "PORT": "$PORT"
       }
-    },
-    "staging": {
-      "variables": {
-        "NODE_ENV": "staging",
-        "PORT": "$PORT"
-      }
     }
-  },
-  "experimental": {
-    "configVersion": 2
   }
 }
