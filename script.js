@@ -9,6 +9,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize contact form
     initContactForm();
     
+    // Initialize assessment form
+    initAssessmentForm();
+    
     // Initialize smooth scrolling
     initSmoothScrolling();
     
@@ -432,7 +435,120 @@ window.addEventListener('unhandledrejection', function(e) {
     e.preventDefault();
 });
 
-// Add CSS animations
+// Assessment Modal Functions
+function openAssessmentModal() {
+    document.getElementById('assessmentModal').style.display = 'block';
+    document.body.style.overflow = 'hidden';
+}
+
+function closeAssessmentModal() {
+    document.getElementById('assessmentModal').style.display = 'none';
+    document.body.style.overflow = 'auto';
+}
+
+// Close modal when clicking outside
+window.addEventListener('click', function(event) {
+    const modal = document.getElementById('assessmentModal');
+    if (event.target === modal) {
+        closeAssessmentModal();
+    }
+});
+
+// Assessment Form Functionality
+function initAssessmentForm() {
+    const assessmentForm = document.getElementById('assessmentForm');
+    if (!assessmentForm) return;
+    
+    assessmentForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const formData = new FormData(assessmentForm);
+        const data = Object.fromEntries(formData);
+        
+        // Calculate assessment results
+        const results = calculateAssessment(data);
+        
+        // Show results
+        showAssessmentResults(results);
+        
+        // Send to server
+        submitAssessment(data, results);
+    });
+}
+
+function calculateAssessment(data) {
+    const hoursMap = {
+        '5-10': 7.5,
+        '10-20': 15,
+        '20-40': 30,
+        '40+': 50
+    };
+    
+    const revenueMap = {
+        '100k-500k': 300000,
+        '500k-2m': 1250000,
+        '2m-10m': 6000000,
+        '10m-50m': 30000000,
+        '50m+': 75000000
+    };
+    
+    const hours = hoursMap[data.hours] || 0;
+    const revenue = revenueMap[data.revenue] || 0;
+    
+    // Calculate potential savings (hours * $50/hour * 52 weeks * efficiency gain)
+    const hourlyRate = Math.min(50 + (revenue / 1000000) * 10, 150);
+    const efficiencyGain = 0.8; // 80% of manual work can be automated
+    const annualSavings = hours * hourlyRate * 52 * efficiencyGain;
+    
+    // Calculate ROI timeline based on investment needed
+    const estimatedInvestment = Math.max(15000, Math.min(annualSavings * 0.3, 150000));
+    const roiMonths = Math.ceil((estimatedInvestment / annualSavings) * 12);
+    
+    // Determine complexity
+    let complexity = 'Medium';
+    if (hours < 15 && revenue < 2000000) complexity = 'Low';
+    if (hours > 30 || revenue > 10000000) complexity = 'High';
+    
+    return {
+        savings: Math.round(annualSavings),
+        roiMonths: Math.min(roiMonths, 24),
+        complexity,
+        investment: Math.round(estimatedInvestment)
+    };
+}
+
+function showAssessmentResults(results) {
+    document.getElementById('savingsAmount').textContent = `${results.savings.toLocaleString()}`;
+    document.getElementById('roiTimeline').textContent = `${results.roiMonths} months`;
+    document.getElementById('complexity').textContent = results.complexity;
+    document.getElementById('assessmentResult').style.display = 'block';
+}
+
+function submitAssessment(data, results) {
+    const assessmentData = {
+        ...data,
+        results,
+        timestamp: new Date().toISOString(),
+        type: 'assessment'
+    };
+    
+    fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(assessmentData)
+    })
+    .then(response => response.json())
+    .then(result => {
+        if (result.success) {
+            showNotification('Assessment complete! Check your email for detailed results.', 'success');
+        }
+    })
+    .catch(error => {
+        console.error('Assessment submission error:', error);
+    });
+}
 const style = document.createElement('style');
 style.textContent = `
     @keyframes slideInRight {
