@@ -17,6 +17,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Initialize animations
     initAnimations();
+    
+    // Initialize analytics
+    initAnalytics();
 });
 
 // Initialize Twemoji
@@ -77,16 +80,39 @@ function initParticles() {
     setInterval(createParticle, 400);
 }
 
-// Navigation Functionality
+// Enhanced Navigation Functionality
 function initNavigation() {
     const navToggle = document.getElementById('nav-toggle');
     const navMenu = document.getElementById('nav-menu');
+    const body = document.body;
     
     if (navToggle && navMenu) {
         // Mobile menu toggle
-        navToggle.addEventListener('click', function() {
-            navMenu.classList.toggle('active');
-            navToggle.classList.toggle('active');
+        navToggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            console.log('Nav toggle clicked'); // Debug log
+            
+            const isActive = navMenu.classList.contains('active');
+            
+            if (isActive) {
+                // Close menu
+                navMenu.classList.remove('active');
+                navToggle.classList.remove('active');
+                body.classList.remove('menu-open');
+                body.style.overflow = '';
+                body.style.position = '';
+                body.style.width = '';
+            } else {
+                // Open menu
+                navMenu.classList.add('active');
+                navToggle.classList.add('active');
+                body.classList.add('menu-open');
+                body.style.overflow = 'hidden';
+                body.style.position = 'fixed';
+                body.style.width = '100%';
+            }
         });
         
         // Close menu when clicking nav links
@@ -95,7 +121,37 @@ function initNavigation() {
             link.addEventListener('click', function() {
                 navMenu.classList.remove('active');
                 navToggle.classList.remove('active');
+                body.classList.remove('menu-open');
+                body.style.overflow = '';
+                body.style.position = '';
+                body.style.width = '';
             });
+        });
+        
+        // Close menu when clicking outside
+        document.addEventListener('click', function(e) {
+            const isClickInsideNav = navMenu.contains(e.target) || navToggle.contains(e.target);
+            
+            if (!isClickInsideNav && navMenu.classList.contains('active')) {
+                navMenu.classList.remove('active');
+                navToggle.classList.remove('active');
+                body.classList.remove('menu-open');
+                body.style.overflow = '';
+                body.style.position = '';
+                body.style.width = '';
+            }
+        });
+        
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 768) {
+                navMenu.classList.remove('active');
+                navToggle.classList.remove('active');
+                body.classList.remove('menu-open');
+                body.style.overflow = '';
+                body.style.position = '';
+                body.style.width = '';
+            }
         });
     }
     
@@ -105,8 +161,10 @@ function initNavigation() {
         if (navbar) {
             if (window.scrollY > 100) {
                 navbar.style.background = 'rgba(10, 10, 10, 0.95)';
+                navbar.style.backdropFilter = 'blur(20px)';
             } else {
                 navbar.style.background = 'rgba(10, 10, 10, 0.9)';
+                navbar.style.backdropFilter = 'blur(10px)';
             }
         }
     });
@@ -392,9 +450,6 @@ function trackEvent(eventName, properties = {}) {
     }
 }
 
-// Initialize analytics
-initAnalytics();
-
 // Utility Functions
 function debounce(func, wait) {
     let timeout;
@@ -549,6 +604,8 @@ function submitAssessment(data, results) {
         console.error('Assessment submission error:', error);
     });
 }
+
+// Add notification animations
 const style = document.createElement('style');
 style.textContent = `
     @keyframes slideInRight {
@@ -588,46 +645,6 @@ style.textContent = `
         display: flex;
         align-items: center;
         justify-content: space-between;
-    }
-    
-    /* Mobile menu styles */
-    @media (max-width: 768px) {
-        .nav-menu {
-            position: fixed;
-            top: 70px;
-            right: -100%;
-            width: 100%;
-            height: calc(100vh - 70px);
-            background: rgba(10, 10, 10, 0.95);
-            backdrop-filter: blur(10px);
-            flex-direction: column;
-            justify-content: flex-start;
-            align-items: center;
-            padding-top: 3rem;
-            transition: right 0.3s ease;
-            border-left: 1px solid rgba(139, 92, 246, 0.2);
-        }
-        
-        .nav-menu.active {
-            right: 0;
-        }
-        
-        .nav-link {
-            font-size: 1.2rem;
-            margin: 1rem 0;
-        }
-        
-        .nav-toggle.active .bar:nth-child(1) {
-            transform: rotate(45deg) translate(5px, 5px);
-        }
-        
-        .nav-toggle.active .bar:nth-child(2) {
-            opacity: 0;
-        }
-        
-        .nav-toggle.active .bar:nth-child(3) {
-            transform: rotate(-45deg) translate(7px, -6px);
-        }
     }
 `;
 document.head.appendChild(style);
