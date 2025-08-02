@@ -15,14 +15,36 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize animations
     initAnimations();
     
-    // Initialize Twemoji
+    // Initialize Twemoji - Force Apple-style emojis
+    initTwemoji();
+});
+
+// Initialize Twemoji
+function initTwemoji() {
+    // Wait for Twemoji to load, then parse all emojis
     if (typeof twemoji !== 'undefined') {
         twemoji.parse(document.body, {
             folder: 'svg',
-            ext: '.svg'
+            ext: '.svg',
+            base: 'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/'
         });
+        console.log('✅ Twemoji initialized successfully');
+    } else {
+        // Fallback: try again after a short delay
+        setTimeout(function() {
+            if (typeof twemoji !== 'undefined') {
+                twemoji.parse(document.body, {
+                    folder: 'svg',
+                    ext: '.svg',
+                    base: 'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/'
+                });
+                console.log('✅ Twemoji initialized (delayed)');
+            } else {
+                console.log('❌ Twemoji failed to load');
+            }
+        }, 1000);
     }
-});
+}
 
 // Floating Particles Animation
 function initParticles() {
