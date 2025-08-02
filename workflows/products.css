@@ -24,6 +24,36 @@
     padding-top: 80px;
 }
 
+/* Tier Headers */
+.tier-header {
+    text-align: center;
+    margin: 4rem 0 2rem 0;
+    padding: 2rem;
+    border-radius: 1rem;
+    border: 1px solid rgba(139, 92, 246, 0.3);
+}
+
+.tier-header.premium-tier {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(236, 72, 153, 0.1));
+    border-color: #8b5cf6;
+}
+
+.tier-header.mini-tier {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(139, 92, 246, 0.1));
+    border-color: #10b981;
+}
+
+.tier-header h3 {
+    font-size: 1.75rem;
+    margin-bottom: 0.5rem;
+    color: #8b5cf6;
+}
+
+.tier-header p {
+    color: #d1d5db;
+    font-size: 1.125rem;
+}
+
 /* Featured Product */
 .featured-product {
     display: grid;
@@ -49,6 +79,13 @@
     border-radius: 1rem;
     font-size: 0.875rem;
     font-weight: 600;
+}
+
+.product-tagline {
+    font-style: italic;
+    color: #a855f7;
+    margin: 0.5rem 0;
+    font-size: 1.125rem;
 }
 
 .product-description {
@@ -80,16 +117,16 @@
     color: #9ca3af;
 }
 
-.product-features {
+.product-features, .business-benefits {
     margin: 2rem 0;
 }
 
-.product-features h4 {
+.product-features h4, .business-benefits h4 {
     color: #8b5cf6;
     margin-bottom: 1rem;
 }
 
-.product-features ul {
+.product-features ul, .business-benefits ul {
     list-style: none;
     margin: 0;
     padding: 0;
@@ -98,9 +135,33 @@
     gap: 0.5rem;
 }
 
-.product-features li {
+.product-features li, .business-benefits li {
     font-size: 0.9rem;
     color: #d1d5db;
+    padding: 0.25rem 0;
+}
+
+/* Compact versions for smaller product cards */
+.product-features-compact, .business-benefits-compact {
+    margin: 1.5rem 0;
+}
+
+.product-features-compact h4, .business-benefits-compact h4 {
+    color: #8b5cf6;
+    margin-bottom: 0.75rem;
+    font-size: 1rem;
+}
+
+.product-features-compact ul, .business-benefits-compact ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.product-features-compact li, .business-benefits-compact li {
+    font-size: 0.875rem;
+    color: #d1d5db;
+    padding: 0.25rem 0;
 }
 
 .product-pricing {
@@ -162,6 +223,40 @@
 
 .monthly-support small {
     color: #9ca3af;
+}
+
+/* Time Savings and Demand Indicators */
+.time-savings {
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin: 1rem 0;
+    color: #10b981;
+    font-size: 0.9rem;
+}
+
+.demand-indicator {
+    margin: 1rem 0;
+    text-align: center;
+}
+
+.demand-high {
+    background: rgba(245, 158, 11, 0.2);
+    color: #f59e0b;
+    padding: 0.5rem 1rem;
+    border-radius: 1rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.demand-extreme {
+    background: rgba(239, 68, 68, 0.2);
+    color: #ef4444;
+    padding: 0.5rem 1rem;
+    border-radius: 1rem;
+    font-size: 0.875rem;
+    font-weight: 600;
 }
 
 .product-cta {
@@ -284,6 +379,17 @@
     box-shadow: 0 20px 40px rgba(139, 92, 246, 0.1);
 }
 
+.product-card.premium-card {
+    border-color: #ec4899;
+    background: rgba(236, 72, 153, 0.05);
+    padding: 2.5rem;
+}
+
+.product-card.premium-card:hover {
+    border-color: #ec4899;
+    box-shadow: 0 20px 40px rgba(236, 72, 153, 0.2);
+}
+
 .product-icon {
     font-size: 2.5rem;
     margin-bottom: 1rem;
@@ -292,7 +398,7 @@
 
 .product-card h3 {
     color: #8b5cf6;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
 }
 
 .product-card p {
@@ -305,29 +411,13 @@
     font-size: 1.25rem;
     font-weight: 700;
     color: #ec4899;
-    margin-bottom: 1.5rem;
+    margin-bottom: 0.5rem;
 }
 
-.product-benefits {
-    list-style: none;
-    margin: 0 0 1.5rem 0;
-    padding: 0;
-}
-
-.product-benefits li {
-    padding: 0.5rem 0;
-    color: #9ca3af;
-    font-size: 0.9rem;
-}
-
-.product-status {
-    background: rgba(245, 158, 11, 0.2);
-    color: #f59e0b;
-    padding: 0.5rem 1rem;
-    border-radius: 1rem;
+.monthly-maintenance {
     font-size: 0.875rem;
-    font-weight: 600;
-    text-align: center;
+    color: #9ca3af;
+    margin-bottom: 1.5rem;
 }
 
 /* Custom Solutions */
@@ -438,6 +528,10 @@
     .pricing-options {
         flex-direction: column;
     }
+    
+    .product-features ul, .business-benefits ul {
+        grid-template-columns: 1fr;
+    }
 }
 
 @media (max-width: 768px) {
@@ -449,7 +543,7 @@
         padding: 2rem;
     }
     
-    .product-features ul {
+    .product-features ul, .business-benefits ul {
         grid-template-columns: 1fr;
     }
     
@@ -464,5 +558,14 @@
     
     .dashboard-stats {
         grid-template-columns: 1fr;
+    }
+    
+    .tier-header {
+        margin: 2rem 0 1rem 0;
+        padding: 1.5rem;
+    }
+    
+    .tier-header h3 {
+        font-size: 1.5rem;
     }
 }
