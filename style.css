@@ -5,10 +5,10 @@
     box-sizing: border-box;
 }
 
-/* Apple Emoji Font */
+/* Apple Emoji Font - Using jsDelivr CDN */
 @font-face {
     font-family: 'Apple Color Emoji';
-    src: url('https://github.com/GORAlexComp/AppleColorEmojiFont/raw/main/AppleColorEmoji.ttf') format('truetype');
+    src: url('https://cdn.jsdelivr.net/gh/GORAlexComp/AppleColorEmojiFont@main/AppleColorEmoji.ttf') format('truetype');
     font-display: swap;
 }
 
