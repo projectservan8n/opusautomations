@@ -1,6 +1,7 @@
-/* Products Page Specific Styles */
-/* Import main styles */
+/* Import main styles from parent directory */
 @import url('../style.css');
+
+/* Products Page Specific Styles */
 
 /* Products Hero */
 .products-hero {
