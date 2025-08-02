@@ -21,28 +21,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Initialize Twemoji
 function initTwemoji() {
-    // Wait for Twemoji to load, then parse all emojis
-    if (typeof twemoji !== 'undefined') {
-        twemoji.parse(document.body, {
-            folder: 'svg',
-            ext: '.svg',
-            base: 'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/'
-        });
-        console.log('✅ Twemoji initialized successfully');
-    } else {
-        // Fallback: try again after a short delay
-        setTimeout(function() {
-            if (typeof twemoji !== 'undefined') {
-                twemoji.parse(document.body, {
-                    folder: 'svg',
-                    ext: '.svg',
-                    base: 'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/'
-                });
-                console.log('✅ Twemoji initialized (delayed)');
-            } else {
-                console.log('❌ Twemoji failed to load');
-            }
-        }, 1000);
+    // Simple approach - just try to parse immediately
+    try {
+        if (window.twemoji) {
+            twemoji.parse(document.body);
+            console.log('✅ Twemoji initialized successfully');
+        } else {
+            console.log('❌ Twemoji not available');
+        }
+    } catch (error) {
+        console.log('❌ Twemoji error:', error);
     }
 }
 
