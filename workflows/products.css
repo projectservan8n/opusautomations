@@ -5,12 +5,26 @@
     box-sizing: border-box;
 }
 
+/* Body and Main Content Adjustments for Fixed Navbar */
 body {
     font-family: 'San Francisco', -apple-system, BlinkMacSystemFont, 'Helvetica', 'Lucida Grande', 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
     background: #0a0a0a;
     color: #ffffff;
     line-height: 1.6;
     overflow-x: hidden;
+    padding-top: 80px !important; /* Add top padding to account for fixed navbar */
+}
+
+/* All main sections need proper top spacing */
+.products-hero,
+.products,
+.implementation-process {
+    scroll-margin-top: 80px; /* For smooth scrolling with fixed navbar */
+}
+
+.products-hero {
+    min-height: calc(80vh - 80px); /* Adjust hero height for fixed navbar */
+    padding-top: 2rem !important; /* Additional padding for better spacing */
 }
 
 /* Floating Particles Background */
@@ -51,16 +65,20 @@ body {
     }
 }
 
-/* Navigation - STANDARDIZED TO MATCH MAIN SITE */
+/* Navigation - STANDARDIZED FROZEN NAVBAR */
 .navbar {
     position: fixed !important;
     top: 0 !important;
-    width: 100%;
-    background: rgba(10, 10, 10, 0.9);
-    backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(139, 92, 246, 0.2);
-    z-index: 1001 !important;
     left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    background: rgba(10, 10, 10, 0.95) !important;
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+    border-bottom: 1px solid rgba(139, 92, 246, 0.2) !important;
+    z-index: 9999 !important;
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3) !important;
+    transition: all 0.3s ease !important;
 }
 
 .nav-container {
@@ -212,14 +230,30 @@ body {
     }
 }
 
-/* Desktop Navigation */
+/* Desktop Navigation - Fixed Navbar */
 @media (min-width: 769px) {
+    /* Ensure body padding on desktop */
+    body {
+        padding-top: 80px !important;
+    }
+    
+    .products-hero {
+        min-height: calc(80vh - 80px);
+        padding-top: 2rem !important;
+    }
+
     .navbar {
         position: fixed !important;
         top: 0 !important;
-        z-index: 1001 !important;
+        z-index: 9999 !important;
         left: 0 !important;
         width: 100% !important;
+        height: 80px !important;
+    }
+
+    .nav-container {
+        height: 80px !important;
+        align-items: center !important;
     }
 
     .nav-menu {
@@ -237,6 +271,7 @@ body {
         border: none !important;
         box-shadow: none !important;
         backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
     }
 
     .nav-link {
@@ -252,11 +287,6 @@ body {
 
     .nav-toggle {
         display: none !important;
-    }
-
-    /* Ensure all page content has proper top spacing */
-    .products-hero {
-        padding-top: 120px !important;
     }
 }
 
@@ -1404,6 +1434,18 @@ body.menu-open {
     
     .process-step {
         padding: 1.25rem;
+    }
+}
+
+/* Smooth Scrolling with Fixed Navbar Offset */
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 80px; /* Accounts for fixed navbar */
+}
+
+@media (max-width: 768px) {
+    html {
+        scroll-padding-top: 70px; /* Accounts for mobile navbar height */
     }
 }
 
