@@ -255,6 +255,11 @@ function scrollToContact() {
     });
 }
 
+// Schedule Call Function
+function scheduleCall() {
+    window.open('https://calendly.com/tony-opusautomations/30min', '_blank');
+}
+
 // Animation on Scroll
 function initAnimations() {
     const observerOptions = {
