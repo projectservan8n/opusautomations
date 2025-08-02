@@ -14,6 +14,14 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Initialize animations
     initAnimations();
+    
+    // Initialize Twemoji
+    if (typeof twemoji !== 'undefined') {
+        twemoji.parse(document.body, {
+            folder: 'svg',
+            ext: '.svg'
+        });
+    }
 });
 
 // Floating Particles Animation
