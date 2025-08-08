@@ -13,6 +13,9 @@ function debugLog(message, data = null) {
     }
 }
 
+// Global variables for smooth scrolling
+let lenis;
+
 // DOM Content Loaded
 document.addEventListener('DOMContentLoaded', function() {
     debugLog('DOM Content Loaded - Initializing Opus Automations');
@@ -449,7 +452,7 @@ function initSmoothScrolling() {
         
         try {
             // Create Lenis instance with official API (darkroomengineering/lenis)
-            const lenis = new window.Lenis({
+            lenis = new window.Lenis({
                 duration: 1.2,           // Duration for programmatic scrolls
                 easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // heraops.com easing
                 direction: 'vertical',   // Scroll direction
