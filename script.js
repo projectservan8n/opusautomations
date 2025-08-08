@@ -167,7 +167,7 @@ function addParticlesCSS() {
     document.head.appendChild(style);
 }
 
-// FIXED Mobile Navigation Functionality
+// COMPLETELY FIXED Mobile Navigation Functionality
 function initNavigation() {
     const navToggle = document.getElementById('nav-toggle');
     const navMenu = document.getElementById('nav-menu');
@@ -252,22 +252,50 @@ function initNavigation() {
         e.stopImmediatePropagation();
     }, { passive: true });
     
-    // Close menu when clicking nav links
+    // FIXED: Close menu when clicking nav links and scroll to sections
     const navLinks = document.querySelectorAll('.nav-link');
     navLinks.forEach(link => {
         link.addEventListener('click', function(e) {
-            // Don't prevent default for external links
-            if (!this.getAttribute('href').startsWith('#')) {
-                closeMenu();
-                return;
-            }
+            e.preventDefault(); // Always prevent default
+            e.stopPropagation();
             
-            // For anchor links, close menu after a short delay
+            const href = this.getAttribute('href');
+            const targetSection = this.getAttribute('data-section');
+            
+            debugLog('Nav link clicked:', { href, targetSection, text: this.textContent });
+            
+            // Close menu first
+            closeMenu();
+            
+            // Wait a moment for menu close animation, then scroll
             setTimeout(() => {
-                closeMenu();
-            }, 100);
+                if (href && href.startsWith('#')) {
+                    const targetElement = document.querySelector(href);
+                    if (targetElement) {
+                        // Calculate offset for fixed navbar
+                        const navbarHeight = window.innerWidth <= 768 ? 70 : 80;
+                        const targetPosition = targetElement.offsetTop - navbarHeight;
+                        
+                        // Smooth scroll to target
+                        window.scrollTo({
+                            top: targetPosition,
+                            behavior: 'smooth'
+                        });
+                        
+                        debugLog('Scrolled to section:', href);
+                        
+                        // Track analytics
+                        trackEvent('nav_click', {
+                            section: targetSection || href.replace('#', ''),
+                            device_type: 'mobile'
+                        });
+                    } else {
+                        debugLog('Target element not found:', href);
+                    }
+                }
+            }, 300); // Wait for menu close animation
             
-            debugLog('Menu closed via nav link click');
+            return false;
         });
     });
     
@@ -301,6 +329,39 @@ function initNavigation() {
             }
         }, 100);
     });
+    
+    // Desktop navigation click handling
+    if (window.innerWidth > 768) {
+        navLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                const href = this.getAttribute('href');
+                const targetSection = this.getAttribute('data-section');
+                
+                if (href && href.startsWith('#')) {
+                    e.preventDefault();
+                    
+                    const targetElement = document.querySelector(href);
+                    if (targetElement) {
+                        const navbarHeight = 80;
+                        const targetPosition = targetElement.offsetTop - navbarHeight;
+                        
+                        window.scrollTo({
+                            top: targetPosition,
+                            behavior: 'smooth'
+                        });
+                        
+                        debugLog('Desktop scrolled to section:', href);
+                        
+                        // Track analytics
+                        trackEvent('nav_click', {
+                            section: targetSection || href.replace('#', ''),
+                            device_type: 'desktop'
+                        });
+                    }
+                }
+            });
+        });
+    }
     
     // Navbar scroll effect
     window.addEventListener('scroll', function() {
@@ -1553,4 +1614,4 @@ window.closeAssessmentModal = closeAssessmentModal;
 window.scrollToContact = scrollToContact;
 window.scheduleCall = scheduleCall;
 
-debugLog('Script.js fully loaded and configured - MOBILE NAV FIXED, CDN ERRORS RESOLVED', CONFIG);
+debugLog('Script.js fully loaded and configured - MOBILE NAV COMPLETELY FIXED', CONFIG);
