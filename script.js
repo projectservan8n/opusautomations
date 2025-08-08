@@ -392,75 +392,81 @@ function showNotification(message, type = 'info') {
     }, 5000);
 }
 
-// Ultra-Smooth Scrolling System (Inspired by heraops.com)
+// Ultra-Smooth Scrolling System (Fixed Version)
 function initSmoothScrolling() {
     // Smooth scrolling state
-    let currentY = window.scrollY;
-    let targetY = window.scrollY;
+    let currentY = 0;
+    let targetY = 0;
     let isScrolling = false;
     let rafId = null;
     let velocity = 0;
     let lastTime = performance.now();
     
-    // Configuration - optimized for smoothness over complexity
+    // Configuration - optimized for smoothness
     const CONFIG = {
-        lerp: 0.1,           // Linear interpolation factor (lower = smoother but slower)
-        momentum: 0.9,       // Momentum decay
-        wheelMultiplier: 1.0, // Mouse wheel sensitivity
+        lerp: 0.08,          // Linear interpolation factor (lower = smoother)
+        momentum: 0.92,       // Momentum decay
+        wheelMultiplier: 1.5, // Mouse wheel sensitivity
         touchMultiplier: 2.0, // Touch scroll sensitivity
         minDelta: 0.1,       // Minimum movement to continue animation
-        maxVelocity: 20      // Maximum scroll velocity
+        maxVelocity: 30      // Maximum scroll velocity
     };
     
     // Smooth scroll container
     let scrollContainer = null;
+    let isInitialized = false;
     
     // Initialize smooth scroll container
     function initScrollContainer() {
-        // Create a smooth scroll wrapper
-        const body = document.body;
-        const html = document.documentElement;
+        if (isInitialized) return;
         
-        // Set up the page structure for smooth scrolling
-        html.classList.add('smooth-scroll-enabled');
-        body.classList.add('smooth-scroll-body');
-        
-        // Create scroll container
+        // Create scroll container wrapper
         scrollContainer = document.createElement('div');
         scrollContainer.className = 'smooth-scroll-container';
         
-        // Move all body children to scroll container
-        while (body.firstChild) {
-            scrollContainer.appendChild(body.firstChild);
-        }
+        // Get all content except navbar
+        const body = document.body;
+        const navbar = document.querySelector('.navbar');
+        const children = Array.from(body.children);
         
-        // Add container to body
-        body.appendChild(scrollContainer);
+        // Move all children except navbar to scroll container
+        children.forEach(child => {
+            if (child !== navbar && !child.classList.contains('smooth-scroll-container')) {
+                scrollContainer.appendChild(child);
+            }
+        });
+        
+        // Insert scroll container after navbar
+        if (navbar && navbar.nextSibling) {
+            body.insertBefore(scrollContainer, navbar.nextSibling);
+        } else {
+            body.appendChild(scrollContainer);
+        }
         
         // Add necessary CSS
         const style = document.createElement('style');
         style.textContent = `
-            .smooth-scroll-enabled {
-                height: 100%;
-                overflow: hidden;
-            }
-            
-            .smooth-scroll-body {
-                height: 100vh;
-                overflow: hidden;
+            body {
+                overflow-x: hidden;
                 margin: 0;
                 padding: 0;
             }
             
             .smooth-scroll-container {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
                 will-change: transform;
                 backface-visibility: hidden;
-                perspective: 1000px;
-                transform-style: preserve-3d;
+                transform: translate3d(0, 0, 0);
+            }
+            
+            /* Keep navbar static and above */
+            .navbar {
+                position: fixed !important;
+                top: 0 !important;
+                left: 0 !important;
+                right: 0 !important;
+                z-index: 9999 !important;
+                will-change: auto;
+                transform: none !important;
             }
             
             /* Optimize elements for smooth scrolling */
@@ -468,27 +474,26 @@ function initSmoothScrolling() {
             .case-content, .about-feature, .stat-card {
                 transform: translate3d(0, 0, 0);
                 backface-visibility: hidden;
-                will-change: transform;
             }
             
             /* Disable default smooth scrolling */
-            * {
+            html {
                 scroll-behavior: auto !important;
             }
         `;
         document.head.appendChild(style);
         
-        // Update body height to enable scrollbar
-        updateBodyHeight();
-    }
-    
-    // Update body height based on content
-    function updateBodyHeight() {
-        if (!scrollContainer) return;
+        // Set initial values
+        currentY = window.scrollY;
+        targetY = currentY;
         
-        const contentHeight = scrollContainer.scrollHeight;
-        document.body.style.height = contentHeight + 'px';
-        document.documentElement.style.height = contentHeight + 'px';
+        // Update the transform
+        if (scrollContainer) {
+            scrollContainer.style.transform = `translate3d(0, ${-currentY}px, 0)`;
+        }
+        
+        isInitialized = true;
+        debugLog('Smooth scroll container initialized');
     }
     
     // Smooth animation loop
@@ -497,16 +502,13 @@ function initSmoothScrolling() {
         const deltaTime = currentTime - lastTime;
         lastTime = currentTime;
         
-        // Calculate target based on actual scroll position
-        targetY = window.scrollY;
-        
-        // Apply momentum if scrolling has velocity
+        // Apply momentum if there's velocity
         if (Math.abs(velocity) > 0.1) {
             targetY += velocity;
             velocity *= CONFIG.momentum;
             
             // Clamp to bounds
-            const maxScroll = document.body.scrollHeight - window.innerHeight;
+            const maxScroll = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
             targetY = Math.max(0, Math.min(targetY, maxScroll));
         }
         
@@ -521,6 +523,9 @@ function initSmoothScrolling() {
             if (scrollContainer) {
                 scrollContainer.style.transform = `translate3d(0, ${-currentY}px, 0)`;
             }
+            
+            // Update window scroll position for other scripts
+            window.history.replaceState(null, null, window.location.pathname + window.location.search + (currentY > 0 ? '#scroll-' + Math.round(currentY) : ''));
             
             // Continue animation
             rafId = requestAnimationFrame(animate);
@@ -552,7 +557,7 @@ function initSmoothScrolling() {
         }
         
         // Apply momentum
-        velocity += delta * CONFIG.wheelMultiplier * 0.5;
+        velocity += delta * CONFIG.wheelMultiplier * 0.3;
         velocity = Math.max(-CONFIG.maxVelocity, Math.min(CONFIG.maxVelocity, velocity));
         
         // Start animation if not already running
@@ -564,41 +569,51 @@ function initSmoothScrolling() {
     // Handle touch events for mobile
     let touchStartY = 0;
     let touchStartTime = 0;
+    let lastTouchY = 0;
     
     function onTouchStart(e) {
         touchStartY = e.touches[0].clientY;
+        lastTouchY = touchStartY;
         touchStartTime = performance.now();
+        velocity = 0; // Stop momentum on touch
     }
     
     function onTouchMove(e) {
-        e.preventDefault();
+        if (e.touches.length > 1) return; // Ignore multi-touch
         
         const touchY = e.touches[0].clientY;
         const touchTime = performance.now();
-        const deltaY = touchStartY - touchY;
+        const deltaY = lastTouchY - touchY;
         const deltaTime = touchTime - touchStartTime;
         
-        // Calculate velocity
+        // Calculate velocity for momentum
         if (deltaTime > 0) {
-            velocity = (deltaY / deltaTime) * CONFIG.touchMultiplier;
+            velocity = (deltaY / deltaTime) * CONFIG.touchMultiplier * 0.5;
             velocity = Math.max(-CONFIG.maxVelocity, Math.min(CONFIG.maxVelocity, velocity));
         }
         
-        touchStartY = touchY;
+        // Apply immediate scroll
+        targetY += deltaY;
+        const maxScroll = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+        targetY = Math.max(0, Math.min(targetY, maxScroll));
+        
+        lastTouchY = touchY;
         touchStartTime = touchTime;
         
         // Start animation
         if (!isScrolling) {
             animate();
         }
+        
+        e.preventDefault();
     }
     
     function onTouchEnd() {
         // Apply touch momentum
-        velocity *= 0.95;
+        velocity *= 0.8;
         
         // Continue animation if there's momentum
-        if (Math.abs(velocity) > 0.5 && !isScrolling) {
+        if (Math.abs(velocity) > 1 && !isScrolling) {
             animate();
         }
     }
@@ -619,17 +634,24 @@ function initSmoothScrolling() {
     
     // Enhanced smooth scroll to element
     function smoothScrollToElement(targetElement, offset = 80) {
-        if (!targetElement) return;
+        if (!targetElement || !scrollContainer) return;
         
-        // Get target position relative to the document
+        // Calculate target position
         const rect = targetElement.getBoundingClientRect();
-        const targetPosition = currentY + rect.top - offset;
+        const elementTop = rect.top + currentY;
+        const targetPosition = elementTop - offset;
         
         // Animate to target
         const startY = currentY;
         const distance = targetPosition - startY;
         const duration = Math.min(Math.abs(distance) * 1.2, 1500);
         const startTime = performance.now();
+        
+        // Cancel existing animation
+        if (rafId) {
+            cancelAnimationFrame(rafId);
+            rafId = null;
+        }
         
         function scrollAnimation() {
             const elapsed = performance.now() - startTime;
@@ -642,6 +664,7 @@ function initSmoothScrolling() {
             
             currentY = startY + (distance * eased);
             targetY = currentY;
+            velocity = 0;
             
             if (scrollContainer) {
                 scrollContainer.style.transform = `translate3d(0, ${-currentY}px, 0)`;
@@ -652,12 +675,6 @@ function initSmoothScrolling() {
             if (progress < 1) {
                 requestAnimationFrame(scrollAnimation);
             }
-        }
-        
-        // Cancel any existing animation
-        if (rafId) {
-            cancelAnimationFrame(rafId);
-            rafId = null;
         }
         
         scrollAnimation();
@@ -681,20 +698,20 @@ function initSmoothScrolling() {
                 delta = window.innerHeight * 0.8;
                 break;
             case 'Home':
-                smoothScrollToElement(document.body, 0);
+                targetY = 0;
+                velocity = 0;
+                if (!isScrolling) animate();
                 return;
             case 'End':
-                currentY = document.body.scrollHeight - window.innerHeight;
-                targetY = currentY;
-                if (scrollContainer) {
-                    scrollContainer.style.transform = `translate3d(0, ${-currentY}px, 0)`;
-                }
+                targetY = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+                velocity = 0;
+                if (!isScrolling) animate();
                 return;
         }
         
         if (delta !== 0) {
             e.preventDefault();
-            velocity += delta * 0.5;
+            velocity += delta * 0.3;
             velocity = Math.max(-CONFIG.maxVelocity, Math.min(CONFIG.maxVelocity, velocity));
             
             if (!isScrolling) {
@@ -708,7 +725,11 @@ function initSmoothScrolling() {
         // Set up scroll container
         initScrollContainer();
         
-        // Bind events
+        // Disable native scrolling
+        document.documentElement.style.overflow = 'hidden';
+        document.body.style.overflow = 'hidden';
+        
+        // Bind events with proper options
         window.addEventListener('wheel', onWheel, { passive: false });
         window.addEventListener('touchstart', onTouchStart, { passive: false });
         window.addEventListener('touchmove', onTouchMove, { passive: false });
@@ -717,7 +738,15 @@ function initSmoothScrolling() {
         
         // Handle window resize
         window.addEventListener('resize', debounce(() => {
-            updateBodyHeight();
+            // Recalculate bounds
+            const maxScroll = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+            if (currentY > maxScroll) {
+                targetY = maxScroll;
+                currentY = maxScroll;
+                if (scrollContainer) {
+                    scrollContainer.style.transform = `translate3d(0, ${-currentY}px, 0)`;
+                }
+            }
         }, 250));
         
         // Set up navigation links
@@ -748,25 +777,18 @@ function initSmoothScrolling() {
             });
         });
         
-        // Initial position
-        currentY = window.scrollY;
-        targetY = currentY;
-        
-        if (scrollContainer) {
-            scrollContainer.style.transform = `translate3d(0, ${-currentY}px, 0)`;
-        }
-        
-        debugLog('Ultra-smooth scrolling system initialized (heraops.com style)');
+        debugLog('Ultra-smooth scrolling system initialized (fixed version)');
     }
     
     // Initialize when DOM is ready
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', initialize);
     } else {
-        initialize();
+        // Small delay to ensure all elements are ready
+        setTimeout(initialize, 100);
     }
     
-    // Expose function globally
+    // Expose functions globally
     window.smoothScrollToElement = smoothScrollToElement;
     
     // Return current scroll position for other functions
