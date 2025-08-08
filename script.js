@@ -494,24 +494,8 @@ function showNotification(message, type = 'info') {
     }, 5000);
 }
 
-// FIXED Smooth Scrolling Implementation (NO CDN DEPENDENCIES)
+// RESTORED Smooth Scrolling Implementation (WITH LENIS)
 function initSmoothScrolling() {
-    // Load Lenis library with correct CDN sources
-    function loadLenis() {
-        return new Promise((resolve) => {
-            // Check if Lenis is already loaded
-            if (window.Lenis) {
-                debugLog('Lenis already loaded');
-                resolve();
-                return;
-            }
-            
-            // Official Lenis CDN sources (CSP-approved) - REMOVED FOR NO CDN DEPENDENCY
-            debugLog('Skipping external CDN loading, using built-in smooth scroll');
-            resolve();
-        });
-    }
-    
     // Initialize Lenis smooth scrolling with correct API
     function initLenis() {
         if (!window.Lenis) {
@@ -521,10 +505,10 @@ function initSmoothScrolling() {
         }
         
         try {
-            // Create Lenis instance with official API (darkroomengineering/lenis)
+            // Create Lenis instance with official API
             lenis = new window.Lenis({
                 duration: 1.2,           // Duration for programmatic scrolls
-                easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // heraops.com easing
+                easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // smooth easing
                 direction: 'vertical',   // Scroll direction
                 smooth: true,           // Enable smooth scrolling
                 mouseMultiplier: 1,     // Mouse wheel sensitivity
@@ -532,7 +516,7 @@ function initSmoothScrolling() {
                 touchMultiplier: 2,     // Touch scroll sensitivity
                 wheelMultiplier: 1,     // Wheel scroll sensitivity
                 normalizeWheel: true,   // Normalize wheel across browsers
-                lerp: 0.1,             // Linear interpolation intensity (0.1 = smooth like heraops)
+                lerp: 0.1,             // Linear interpolation intensity
                 infinite: false,        // Disable infinite scroll
                 orientation: 'vertical', // Scroll orientation
                 gestureOrientation: 'vertical' // Gesture orientation
@@ -562,7 +546,7 @@ function initSmoothScrolling() {
                 });
             }
             
-            // Set up navigation links - ENHANCED for merged site
+            // Set up navigation links
             const navLinks = document.querySelectorAll('.nav-link[href^="#"], [data-scroll-to]');
             navLinks.forEach(link => {
                 link.addEventListener('click', function(e) {
@@ -608,7 +592,7 @@ function initSmoothScrolling() {
             window.lenis = lenis;
             window.getCurrentScrollY = () => lenis.scroll || 0;
             
-            debugLog('🚀 Lenis smooth scrolling initialized successfully (heraops.com style)');
+            debugLog('🚀 Lenis smooth scrolling initialized successfully');
             
         } catch (error) {
             console.error('❌ Error initializing Lenis:', error);
@@ -616,7 +600,7 @@ function initSmoothScrolling() {
         }
     }
     
-    // Enhanced fallback smooth scroll (NO EXTERNAL LIBRARIES)
+    // Enhanced fallback smooth scroll (if Lenis fails)
     function initFallbackSmoothScroll() {
         let isScrolling = false;
         let currentScrollY = window.scrollY;
@@ -777,7 +761,7 @@ function initSmoothScrolling() {
                 
                 if (targetElement) {
                     smoothScrollToElement(targetElement, 80);
-                    debugLog('🎯 Built-in smooth scrolling to:', targetId);
+                    debugLog('🎯 Fallback smooth scrolling to:', targetId);
                 }
             });
         });
@@ -790,7 +774,7 @@ function initSmoothScrolling() {
                 
                 if (targetElement) {
                     smoothScrollToElement(targetElement, 80);
-                    debugLog('🎯 Built-in smooth scrolling to:', targetId);
+                    debugLog('🎯 Fallback smooth scrolling to:', targetId);
                 }
             });
         });
@@ -821,7 +805,7 @@ function initSmoothScrolling() {
         window.smoothScrollToElement = smoothScrollToElement;
         window.getCurrentScrollY = () => currentScrollY;
         
-        debugLog('🚀 Built-in smooth scrolling initialized (NO CDN DEPENDENCIES)');
+        debugLog('🚀 Fallback smooth scrolling initialized');
     }
     
     // Update navbar background and active states based on scroll position
@@ -841,7 +825,7 @@ function initSmoothScrolling() {
         updateActiveNavState(scrollY);
     }
     
-    // Update active navigation state with purple glow - ENHANCED for merged site
+    // Update active navigation state with purple glow
     function updateActiveNavState(scrollY) {
         const navLinks = document.querySelectorAll('.nav-link');
         const sections = [
@@ -983,7 +967,7 @@ function initSmoothScrolling() {
                PURPLE GLOW NAVIGATION EFFECTS 
                =============================== */
             
-            /* Active glow state (matches Products page) */
+            /* Active glow state */
             .nav-link.nav-active-glow {
                 color: #8b5cf6 !important;
                 background: rgba(139, 92, 246, 0.2) !important;
@@ -1076,27 +1060,23 @@ function initSmoothScrolling() {
         document.head.appendChild(style);
     }
     
-    // Initialize everything
-    async function initialize() {
-        debugLog('🎬 Initializing smooth scrolling system (NO EXTERNAL DEPENDENCIES)...');
+    // Initialize everything - Check for Lenis first
+    function initialize() {
+        debugLog('🎬 Initializing Lenis smooth scrolling system...');
         
         // Add CSS first
         addSmoothScrollCSS();
         
-        // Load and initialize - SKIPPING CDN, USING BUILT-IN
-        try {
-            await loadLenis();
-            
-            // Small delay to ensure DOM is ready
-            setTimeout(() => {
-                // Always use fallback (built-in) since we're not loading external CDNs
+        // Small delay to ensure Lenis loads from CDN
+        setTimeout(() => {
+            if (window.Lenis) {
+                initLenis();
+                debugLog('✅ Using Lenis for smooth scrolling');
+            } else {
                 initFallbackSmoothScroll();
-            }, 100);
-            
-        } catch (error) {
-            console.error('❌ Error in smooth scroll init:', error);
-            initFallbackSmoothScroll();
-        }
+                debugLog('⚠️ Lenis not loaded, using fallback');
+            }
+        }, 100);
     }
     
     // Initialize when DOM is ready
