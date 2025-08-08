@@ -4,13 +4,16 @@ const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const axios = require('axios');
-require('dotenv').config();
+
+// Hardcoded configuration - no .env file needed
+const N8N_WEBHOOK_URL = 'https://primary-production-3ef2.up.railway.app/webhook/contact-form';
 
 // Add startup logging
 console.log('🚀 Starting Opus Automations server...');
 console.log('📍 Current directory:', __dirname);
 console.log('🔧 Node version:', process.version);
 console.log('🌍 Environment:', process.env.NODE_ENV || 'development');
+console.log('🔗 n8n Webhook URL:', N8N_WEBHOOK_URL);
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -85,7 +88,7 @@ app.get('/health', (req, res) => {
         memory: process.memoryUsage(),
         environment: process.env.NODE_ENV || 'development',
         port: PORT,
-        n8n_configured: !!process.env.N8N_WEBHOOK_URL
+        n8n_configured: !!N8N_WEBHOOK_URL
     };
     
     console.log('Health check requested:', healthData);
@@ -131,20 +134,24 @@ app.post('/api/contact', contactLimiter, async (req, res) => {
             leadScore: webhookData.leadScore
         });
         
-        // Send to n8n webhook if configured
-        if (process.env.N8N_WEBHOOK_URL) {
+        // Send to n8n webhook - hardcoded URL
+        if (N8N_WEBHOOK_URL) {
             try {
                 console.log('📤 Sending to n8n webhook...');
+                console.log('🔗 Webhook URL:', N8N_WEBHOOK_URL);
+                console.log('📦 Webhook Data:', JSON.stringify(webhookData, null, 2));
                 
-                const response = await axios.post(process.env.N8N_WEBHOOK_URL, webhookData, {
-                    timeout: 10000,
+                const response = await axios.post(N8N_WEBHOOK_URL, webhookData, {
+                    timeout: 15000,
                     headers: {
                         'Content-Type': 'application/json',
                         'User-Agent': 'Opus-Automations-Server'
                     }
                 });
                 
-                console.log('✅ n8n response:', response.status);
+                console.log('✅ n8n response status:', response.status);
+                console.log('✅ n8n response headers:', response.headers);
+                console.log('✅ n8n response data:', response.data);
                 
                 // Return n8n response or default success
                 res.status(200).json(response.data || { 
@@ -153,7 +160,15 @@ app.post('/api/contact', contactLimiter, async (req, res) => {
                 });
                 
             } catch (n8nError) {
-                console.error('❌ n8n webhook error:', n8nError.message);
+                console.error('❌ n8n webhook error details:');
+                console.error('Error message:', n8nError.message);
+                console.error('Response status:', n8nError.response?.status);
+                console.error('Response data:', n8nError.response?.data);
+                console.error('Request config:', {
+                    url: n8nError.config?.url,
+                    method: n8nError.config?.method,
+                    headers: n8nError.config?.headers
+                });
                 
                 // Fallback - still accept the submission
                 res.status(200).json({ 
@@ -226,11 +241,7 @@ app.post('/api/analytics', (req, res) => {
         // Log analytics event
         console.log('📊 Analytics event:', event, data);
         
-        // Future: forward to n8n analytics workflow
-        if (process.env.N8N_ANALYTICS_WEBHOOK_URL) {
-            axios.post(process.env.N8N_ANALYTICS_WEBHOOK_URL, req.body)
-                .catch(err => console.log('Analytics webhook error:', err.message));
-        }
+        // Note: No analytics webhook configured - just log
         
         res.status(200).json({ success: true });
     } catch (error) {
@@ -246,20 +257,14 @@ app.post('/api/webhook/material-order', express.raw({ type: 'application/json' }
         
         console.log('📦 Material order received:', orderData);
         
-        // Forward to n8n material management workflow
-        if (process.env.N8N_MATERIAL_WEBHOOK_URL) {
-            const response = await axios.post(process.env.N8N_MATERIAL_WEBHOOK_URL, orderData, {
-                timeout: 10000
-            });
-            return res.status(200).json(response.data);
-        }
+        // Note: No material webhook configured - just log
         
         // Fallback response
         res.status(200).json({ 
             success: true, 
             orderId: orderData.orderId || Date.now(),
             status: 'received',
-            note: 'Will be processed by n8n workflow'
+            note: 'Order logged for processing'
         });
         
     } catch (error) {
@@ -349,9 +354,12 @@ app.get('/api/docs', (req, res) => {
             'GET /': 'Main homepage'
         },
         integrations: {
-            n8n_webhook: !!process.env.N8N_WEBHOOK_URL,
-            n8n_analytics: !!process.env.N8N_ANALYTICS_WEBHOOK_URL,
-            n8n_material: !!process.env.N8N_MATERIAL_WEBHOOK_URL
+            n8n_webhook: !!N8N_WEBHOOK_URL,
+            n8n_analytics: false,
+            n8n_material: false
+        },
+        configuration: {
+            n8n_webhook_url: N8N_WEBHOOK_URL
         },
         documentation: 'Contact tony@opusautomations.com for API access'
     });
@@ -385,7 +393,7 @@ process.on('SIGINT', () => {
 
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`🚀 Opus Automations server running on port ${PORT}`);
-    console.log(`🔗 n8n webhook: ${process.env.N8N_WEBHOOK_URL ? 'Configured' : 'Not configured'}`);
+    console.log(`🔗 n8n webhook: ${N8N_WEBHOOK_URL ? 'Configured' : 'Not configured'}`);
     console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
     console.log(`🔗 Health check: http://localhost:${PORT}/health`);
     console.log(`🏠 Homepage: http://localhost:${PORT}/`);
