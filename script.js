@@ -1,8 +1,8 @@
-// Hardcoded configuration - no environment variables needed
+// DEBUG: Enable debug mode to see what's happening
 const CONFIG = {
-    API_BASE_URL: window.location.origin, // Uses current domain automatically
+    API_BASE_URL: window.location.origin,
     ANALYTICS_ENABLED: true,
-    DEBUG_MODE: false, // Set to true for development debugging
+    DEBUG_MODE: true, // ENABLED for debugging navigation
     CALENDLY_URL: 'https://calendly.com/tony-opusautomations/30min'
 };
 
@@ -167,7 +167,7 @@ function addParticlesCSS() {
     document.head.appendChild(style);
 }
 
-// COMPLETELY FIXED Mobile Navigation Functionality
+// COMPLETELY FIXED Mobile Navigation Functionality - BULLETPROOF VERSION
 function initNavigation() {
     const navToggle = document.getElementById('nav-toggle');
     const navMenu = document.getElementById('nav-menu');
@@ -178,16 +178,14 @@ function initNavigation() {
         return;
     }
     
-    debugLog('Navigation elements found, initializing...');
+    debugLog('Navigation elements found, initializing BULLETPROOF navigation...');
     
     // Store current scroll position when menu opens
     let scrollPositionBeforeMenu = 0;
     
     // Helper functions for menu state
     function openMenu() {
-        // Store current scroll position
         scrollPositionBeforeMenu = window.scrollY;
-        
         navMenu.classList.add('active');
         navToggle.classList.add('active');
         body.classList.add('menu-open');
@@ -212,7 +210,7 @@ function initNavigation() {
         body.style.width = '';
         body.style.top = '';
         
-        // Restore scroll position immediately without smooth scrolling
+        // Restore scroll position immediately
         if (scrollPositionBeforeMenu > 0) {
             window.scrollTo(0, scrollPositionBeforeMenu);
         }
@@ -220,15 +218,45 @@ function initNavigation() {
         debugLog('Mobile menu closed, restored scroll position:', scrollPositionBeforeMenu);
     }
     
-    // Mobile menu toggle with better event handling - FIXED SCROLL ISSUE
+    // SIMPLE scroll to section function
+    function scrollToSection(sectionId) {
+        debugLog('🎯 Attempting to scroll to section:', sectionId);
+        
+        const targetElement = document.getElementById(sectionId);
+        if (!targetElement) {
+            debugLog('❌ Target element not found:', sectionId);
+            return;
+        }
+        
+        // Get the actual position
+        const elementRect = targetElement.getBoundingClientRect();
+        const absoluteElementTop = elementRect.top + window.scrollY;
+        
+        // Account for navbar
+        const navbarHeight = window.innerWidth <= 768 ? 70 : 80;
+        const targetScrollPosition = absoluteElementTop - navbarHeight;
+        
+        debugLog('📐 Scroll calculation:', {
+            elementTop: absoluteElementTop,
+            navbarHeight: navbarHeight,
+            targetPosition: targetScrollPosition,
+            currentScroll: window.scrollY
+        });
+        
+        // FORCE scroll to position
+        window.scrollTo({
+            top: Math.max(0, targetScrollPosition),
+            behavior: 'smooth'
+        });
+        
+        debugLog('✅ Scroll command executed to position:', targetScrollPosition);
+    }
+    
+    // Mobile menu toggle
     navToggle.addEventListener('click', function(e) {
         e.preventDefault();
         e.stopPropagation();
-        e.stopImmediatePropagation(); // Prevent any other handlers
         
-        debugLog('Nav toggle clicked');
-        
-        // Toggle menu state
         const isActive = navMenu.classList.contains('active');
         
         if (isActive) {
@@ -237,76 +265,58 @@ function initNavigation() {
             openMenu();
         }
         
-        // Prevent any default scroll behavior
         return false;
     });
     
-    // Prevent event bubbling on the toggle button - ENHANCED
-    navToggle.addEventListener('touchstart', function(e) {
-        e.stopPropagation();
-        e.stopImmediatePropagation();
-    }, { passive: true });
-    
-    navToggle.addEventListener('touchend', function(e) {
-        e.stopPropagation();
-        e.stopImmediatePropagation();
-    }, { passive: true });
-    
-    // FIXED: Close menu when clicking nav links and scroll to sections
+    // BULLETPROOF navigation link handling
     const navLinks = document.querySelectorAll('.nav-link');
     navLinks.forEach(link => {
         link.addEventListener('click', function(e) {
-            e.preventDefault(); // Always prevent default
+            e.preventDefault();
             e.stopPropagation();
             
             const href = this.getAttribute('href');
-            const targetSection = this.getAttribute('data-section');
+            debugLog('🔗 Nav link clicked:', {
+                href: href,
+                text: this.textContent.trim(),
+                isMobile: window.innerWidth <= 768
+            });
             
-            debugLog('Nav link clicked:', { href, targetSection, text: this.textContent });
+            // Extract section ID from href
+            let sectionId = '';
+            if (href && href.startsWith('#')) {
+                sectionId = href.substring(1); // Remove the #
+            }
             
-            // Close menu first
-            closeMenu();
+            debugLog('🎯 Extracted section ID:', sectionId);
             
-            // Wait a moment for menu close animation, then scroll
-            setTimeout(() => {
-                if (href && href.startsWith('#')) {
-                    const targetElement = document.querySelector(href);
-                    if (targetElement) {
-                        // Calculate offset for fixed navbar
-                        const navbarHeight = window.innerWidth <= 768 ? 70 : 80;
-                        const targetPosition = targetElement.offsetTop - navbarHeight;
-                        
-                        // Smooth scroll to target
-                        window.scrollTo({
-                            top: targetPosition,
-                            behavior: 'smooth'
-                        });
-                        
-                        debugLog('Scrolled to section:', href);
-                        
-                        // Track analytics
-                        trackEvent('nav_click', {
-                            section: targetSection || href.replace('#', ''),
-                            device_type: 'mobile'
-                        });
-                    } else {
-                        debugLog('Target element not found:', href);
+            // Close menu first (if mobile)
+            if (window.innerWidth <= 768) {
+                closeMenu();
+                
+                // Wait for menu close, then scroll
+                setTimeout(() => {
+                    if (sectionId) {
+                        scrollToSection(sectionId);
                     }
+                }, 400); // Give menu time to close
+            } else {
+                // Desktop - scroll immediately
+                if (sectionId) {
+                    scrollToSection(sectionId);
                 }
-            }, 300); // Wait for menu close animation
+            }
             
             return false;
         });
     });
     
-    // Close menu when clicking outside - IMPROVED
+    // Close menu when clicking outside
     document.addEventListener('click', function(e) {
-        // Check if click is outside nav elements
         const isClickInsideNav = navMenu.contains(e.target) || navToggle.contains(e.target);
         
         if (!isClickInsideNav && navMenu.classList.contains('active')) {
             closeMenu();
-            debugLog('Menu closed via outside click');
         }
     });
     
@@ -314,54 +324,19 @@ function initNavigation() {
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape' && navMenu.classList.contains('active')) {
             closeMenu();
-            debugLog('Menu closed via escape key');
         }
     });
     
-    // Handle window resize - IMPROVED
+    // Handle window resize
     let resizeTimeout;
     window.addEventListener('resize', function() {
         clearTimeout(resizeTimeout);
         resizeTimeout = setTimeout(() => {
             if (window.innerWidth > 768 && navMenu.classList.contains('active')) {
                 closeMenu();
-                debugLog('Menu closed due to window resize');
             }
         }, 100);
     });
-    
-    // Desktop navigation click handling
-    if (window.innerWidth > 768) {
-        navLinks.forEach(link => {
-            link.addEventListener('click', function(e) {
-                const href = this.getAttribute('href');
-                const targetSection = this.getAttribute('data-section');
-                
-                if (href && href.startsWith('#')) {
-                    e.preventDefault();
-                    
-                    const targetElement = document.querySelector(href);
-                    if (targetElement) {
-                        const navbarHeight = 80;
-                        const targetPosition = targetElement.offsetTop - navbarHeight;
-                        
-                        window.scrollTo({
-                            top: targetPosition,
-                            behavior: 'smooth'
-                        });
-                        
-                        debugLog('Desktop scrolled to section:', href);
-                        
-                        // Track analytics
-                        trackEvent('nav_click', {
-                            section: targetSection || href.replace('#', ''),
-                            device_type: 'desktop'
-                        });
-                    }
-                }
-            });
-        });
-    }
     
     // Navbar scroll effect
     window.addEventListener('scroll', function() {
@@ -377,7 +352,7 @@ function initNavigation() {
         }
     });
     
-    debugLog('Enhanced navigation system initialized');
+    debugLog('🚀 BULLETPROOF navigation system initialized');
 }
 
 // Contact Form Functionality
