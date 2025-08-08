@@ -268,18 +268,23 @@ function initNavigation() {
         return false;
     });
     
-    // BULLETPROOF navigation link handling
+    // BULLETPROOF navigation link handling - PREVENT ALL OTHER HANDLERS
     const navLinks = document.querySelectorAll('.nav-link');
     navLinks.forEach(link => {
+        // Remove any existing event listeners first
+        link.removeEventListener('click', arguments.callee);
+        
         link.addEventListener('click', function(e) {
             e.preventDefault();
             e.stopPropagation();
+            e.stopImmediatePropagation(); // Stop ALL other handlers
             
             const href = this.getAttribute('href');
             debugLog('🔗 Nav link clicked:', {
                 href: href,
                 text: this.textContent.trim(),
-                isMobile: window.innerWidth <= 768
+                isMobile: window.innerWidth <= 768,
+                scrollPosition: window.scrollY
             });
             
             // Extract section ID from href
@@ -290,16 +295,38 @@ function initNavigation() {
             
             debugLog('🎯 Extracted section ID:', sectionId);
             
-            // Close menu first (if mobile)
+            // IMMEDIATELY scroll on mobile (before closing menu)
             if (window.innerWidth <= 768) {
-                closeMenu();
-                
-                // Wait for menu close, then scroll
-                setTimeout(() => {
-                    if (sectionId) {
-                        scrollToSection(sectionId);
-                    }
-                }, 400); // Give menu time to close
+                // Calculate scroll position BEFORE closing menu
+                const targetElement = document.getElementById(sectionId);
+                if (targetElement) {
+                    const elementRect = targetElement.getBoundingClientRect();
+                    const absoluteElementTop = elementRect.top + window.scrollY;
+                    const navbarHeight = 70;
+                    const targetScrollPosition = Math.max(0, absoluteElementTop - navbarHeight);
+                    
+                    debugLog('📐 PRE-CLOSE Scroll calculation:', {
+                        elementTop: absoluteElementTop,
+                        navbarHeight: navbarHeight,
+                        targetPosition: targetScrollPosition,
+                        currentScroll: window.scrollY
+                    });
+                    
+                    // Store the target position
+                    const finalScrollPosition = targetScrollPosition;
+                    
+                    // Close menu
+                    closeMenu();
+                    
+                    // Immediately scroll to target (override the menu close scroll restoration)
+                    setTimeout(() => {
+                        window.scrollTo({
+                            top: finalScrollPosition,
+                            behavior: 'smooth'
+                        });
+                        debugLog('✅ FINAL scroll executed to position:', finalScrollPosition);
+                    }, 50); // Very quick delay
+                }
             } else {
                 // Desktop - scroll immediately
                 if (sectionId) {
@@ -308,7 +335,7 @@ function initNavigation() {
             }
             
             return false;
-        });
+        }, true); // Use capture phase to run before other handlers
     });
     
     // Close menu when clicking outside
@@ -598,20 +625,20 @@ function initSmoothScrolling() {
                 });
             }
             
-            // Set up navigation links
-            const navLinks = document.querySelectorAll('.nav-link[href^="#"], [data-scroll-to]');
-            navLinks.forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const targetId = this.getAttribute('href') || this.getAttribute('data-scroll-to');
-                    const targetElement = document.querySelector(targetId);
-                    
-                    if (targetElement) {
-                        smoothScrollToElement(targetElement, 80);
-                        debugLog('🎯 Lenis smooth scrolling to:', targetId);
-                    }
-                });
-            });
+            // DISABLED: Set up navigation links (conflicts with bulletproof nav)
+            // const navLinks = document.querySelectorAll('.nav-link[href^="#"], [data-scroll-to]');
+            // navLinks.forEach(link => {
+            //     link.addEventListener('click', function(e) {
+            //         e.preventDefault();
+            //         const targetId = this.getAttribute('href') || this.getAttribute('data-scroll-to');
+            //         const targetElement = document.querySelector(targetId);
+            //         
+            //         if (targetElement) {
+            //             smoothScrollToElement(targetElement, 80);
+            //             debugLog('🎯 Lenis smooth scrolling to:', targetId);
+            //         }
+            //     });
+            // });
             
             // Add smooth scrolling to elements with data-scroll-to attribute
             document.querySelectorAll('[data-scroll-to]').forEach(element => {
@@ -803,20 +830,20 @@ function initSmoothScrolling() {
             scrollAnimation();
         }
         
-        // Set up navigation links
-        const navLinks = document.querySelectorAll('.nav-link[href^="#"], [data-scroll-to]');
-        navLinks.forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                const targetId = this.getAttribute('href') || this.getAttribute('data-scroll-to');
-                const targetElement = document.querySelector(targetId);
-                
-                if (targetElement) {
-                    smoothScrollToElement(targetElement, 80);
-                    debugLog('🎯 Fallback smooth scrolling to:', targetId);
-                }
-            });
-        });
+        // DISABLED: Set up navigation links (conflicts with bulletproof nav)
+        // const navLinks = document.querySelectorAll('.nav-link[href^="#"], [data-scroll-to]');
+        // navLinks.forEach(link => {
+        //     link.addEventListener('click', function(e) {
+        //         e.preventDefault();
+        //         const targetId = this.getAttribute('href') || this.getAttribute('data-scroll-to');
+        //         const targetElement = document.querySelector(targetId);
+        //         
+        //         if (targetElement) {
+        //             smoothScrollToElement(targetElement, 80);
+        //             debugLog('🎯 Fallback smooth scrolling to:', targetId);
+        //         }
+        //     });
+        // });
         
         // Add smooth scrolling to elements with data-scroll-to attribute
         document.querySelectorAll('[data-scroll-to]').forEach(element => {
