@@ -5,14 +5,31 @@
     box-sizing: border-box;
 }
 
-/* Import fonts that match Lenis/darkroom.engineering style */
+/* Import custom Horizon fonts */
+@font-face {
+    font-family: 'Horizon';
+    src: url('https://github.com/projectservan8n/opusautomations/raw/main/assets/fonts/horizon.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Horizon Outlined';
+    src: url('https://github.com/projectservan8n/opusautomations/raw/main/assets/fonts/horizon_outlined.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* Import backup fonts */
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap');
 
 /* Body and Main Content Adjustments for Fixed Navbar */
 body {
-    font-family: 'Space Grotesk', 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-family: 'Horizon', 'Space Grotesk', 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     background: #0a0a0a;
     color: #ffffff;
     line-height: 1.6;
@@ -99,12 +116,14 @@ body {
 }
 
 .logo-text {
+    font-family: 'Horizon Outlined', 'Horizon', 'Space Grotesk', sans-serif;
     font-size: 1.5rem;
     font-weight: 700;
     background: linear-gradient(135deg, #8b5cf6, #ec4899);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+    letter-spacing: 0.02em;
 }
 
 .logo-image {
@@ -122,6 +141,7 @@ body {
 }
 
 .nav-link {
+    font-family: 'Horizon', 'Space Grotesk', sans-serif;
     color: #e5e7eb;
     text-decoration: none;
     font-weight: 500;
@@ -130,6 +150,7 @@ body {
     border-radius: 0.375rem;
     transition: all 0.3s ease;
     position: relative;
+    letter-spacing: 0.01em;
 }
 
 .nav-link:hover {
@@ -246,12 +267,13 @@ body {
         border-bottom: 1px solid rgba(139, 92, 246, 0.1) !important;
         margin: 0 !important;
         background: none !important;
-        font-family: 'Space Grotesk', sans-serif !important;
+        font-family: 'Horizon', 'Space Grotesk', sans-serif !important;
         text-transform: uppercase !important;
     }
     
     /* Navigation Links - FIXED */
     .nav-link {
+        font-family: 'Horizon', 'Space Grotesk', sans-serif !important;
         font-size: 1rem !important;
         margin: 0 !important;
         padding: 1.2rem 1.5rem !important;
@@ -270,7 +292,6 @@ body {
         letter-spacing: 0.02em !important;
         position: relative !important;
         min-height: 60px !important;
-        font-family: 'Space Grotesk', sans-serif !important;
         text-transform: uppercase !important;
         font-size: 0.9rem !important;
         cursor: pointer !important;
@@ -428,13 +449,17 @@ body.menu-open {
 }
 
 .gradient-text {
+    font-family: 'Horizon', 'Space Grotesk', sans-serif;
     background: linear-gradient(135deg, #8b5cf6, #ec4899);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+    font-weight: 700;
+    letter-spacing: -0.01em;
 }
 
 .btn {
+    font-family: 'Horizon', 'Space Grotesk', sans-serif;
     padding: 0.75rem 1.5rem;
     border: none;
     border-radius: 0.5rem;
@@ -448,6 +473,7 @@ body.menu-open {
     display: flex;
     align-items: center;
     justify-content: center;
+    letter-spacing: 0.01em;
 }
 
 .btn-primary {
@@ -498,10 +524,12 @@ body.menu-open {
 }
 
 .hero-title {
+    font-family: 'Horizon', 'Space Grotesk', sans-serif;
     font-size: 3.5rem;
     font-weight: 800;
     line-height: 1.1;
     margin-bottom: 1.5rem;
+    letter-spacing: -0.02em;
 }
 
 .hero-subtitle {
@@ -636,9 +664,11 @@ body.menu-open {
 }
 
 .section-title {
+    font-family: 'Horizon', 'Space Grotesk', sans-serif;
     font-size: 2.5rem;
     font-weight: 700;
     margin-bottom: 1rem;
+    letter-spacing: -0.01em;
 }
 
 .section-subtitle {
