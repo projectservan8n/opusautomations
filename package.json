@@ -1,23 +1,42 @@
 {
-  "name": "opus-automations",
-  "version": "1.0.0",
-  "description": "AI-Powered Business Automation Solutions",
+  "name": "opus-automations-merged",
+  "version": "2.0.0",
+  "description": "AI-Powered Business Automation Solutions - Complete Site with Products",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js",
     "build": "npm install --only=production",
     "test": "node -e \"console.log('Health check test'); process.exit(0);\"",
-    "postinstall": "echo 'Installation complete'"
+    "postinstall": "echo 'Installation complete - Merged site ready'",
+    "lint": "echo 'Linting skipped - no linter configured'",
+    "clean": "echo 'Cleaning build artifacts...' && rm -rf node_modules/.cache || true",
+    "health": "curl -f http://localhost:8080/health || exit 1"
   },
   "keywords": [
     "automation",
     "business-automation",
     "workflow-automation",
     "ai",
+    "artificial-intelligence",
+    "consulting",
+    "products",
     "material-management",
     "process-optimization",
-    "custom-software"
+    "custom-software",
+    "startup-automation",
+    "enterprise-automation",
+    "focusflow",
+    "supplychain",
+    "pulsekpi",
+    "autocaption",
+    "copyforge",
+    "productivity",
+    "performance-management",
+    "kpi-automation",
+    "content-generation",
+    "transcription",
+    "ai-copywriting"
   ],
   "author": {
     "name": "Tony",
@@ -25,6 +44,15 @@
     "url": "https://opusautomations.com"
   },
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/opus-automations/merged-site.git"
+  },
+  "bugs": {
+    "url": "https://github.com/opus-automations/merged-site/issues",
+    "email": "tony@opusautomations.com"
+  },
+  "homepage": "https://opusautomations.com",
   "engines": {
     "node": ">=18.0.0",
     "npm": ">=9.0.0"
@@ -39,5 +67,62 @@
   },
   "devDependencies": {
     "nodemon": "^3.0.2"
-  }
+  },
+  "config": {
+    "site_type": "merged_single_page",
+    "features": [
+      "consulting_services",
+      "product_catalog",
+      "case_studies",
+      "contact_forms",
+      "assessment_modal",
+      "smooth_scrolling",
+      "particles_background",
+      "mobile_navigation",
+      "analytics_tracking"
+    ],
+    "products": [
+      "focusflow_performance_platform",
+      "supplychain_command_center",
+      "pulsekpi_daily_insights",
+      "pulsekpi_weekly_review",
+      "pulsekpi_monthly_executive",
+      "autocaption_pro",
+      "copyforge_ai"
+    ]
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead",
+    "not ie 11"
+  ],
+  "funding": {
+    "type": "individual",
+    "url": "https://calendly.com/tony-opusautomations/30min"
+  },
+  "private": false,
+  "preferGlobal": false,
+  "files": [
+    "server.js",
+    "index.html",
+    "style.css",
+    "script.js",
+    "package.json",
+    "railway.json",
+    "README.md"
+  ],
+  "directories": {
+    "doc": "./docs",
+    "example": "./examples"
+  },
+  "os": [
+    "darwin",
+    "linux",
+    "win32"
+  ],
+  "cpu": [
+    "x64",
+    "arm64"
+  ]
 }
