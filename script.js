@@ -62,7 +62,7 @@ function initTwemoji() {
     }
 }
 
-// Floating Particles Animation
+// Enhanced Floating Particles Animation - More Visible
 function initParticles() {
     const particlesContainer = document.getElementById('particles');
     if (!particlesContainer) {
@@ -70,7 +70,7 @@ function initParticles() {
         return;
     }
     
-    const particleCount = 50;
+    const particleCount = 80; // Increased count for more visibility
     
     function createParticle() {
         const particle = document.createElement('div');
@@ -78,13 +78,32 @@ function initParticles() {
         
         // Random starting position
         particle.style.left = Math.random() * 100 + '%';
-        particle.style.animationDuration = (Math.random() * 20 + 10) + 's';
-        particle.style.animationDelay = Math.random() * 20 + 's';
+        particle.style.bottom = '-10px'; // Start from bottom
         
-        // Random size
-        const size = Math.random() * 4 + 2;
+        // More visible styling
+        const size = Math.random() * 6 + 3; // Larger particles (3-9px)
         particle.style.width = size + 'px';
         particle.style.height = size + 'px';
+        
+        // Enhanced visibility
+        particle.style.background = `linear-gradient(45deg, 
+            rgba(139, 92, 246, ${0.6 + Math.random() * 0.4}), 
+            rgba(236, 72, 153, ${0.5 + Math.random() * 0.3})
+        )`;
+        particle.style.borderRadius = '50%';
+        particle.style.position = 'absolute';
+        particle.style.pointerEvents = 'none';
+        particle.style.zIndex = '1';
+        
+        // Add glow effect for better visibility
+        particle.style.boxShadow = `0 0 ${size * 2}px rgba(139, 92, 246, 0.3)`;
+        
+        // Animation properties
+        const duration = Math.random() * 15 + 10; // 10-25 seconds
+        const horizontalDrift = (Math.random() - 0.5) * 200; // Drift left/right
+        
+        particle.style.animation = `floatUp ${duration}s linear forwards`;
+        particle.style.setProperty('--horizontal-drift', horizontalDrift + 'px');
         
         particlesContainer.appendChild(particle);
         
@@ -93,18 +112,77 @@ function initParticles() {
             if (particle.parentNode) {
                 particle.parentNode.removeChild(particle);
             }
-        }, 40000);
+        }, duration * 1000 + 1000);
     }
     
-    // Create initial particles
+    // Create initial burst of particles
     for (let i = 0; i < particleCount; i++) {
-        setTimeout(createParticle, Math.random() * 2000);
+        setTimeout(createParticle, Math.random() * 3000);
     }
     
-    // Continuously create new particles
-    setInterval(createParticle, 400);
+    // Continuously create new particles more frequently
+    setInterval(createParticle, 200); // More frequent creation
     
-    debugLog('Particles system initialized');
+    // Add the CSS animation
+    addParticlesCSS();
+    
+    debugLog('Enhanced particles system initialized with', particleCount, 'particles');
+}
+
+// Add enhanced particles CSS
+function addParticlesCSS() {
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0) translateX(0) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) translateX(var(--horizontal-drift, 0px)) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        .particles-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
+        }
+        
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+            will-change: transform, opacity;
+        }
+        
+        /* Pulsing effect for some particles */
+        .particle:nth-child(3n) {
+            animation-name: floatUp, pulse;
+            animation-duration: inherit, 3s;
+            animation-timing-function: linear, ease-in-out;
+            animation-iteration-count: 1, infinite;
+            animation-fill-mode: forwards, none;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+    `;
+    document.head.appendChild(style);
 }
 
 // Enhanced Navigation Functionality
