@@ -404,11 +404,11 @@ function initSmoothScrolling() {
                 return;
             }
             
-            // Official Lenis CDN sources (from darkroomengineering/lenis)
+            // Official Lenis CDN sources (CSP-approved)
             const lenisUrls = [
-                'https://unpkg.com/lenis@1.2.1/dist/lenis.min.js',
                 'https://cdn.jsdelivr.net/npm/lenis@1.2.1/dist/lenis.min.js',
-                'https://unpkg.com/lenis@latest/dist/lenis.min.js'
+                'https://cdnjs.cloudflare.com/ajax/libs/lenis/1.2.1/lenis.min.js',
+                'https://unpkg.com/lenis@1.2.1/dist/lenis.min.js'
             ];
             
             let currentUrlIndex = 0;
