@@ -64,19 +64,6 @@ app.use(express.static(path.join(__dirname), {
     }
 }));
 
-// Serve workflows directory with no caching
-app.use('/workflows', express.static(path.join(__dirname, 'workflows'), {
-    maxAge: 0,
-    etag: false,
-    lastModified: false,
-    setHeaders: (res, path) => {
-        res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
-        res.setHeader('Pragma', 'no-cache');
-        res.setHeader('Expires', '0');
-        res.setHeader('Surrogate-Control', 'no-store');
-    }
-}));
-
 // Routes
 
 // Health check
@@ -88,7 +75,8 @@ app.get('/health', (req, res) => {
         memory: process.memoryUsage(),
         environment: process.env.NODE_ENV || 'development',
         port: PORT,
-        n8n_configured: !!N8N_WEBHOOK_URL
+        n8n_configured: !!N8N_WEBHOOK_URL,
+        site_type: 'merged_single_page'
     };
     
     console.log('Health check requested:', healthData);
@@ -124,14 +112,16 @@ app.post('/api/contact', contactLimiter, async (req, res) => {
             ip: req.ip,
             userAgent: req.get('User-Agent'),
             headers: req.headers,
-            leadScore: calculateLeadScore(req.body)
+            leadScore: calculateLeadScore(req.body),
+            source: 'merged_site'
         };
         
         console.log('📝 Contact form submission:', {
             name, email, company, revenue, operations,
             timestamp: new Date().toISOString(),
             ip: req.ip,
-            leadScore: webhookData.leadScore
+            leadScore: webhookData.leadScore,
+            source: 'merged_site'
         });
         
         // Send to n8n webhook - hardcoded URL
@@ -145,7 +135,7 @@ app.post('/api/contact', contactLimiter, async (req, res) => {
                     timeout: 15000,
                     headers: {
                         'Content-Type': 'application/json',
-                        'User-Agent': 'Opus-Automations-Server'
+                        'User-Agent': 'Opus-Automations-Merged-Server'
                     }
                 });
                 
@@ -230,6 +220,11 @@ function calculateLeadScore(data) {
         score += 15;
     }
     
+    // Assessment data bonus (if it's an assessment submission)
+    if (data.type === 'assessment') {
+        score += 20; // Assessment submissions are higher intent
+    }
+    
     return Math.min(score, 100);
 }
 
@@ -238,10 +233,32 @@ app.post('/api/analytics', (req, res) => {
     try {
         const { event, data } = req.body;
         
-        // Log analytics event
-        console.log('📊 Analytics event:', event, data);
+        // Log analytics event with enhanced data for merged site
+        console.log('📊 Analytics event:', event, {
+            ...data,
+            site_type: 'merged_single_page',
+            timestamp: new Date().toISOString()
+        });
         
-        // Note: No analytics webhook configured - just log
+        // Enhanced analytics for product interactions
+        if (event === 'product_interest') {
+            console.log('🛍️ Product Interest:', {
+                product: data.product_name,
+                type: data.product_type,
+                timestamp: new Date().toISOString(),
+                user_agent: data.user_agent
+            });
+        }
+        
+        // Track section engagement
+        if (event === 'cta_click') {
+            console.log('🎯 CTA Click:', {
+                button: data.button_text,
+                section: data.section,
+                is_calendly: data.is_calendly,
+                timestamp: new Date().toISOString()
+            });
+        }
         
         res.status(200).json({ success: true });
     } catch (error) {
@@ -273,70 +290,119 @@ app.post('/api/webhook/material-order', express.raw({ type: 'application/json' }
     }
 });
 
-// Serve main routes
+// Main route - serve the merged single page
 app.get('/', (req, res) => {
+    console.log('📄 Serving main page (merged site)');
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-// Serve workflows page
+// Handle old workflows routes - redirect to main page with anchor
 app.get('/workflows', (req, res) => {
-    res.sendFile(path.join(__dirname, 'workflows', 'index.html'));
+    console.log('🔄 Redirecting /workflows to /#products');
+    res.redirect('/#products');
 });
 
 app.get('/workflows/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'workflows', 'index.html'));
+    console.log('🔄 Redirecting /workflows/ to /#products');
+    res.redirect('/#products');
 });
 
 // Serve individual sections from main page with anchors
-app.get('/case-studies', (req, res) => {
-    res.redirect('/#case-studies');
-});
-
-app.get('/case-studies/', (req, res) => {
-    res.redirect('/#case-studies');
-});
-
-app.get('/about', (req, res) => {
-    res.redirect('/#about');
-});
-
-app.get('/about/', (req, res) => {
-    res.redirect('/#about');
-});
-
-app.get('/contact', (req, res) => {
-    res.redirect('/#contact');
-});
-
-app.get('/contact/', (req, res) => {
-    res.redirect('/#contact');
-});
-
 app.get('/services', (req, res) => {
+    console.log('🔄 Redirecting /services to /#services');
     res.redirect('/#services');
 });
 
 app.get('/services/', (req, res) => {
+    console.log('🔄 Redirecting /services/ to /#services');
     res.redirect('/#services');
+});
+
+app.get('/products', (req, res) => {
+    console.log('🔄 Redirecting /products to /#products');
+    res.redirect('/#products');
+});
+
+app.get('/products/', (req, res) => {
+    console.log('🔄 Redirecting /products/ to /#products');
+    res.redirect('/#products');
+});
+
+app.get('/case-studies', (req, res) => {
+    console.log('🔄 Redirecting /case-studies to /#case-studies');
+    res.redirect('/#case-studies');
+});
+
+app.get('/case-studies/', (req, res) => {
+    console.log('🔄 Redirecting /case-studies/ to /#case-studies');
+    res.redirect('/#case-studies');
+});
+
+app.get('/about', (req, res) => {
+    console.log('🔄 Redirecting /about to /#about');
+    res.redirect('/#about');
+});
+
+app.get('/about/', (req, res) => {
+    console.log('🔄 Redirecting /about/ to /#about');
+    res.redirect('/#about');
+});
+
+app.get('/contact', (req, res) => {
+    console.log('🔄 Redirecting /contact to /#contact');
+    res.redirect('/#contact');
+});
+
+app.get('/contact/', (req, res) => {
+    console.log('🔄 Redirecting /contact/ to /#contact');
+    res.redirect('/#contact');
 });
 
 // Serve material management case study (future expansion)
 app.get('/workflows/material-management', (req, res) => {
-    // For now, redirect to workflows page with anchor
-    res.redirect('/workflows#products');
+    console.log('🔄 Redirecting /workflows/material-management to /#products');
+    res.redirect('/#products');
 });
 
 app.get('/workflows/material-management/', (req, res) => {
-    res.redirect('/workflows#products');
+    console.log('🔄 Redirecting /workflows/material-management/ to /#products');
+    res.redirect('/#products');
 });
 
 app.get('/workflows/material-management/demo', (req, res) => {
-    // Future: serve actual material management demo
+    console.log('📋 Material management demo requested');
     res.json({ 
         message: 'Material Management Demo coming soon',
         contact: 'tony@opusautomations.com',
-        status: 'development'
+        status: 'development',
+        redirect_to: '/#products'
     });
+});
+
+// Product-specific routes (for future individual product pages)
+app.get('/products/focusflow', (req, res) => {
+    console.log('🔄 Redirecting FocusFlow to /#products');
+    res.redirect('/#products');
+});
+
+app.get('/products/supplychain', (req, res) => {
+    console.log('🔄 Redirecting SupplyChain to /#products');
+    res.redirect('/#products');
+});
+
+app.get('/products/pulsekpi', (req, res) => {
+    console.log('🔄 Redirecting PulseKPI to /#products');
+    res.redirect('/#products');
+});
+
+app.get('/products/autocaption', (req, res) => {
+    console.log('🔄 Redirecting AutoCaption to /#products');
+    res.redirect('/#products');
+});
+
+app.get('/products/copyforge', (req, res) => {
+    console.log('🔄 Redirecting CopyForge to /#products');
+    res.redirect('/#products');
 });
 
 // API documentation endpoint
@@ -345,13 +411,25 @@ app.get('/api/docs', (req, res) => {
         name: 'Opus Automations API',
         version: '1.0.0',
         port: PORT,
+        site_type: 'merged_single_page',
         endpoints: {
             'POST /api/contact': 'Submit contact form (proxied to n8n)',
             'POST /api/analytics': 'Track analytics events',
             'POST /api/webhook/material-order': 'Material order webhook',
             'GET /health': 'Health check',
-            'GET /workflows': 'Products page',
-            'GET /': 'Main homepage'
+            'GET /': 'Main homepage (merged site)',
+            'GET /products': 'Redirect to /#products',
+            'GET /services': 'Redirect to /#services',
+            'GET /about': 'Redirect to /#about',
+            'GET /contact': 'Redirect to /#contact'
+        },
+        redirects: {
+            '/workflows': '/#products',
+            '/products': '/#products',
+            '/services': '/#services',
+            '/case-studies': '/#case-studies',
+            '/about': '/#about',
+            '/contact': '/#contact'
         },
         integrations: {
             n8n_webhook: !!N8N_WEBHOOK_URL,
@@ -365,9 +443,68 @@ app.get('/api/docs', (req, res) => {
     });
 });
 
+// Sitemap for SEO (merged site)
+app.get('/sitemap.xml', (req, res) => {
+    const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+        <loc>${req.protocol}://${req.get('host')}/</loc>
+        <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>1.0</priority>
+    </url>
+    <url>
+        <loc>${req.protocol}://${req.get('host')}/#services</loc>
+        <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>${req.protocol}://${req.get('host')}/#products</loc>
+        <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.9</priority>
+    </url>
+    <url>
+        <loc>${req.protocol}://${req.get('host')}/#case-studies</loc>
+        <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    <url>
+        <loc>${req.protocol}://${req.get('host')}/#about</loc>
+        <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+    <url>
+        <loc>${req.protocol}://${req.get('host')}/#contact</loc>
+        <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+</urlset>`;
+    
+    res.set('Content-Type', 'text/xml');
+    res.send(sitemap);
+});
+
+// Robots.txt for SEO
+app.get('/robots.txt', (req, res) => {
+    const robots = `User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /health
+
+Sitemap: ${req.protocol}://${req.get('host')}/sitemap.xml`;
+    
+    res.set('Content-Type', 'text/plain');
+    res.send(robots);
+});
+
 // 404 handler - serve main page for SPA routing
 app.use((req, res) => {
-    console.log('404 for path:', req.path);
+    console.log('404 for path:', req.path, '- serving main page');
     res.status(404).sendFile(path.join(__dirname, 'index.html'));
 });
 
@@ -396,7 +533,8 @@ app.listen(PORT, '0.0.0.0', () => {
     console.log(`🔗 n8n webhook: ${N8N_WEBHOOK_URL ? 'Configured' : 'Not configured'}`);
     console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
     console.log(`🔗 Health check: http://localhost:${PORT}/health`);
-    console.log(`🏠 Homepage: http://localhost:${PORT}/`);
-    console.log(`📦 Products: http://localhost:${PORT}/workflows`);
-    console.log('✅ Server startup complete');
+    console.log(`🏠 Homepage (merged): http://localhost:${PORT}/`);
+    console.log(`📦 Products: http://localhost:${PORT}/#products`);
+    console.log(`🔄 All old routes redirect to main page with anchors`);
+    console.log('✅ Server startup complete - MERGED SITE READY');
 });
