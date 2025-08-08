@@ -522,6 +522,9 @@ function initSmoothScrolling() {
                 updateNavbarBackground(e.scroll);
             });
             
+            // Initialize nav click effects
+            addNavClickEffects();
+            
             // Handle window resize
             window.addEventListener('resize', () => {
                 lenis.resize();
@@ -734,6 +737,9 @@ function initSmoothScrolling() {
             }
         }, { passive: true });
         
+        // Initialize nav click effects
+        addNavClickEffects();
+        
         // Expose functions
         window.smoothScrollToElement = smoothScrollToElement;
         window.getCurrentScrollY = () => currentScrollY;
@@ -741,7 +747,7 @@ function initSmoothScrolling() {
         debugLog('🚀 Enhanced fallback smooth scrolling initialized (heraops.com inspired)');
     }
     
-    // Update navbar background based on scroll position
+    // Update navbar background and active states based on scroll position
     function updateNavbarBackground(scrollY) {
         const navbar = document.querySelector('.navbar');
         if (navbar) {
@@ -753,9 +759,93 @@ function initSmoothScrolling() {
                 navbar.style.backdropFilter = 'blur(10px)';
             }
         }
+        
+        // Update active nav states based on scroll position
+        updateActiveNavState(scrollY);
     }
     
-    // Add optimized CSS for smooth scrolling
+    // Update active navigation state with purple glow
+    function updateActiveNavState(scrollY) {
+        const navLinks = document.querySelectorAll('.nav-link');
+        const sections = [
+            { id: 'services', element: document.getElementById('services') },
+            { id: 'case-studies', element: document.getElementById('case-studies') },
+            { id: 'about', element: document.getElementById('about') },
+            { id: 'contact', element: document.getElementById('contact') }
+        ];
+        
+        // Remove all active states first
+        navLinks.forEach(link => {
+            link.classList.remove('nav-active-glow');
+        });
+        
+        // Determine which section is currently in view
+        let currentSection = '';
+        const viewportHeight = window.innerHeight;
+        const scrollPosition = scrollY + viewportHeight / 2; // Middle of viewport
+        
+        // Check if we're at the very top (hero section)
+        if (scrollY < 200) {
+            currentSection = 'home';
+        } else {
+            // Find the section that's currently in the center of the viewport
+            for (let i = 0; i < sections.length; i++) {
+                const section = sections[i];
+                if (section.element) {
+                    const sectionTop = section.element.offsetTop;
+                    const sectionBottom = sectionTop + section.element.offsetHeight;
+                    
+                    if (scrollPosition >= sectionTop && scrollPosition < sectionBottom) {
+                        currentSection = section.id;
+                        break;
+                    }
+                }
+            }
+        }
+        
+        // Apply active glow to the current section's nav link
+        if (currentSection) {
+            const activeLink = document.querySelector(`.nav-link[href*="${currentSection}"]`);
+            if (activeLink) {
+                activeLink.classList.add('nav-active-glow');
+            }
+        }
+    }
+    
+    // Add click glow effect to nav links
+    function addNavClickEffects() {
+        const navLinks = document.querySelectorAll('.nav-link');
+        
+        navLinks.forEach(link => {
+            // Add click effect
+            link.addEventListener('click', function(e) {
+                // Remove glow from all links
+                navLinks.forEach(l => l.classList.remove('nav-active-glow'));
+                
+                // Add glow to clicked link
+                this.classList.add('nav-active-glow');
+                
+                // Add temporary click pulse effect
+                this.classList.add('nav-click-pulse');
+                setTimeout(() => {
+                    this.classList.remove('nav-click-pulse');
+                }, 300);
+            });
+            
+            // Add hover effects
+            link.addEventListener('mouseenter', function() {
+                if (!this.classList.contains('nav-active-glow')) {
+                    this.classList.add('nav-hover-glow');
+                }
+            });
+            
+            link.addEventListener('mouseleave', function() {
+                this.classList.remove('nav-hover-glow');
+            });
+        });
+    }
+    
+    // Add optimized CSS for smooth scrolling and nav effects
     function addSmoothScrollCSS() {
         const style = document.createElement('style');
         style.textContent = `
@@ -809,6 +899,100 @@ function initSmoothScrolling() {
                 text-rendering: optimizeSpeed;
                 -webkit-font-smoothing: antialiased;
                 -moz-osx-font-smoothing: grayscale;
+            }
+            
+            /* ===============================
+               PURPLE GLOW NAVIGATION EFFECTS 
+               =============================== */
+            
+            /* Active glow state (matches Products page) */
+            .nav-link.nav-active-glow {
+                color: #8b5cf6 !important;
+                background: rgba(139, 92, 246, 0.2) !important;
+                box-shadow: 
+                    0 0 20px rgba(139, 92, 246, 0.4),
+                    0 0 40px rgba(139, 92, 246, 0.2),
+                    inset 0 0 10px rgba(139, 92, 246, 0.1) !important;
+                border: 1px solid rgba(139, 92, 246, 0.5) !important;
+                font-weight: 600 !important;
+                transform: translateY(-1px) !important;
+                transition: all 0.3s ease !important;
+            }
+            
+            /* Hover glow state */
+            .nav-link.nav-hover-glow {
+                color: #a855f7 !important;
+                background: rgba(139, 92, 246, 0.1) !important;
+                box-shadow: 
+                    0 0 15px rgba(139, 92, 246, 0.3),
+                    0 0 30px rgba(139, 92, 246, 0.1) !important;
+                border: 1px solid rgba(139, 92, 246, 0.3) !important;
+                transform: translateY(-0.5px) !important;
+                transition: all 0.2s ease !important;
+            }
+            
+            /* Click pulse effect */
+            .nav-link.nav-click-pulse {
+                animation: navClickPulse 0.3s ease !important;
+            }
+            
+            @keyframes navClickPulse {
+                0% {
+                    transform: translateY(-1px) scale(1);
+                    box-shadow: 
+                        0 0 20px rgba(139, 92, 246, 0.4),
+                        0 0 40px rgba(139, 92, 246, 0.2);
+                }
+                50% {
+                    transform: translateY(-2px) scale(1.02);
+                    box-shadow: 
+                        0 0 30px rgba(139, 92, 246, 0.6),
+                        0 0 60px rgba(139, 92, 246, 0.3);
+                }
+                100% {
+                    transform: translateY(-1px) scale(1);
+                    box-shadow: 
+                        0 0 20px rgba(139, 92, 246, 0.4),
+                        0 0 40px rgba(139, 92, 246, 0.2);
+                }
+            }
+            
+            /* Enhanced nav-link base styles */
+            .nav-link {
+                position: relative;
+                transition: all 0.3s ease !important;
+                border: 1px solid transparent !important;
+                backdrop-filter: blur(10px) !important;
+            }
+            
+            /* Remove default hover/active states to avoid conflicts */
+            .nav-link:hover:not(.nav-active-glow):not(.nav-hover-glow) {
+                background: rgba(139, 92, 246, 0.05) !important;
+                color: #e5e7eb !important;
+            }
+            
+            .nav-link.active:not(.nav-active-glow) {
+                background: rgba(139, 92, 246, 0.1) !important;
+                color: #8b5cf6 !important;
+            }
+            
+            /* Mobile navigation glow effects */
+            @media (max-width: 768px) {
+                .nav-link.nav-active-glow {
+                    background: rgba(139, 92, 246, 0.25) !important;
+                    box-shadow: 
+                        0 0 25px rgba(139, 92, 246, 0.5),
+                        0 0 50px rgba(139, 92, 246, 0.3),
+                        inset 0 0 15px rgba(139, 92, 246, 0.2) !important;
+                    border-left: 4px solid #8b5cf6 !important;
+                }
+                
+                .nav-link.nav-hover-glow {
+                    background: rgba(139, 92, 246, 0.15) !important;
+                    box-shadow: 
+                        0 0 20px rgba(139, 92, 246, 0.4),
+                        0 0 40px rgba(139, 92, 246, 0.2) !important;
+                }
             }
         `;
         document.head.appendChild(style);
