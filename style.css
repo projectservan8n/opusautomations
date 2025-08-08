@@ -5,9 +5,14 @@
     box-sizing: border-box;
 }
 
+/* Import fonts that match Lenis/darkroom.engineering style */
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap');
+
 /* Body and Main Content Adjustments for Fixed Navbar */
 body {
-    font-family: 'San Francisco', -apple-system, BlinkMacSystemFont, 'Helvetica', 'Lucida Grande', 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    font-family: 'Space Grotesk', 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     background: #0a0a0a;
     color: #ffffff;
     line-height: 1.6;
@@ -156,7 +161,7 @@ body {
     border-radius: 2px;
 }
 
-/* Mobile Navigation Styles - INSTAGRAM STYLE ONLY */
+/* Mobile Navigation Styles - FIXED HAMBURGER */
 @media (max-width: 768px) {
     /* Body adjustments */
     body {
@@ -178,17 +183,35 @@ body {
         scroll-margin-top: 70px;
     }
     
-    /* Show hamburger toggle */
+    /* Show hamburger toggle - FIXED */
     .nav-toggle {
         display: flex !important;
+        position: relative !important;
+        z-index: 10000 !important;
+        background: none !important;
+        border: none !important;
+        cursor: pointer !important;
+        padding: 0.5rem !important;
     }
 
-    /* INSTAGRAM-STYLE SIDE MENU - ONLY THIS STYLE */
+    /* HAMBURGER BARS - FIXED STYLING */
+    .bar {
+        width: 25px !important;
+        height: 3px !important;
+        background: #8b5cf6 !important;
+        margin: 3px 0 !important;
+        transition: 0.3s ease !important;
+        border-radius: 2px !important;
+        display: block !important;
+    }
+
+    /* FIXED SIDE MENU */
     .nav-menu {
         position: fixed !important;
         top: 0 !important;
-        right: -320px !important;
-        width: 320px !important;
+        right: -100% !important;
+        width: 100% !important;
+        max-width: 320px !important;
         height: 100vh !important;
         background: rgba(10, 10, 10, 0.98) !important;
         backdrop-filter: blur(30px) !important;
@@ -198,20 +221,20 @@ body {
         align-items: stretch !important;
         padding: 0 !important;
         margin: 0 !important;
-        transition: right 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
-        z-index: 9998 !important;
+        transition: right 0.4s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+        z-index: 9999 !important;
         border-left: 1px solid rgba(139, 92, 246, 0.2) !important;
         box-shadow: -5px 0 25px rgba(0, 0, 0, 0.4) !important;
         overflow-y: auto !important;
         border-radius: 0 !important;
     }
     
-    /* Menu slides in when active */
+    /* Menu slides in when active - FIXED */
     .nav-menu.active {
         right: 0 !important;
     }
 
-    /* Menu Header - "Menu" text at top */
+    /* Menu Header */
     .nav-menu::before {
         content: 'Menu' !important;
         display: block !important;
@@ -223,16 +246,13 @@ body {
         border-bottom: 1px solid rgba(139, 92, 246, 0.1) !important;
         margin: 0 !important;
         background: none !important;
-        position: static !important;
-        left: auto !important;
-        top: auto !important;
-        width: auto !important;
-        height: auto !important;
+        font-family: 'Space Grotesk', sans-serif !important;
+        text-transform: uppercase !important;
     }
     
-    /* Navigation Links - Instagram Style */
+    /* Navigation Links - FIXED */
     .nav-link {
-        font-size: 1.1rem !important;
+        font-size: 1rem !important;
         margin: 0 !important;
         padding: 1.2rem 1.5rem !important;
         border-radius: 0 !important;
@@ -246,108 +266,62 @@ body {
         text-decoration: none !important;
         display: flex !important;
         align-items: center !important;
-        font-weight: 400 !important;
-        letter-spacing: 0.3px !important;
+        font-weight: 600 !important;
+        letter-spacing: 0.02em !important;
         position: relative !important;
         min-height: 60px !important;
-        max-width: none !important;
-        transform: none !important;
-        box-shadow: none !important;
-        backdrop-filter: none !important;
-        -webkit-backdrop-filter: none !important;
+        font-family: 'Space Grotesk', sans-serif !important;
+        text-transform: uppercase !important;
+        font-size: 0.9rem !important;
+        cursor: pointer !important;
+        user-select: none !important;
     }
 
-    /* First menu item spacing */
+    /* Remove borders on mobile nav links */
     .nav-link:first-child {
         margin-top: 0 !important;
         border-top: none !important;
     }
 
-    /* Icons before each menu item */
-    .nav-link::before {
-        width: 24px !important;
-        height: 24px !important;
-        margin-right: 1rem !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        font-size: 16px !important;
-        opacity: 0.8 !important;
-        background: none !important;
-        border: none !important;
-        position: static !important;
-    }
-
-    /* Specific menu item icons */
-    .nav-link[href*="services"]::before,
-    .nav-link[href^="/#services"]::before {
-        content: '🔧' !important;
-    }
-
-    .nav-link[href*="products"]::before,
-    .nav-link[href^="/#products"]::before {
-        content: '📦' !important;
-    }
-
-    .nav-link[href*="case-studies"]::before,
-    .nav-link[href^="/#case-studies"]::before {
-        content: '📊' !important;
-    }
-
-    .nav-link[href*="about"]::before,
-    .nav-link[href^="/#about"]::before {
-        content: '👤' !important;
-    }
-
-    .nav-link[href*="contact"]::before,
-    .nav-link[href^="/#contact"]::before {
-        content: '📧' !important;
-    }
-
-    /* Remove last border */
     .nav-link:last-child {
         border-bottom: none !important;
     }
 
-    /* Hover state */
-    .nav-link:hover {
+    /* Hover state - FIXED */
+    .nav-link:hover,
+    .nav-link:focus {
         background: rgba(139, 92, 246, 0.1) !important;
         color: #ffffff !important;
         transform: none !important;
         box-shadow: none !important;
     }
 
-    /* Active state - current page */
+    /* Active state - FIXED */
     .nav-link.active {
         background: rgba(139, 92, 246, 0.15) !important;
         color: #8b5cf6 !important;
-        font-weight: 500 !important;
+        font-weight: 700 !important;
         border-left: 3px solid #8b5cf6 !important;
-        transform: none !important;
-        box-shadow: none !important;
-    }
-
-    .nav-link.active::before {
-        opacity: 1 !important;
     }
     
-    /* Dark overlay when menu is open */
+    /* Dark overlay when menu is open - FIXED */
     body.menu-open::before {
         content: '' !important;
         position: fixed !important;
         top: 0 !important;
         left: 0 !important;
-        width: calc(100% - 320px) !important;
+        width: 100vw !important;
         height: 100vh !important;
-        background: rgba(0, 0, 0, 0.5) !important;
-        z-index: 9997 !important;
+        background: rgba(0, 0, 0, 0.6) !important;
+        z-index: 9998 !important;
         backdrop-filter: blur(2px) !important;
         display: block !important;
     }
     
-    /* Hamburger animation */
+    /* Hamburger animation - FIXED */
     .nav-toggle.active .bar:nth-child(1) {
         transform: rotate(45deg) translate(5px, 5px) !important;
+        background: #ffffff !important;
     }
     
     .nav-toggle.active .bar:nth-child(2) {
@@ -356,24 +330,26 @@ body {
     
     .nav-toggle.active .bar:nth-child(3) {
         transform: rotate(-45deg) translate(7px, -6px) !important;
+        background: #ffffff !important;
     }
 
-    /* Fixed navbar */
+    /* Fixed navbar - IMPROVED */
     .navbar {
         position: fixed !important;
         top: 0 !important;
-        z-index: 9999 !important;
+        z-index: 10000 !important;
         height: 70px !important;
+        width: 100% !important;
+        left: 0 !important;
+        right: 0 !important;
     }
 
     .nav-container {
         height: 70px !important;
         align-items: center !important;
-    }
-
-    /* REMOVE ANY OTHER MENU STYLES */
-    .nav-menu::after {
-        display: none !important;
+        display: flex !important;
+        justify-content: space-between !important;
+        padding: 0 1rem !important;
     }
 }
 
@@ -2553,30 +2529,4 @@ html {
 html {
     scrollbar-width: thin;
     scrollbar-color: rgba(139, 92, 246, 0.5) rgba(139, 92, 246, 0.1);
-}
-
-/* Twemoji emoji styling */
-img.emoji {
-    height: 1em;
-    width: 1em;
-    margin: 0 0.05em 0 0.1em;
-    vertical-align: -0.1em;
-    display: inline !important;
-}
-
-/* Service icon emojis */
-.service-icon img.emoji,
-.product-icon img.emoji {
-    height: 2.5rem !important;
-    width: 2.5rem !important;
-    margin: 0 !important;
-    vertical-align: baseline !important;
-}
-
-/* Contact icon emojis */
-.contact-icon img.emoji {
-    height: 1.25rem !important;
-    width: 1.25rem !important;
-    margin-right: 0.5rem !important;
-    vertical-align: middle !important;
 }
