@@ -392,362 +392,71 @@ function showNotification(message, type = 'info') {
     }, 5000);
 }
 
-// Ultra-Smooth Scrolling System (Fixed Version)
+// Lenis Smooth Scrolling Implementation (like heraops.com)
 function initSmoothScrolling() {
-    // Smooth scrolling state
-    let currentY = 0;
-    let targetY = 0;
-    let isScrolling = false;
-    let rafId = null;
-    let velocity = 0;
-    let lastTime = performance.now();
-    
-    // Configuration - optimized for smoothness
-    const CONFIG = {
-        lerp: 0.08,          // Linear interpolation factor (lower = smoother)
-        momentum: 0.92,       // Momentum decay
-        wheelMultiplier: 1.5, // Mouse wheel sensitivity
-        touchMultiplier: 2.0, // Touch scroll sensitivity
-        minDelta: 0.1,       // Minimum movement to continue animation
-        maxVelocity: 30      // Maximum scroll velocity
-    };
-    
-    // Smooth scroll container
-    let scrollContainer = null;
-    let isInitialized = false;
-    
-    // Initialize smooth scroll container
-    function initScrollContainer() {
-        if (isInitialized) return;
-        
-        // Create scroll container wrapper
-        scrollContainer = document.createElement('div');
-        scrollContainer.className = 'smooth-scroll-container';
-        
-        // Get all content except navbar
-        const body = document.body;
-        const navbar = document.querySelector('.navbar');
-        const children = Array.from(body.children);
-        
-        // Move all children except navbar to scroll container
-        children.forEach(child => {
-            if (child !== navbar && !child.classList.contains('smooth-scroll-container')) {
-                scrollContainer.appendChild(child);
+    // Load Lenis library
+    function loadLenis() {
+        return new Promise((resolve) => {
+            // Check if Lenis is already loaded
+            if (window.Lenis) {
+                resolve();
+                return;
             }
+            
+            // Load Lenis from CDN
+            const script = document.createElement('script');
+            script.src = 'https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.42/dist/lenis.min.js';
+            script.onload = resolve;
+            script.onerror = () => {
+                console.warn('Failed to load Lenis, falling back to custom smooth scroll');
+                initFallbackSmoothScroll();
+                resolve();
+            };
+            document.head.appendChild(script);
+        });
+    }
+    
+    // Initialize Lenis smooth scrolling
+    function initLenis() {
+        if (!window.Lenis) {
+            console.warn('Lenis not available, using fallback');
+            initFallbackSmoothScroll();
+            return;
+        }
+        
+        // Create Lenis instance with heraops.com-like settings
+        const lenis = new Lenis({
+            duration: 1.2,        // Animation duration (heraops uses ~1.2)
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Custom easing
+            direction: 'vertical', // Vertical scrolling
+            gestureDirection: 'vertical',
+            smooth: true,
+            mouseMultiplier: 1,    // Mouse wheel sensitivity
+            smoothTouch: false,    // Disable on touch devices for native feel
+            touchMultiplier: 2,    // Touch sensitivity
+            infinite: false,       // No infinite scroll
+            wrapper: window,       // Use window as wrapper
+            content: document.documentElement // Scroll the entire document
         });
         
-        // Insert scroll container after navbar
-        if (navbar && navbar.nextSibling) {
-            body.insertBefore(scrollContainer, navbar.nextSibling);
-        } else {
-            body.appendChild(scrollContainer);
+        // Animation loop for Lenis
+        function raf(time) {
+            lenis.raf(time);
+            requestAnimationFrame(raf);
         }
+        requestAnimationFrame(raf);
         
-        // Add necessary CSS
-        const style = document.createElement('style');
-        style.textContent = `
-            body {
-                overflow-x: hidden;
-                margin: 0;
-                padding: 0;
-            }
+        // Enhanced smooth scroll to element function
+        function smoothScrollToElement(targetElement, offset = 80) {
+            if (!targetElement) return;
             
-            .smooth-scroll-container {
-                will-change: transform;
-                backface-visibility: hidden;
-                transform: translate3d(0, 0, 0);
-            }
+            const targetPosition = targetElement.offsetTop - offset;
             
-            /* Keep navbar static and above */
-            .navbar {
-                position: fixed !important;
-                top: 0 !important;
-                left: 0 !important;
-                right: 0 !important;
-                z-index: 9999 !important;
-                will-change: auto;
-                transform: none !important;
-            }
-            
-            /* Optimize elements for smooth scrolling */
-            .service-card, .product-card, .hero-content, .hero-visual,
-            .case-content, .about-feature, .stat-card {
-                transform: translate3d(0, 0, 0);
-                backface-visibility: hidden;
-            }
-            
-            /* Disable default smooth scrolling */
-            html {
-                scroll-behavior: auto !important;
-            }
-        `;
-        document.head.appendChild(style);
-        
-        // Set initial values
-        currentY = window.scrollY;
-        targetY = currentY;
-        
-        // Update the transform
-        if (scrollContainer) {
-            scrollContainer.style.transform = `translate3d(0, ${-currentY}px, 0)`;
+            lenis.scrollTo(targetPosition, {
+                duration: 1.5,
+                easing: (t) => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2
+            });
         }
-        
-        isInitialized = true;
-        debugLog('Smooth scroll container initialized');
-    }
-    
-    // Smooth animation loop
-    function animate() {
-        const currentTime = performance.now();
-        const deltaTime = currentTime - lastTime;
-        lastTime = currentTime;
-        
-        // Apply momentum if there's velocity
-        if (Math.abs(velocity) > 0.1) {
-            targetY += velocity;
-            velocity *= CONFIG.momentum;
-            
-            // Clamp to bounds
-            const maxScroll = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
-            targetY = Math.max(0, Math.min(targetY, maxScroll));
-        }
-        
-        // Smooth interpolation
-        const diff = targetY - currentY;
-        
-        if (Math.abs(diff) > CONFIG.minDelta) {
-            currentY += diff * CONFIG.lerp;
-            isScrolling = true;
-            
-            // Apply transform to container
-            if (scrollContainer) {
-                scrollContainer.style.transform = `translate3d(0, ${-currentY}px, 0)`;
-            }
-            
-            // Update window scroll position for other scripts
-            window.history.replaceState(null, null, window.location.pathname + window.location.search + (currentY > 0 ? '#scroll-' + Math.round(currentY) : ''));
-            
-            // Continue animation
-            rafId = requestAnimationFrame(animate);
-        } else {
-            // Animation complete
-            currentY = targetY;
-            isScrolling = false;
-            velocity = 0;
-            
-            if (scrollContainer) {
-                scrollContainer.style.transform = `translate3d(0, ${-currentY}px, 0)`;
-            }
-        }
-        
-        // Update navbar background based on scroll position
-        updateNavbarBackground();
-    }
-    
-    // Handle wheel events
-    function onWheel(e) {
-        e.preventDefault();
-        
-        // Calculate scroll delta
-        let delta = 0;
-        if (e.deltaY) {
-            delta = e.deltaY;
-        } else if (e.wheelDelta) {
-            delta = -e.wheelDelta;
-        }
-        
-        // Apply momentum
-        velocity += delta * CONFIG.wheelMultiplier * 0.3;
-        velocity = Math.max(-CONFIG.maxVelocity, Math.min(CONFIG.maxVelocity, velocity));
-        
-        // Start animation if not already running
-        if (!isScrolling) {
-            animate();
-        }
-    }
-    
-    // Handle touch events for mobile
-    let touchStartY = 0;
-    let touchStartTime = 0;
-    let lastTouchY = 0;
-    
-    function onTouchStart(e) {
-        touchStartY = e.touches[0].clientY;
-        lastTouchY = touchStartY;
-        touchStartTime = performance.now();
-        velocity = 0; // Stop momentum on touch
-    }
-    
-    function onTouchMove(e) {
-        if (e.touches.length > 1) return; // Ignore multi-touch
-        
-        const touchY = e.touches[0].clientY;
-        const touchTime = performance.now();
-        const deltaY = lastTouchY - touchY;
-        const deltaTime = touchTime - touchStartTime;
-        
-        // Calculate velocity for momentum
-        if (deltaTime > 0) {
-            velocity = (deltaY / deltaTime) * CONFIG.touchMultiplier * 0.5;
-            velocity = Math.max(-CONFIG.maxVelocity, Math.min(CONFIG.maxVelocity, velocity));
-        }
-        
-        // Apply immediate scroll
-        targetY += deltaY;
-        const maxScroll = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
-        targetY = Math.max(0, Math.min(targetY, maxScroll));
-        
-        lastTouchY = touchY;
-        touchStartTime = touchTime;
-        
-        // Start animation
-        if (!isScrolling) {
-            animate();
-        }
-        
-        e.preventDefault();
-    }
-    
-    function onTouchEnd() {
-        // Apply touch momentum
-        velocity *= 0.8;
-        
-        // Continue animation if there's momentum
-        if (Math.abs(velocity) > 1 && !isScrolling) {
-            animate();
-        }
-    }
-    
-    // Update navbar background
-    function updateNavbarBackground() {
-        const navbar = document.querySelector('.navbar');
-        if (navbar) {
-            if (currentY > 100) {
-                navbar.style.background = 'rgba(10, 10, 10, 0.95)';
-                navbar.style.backdropFilter = 'blur(20px)';
-            } else {
-                navbar.style.background = 'rgba(10, 10, 10, 0.9)';
-                navbar.style.backdropFilter = 'blur(10px)';
-            }
-        }
-    }
-    
-    // Enhanced smooth scroll to element
-    function smoothScrollToElement(targetElement, offset = 80) {
-        if (!targetElement || !scrollContainer) return;
-        
-        // Calculate target position
-        const rect = targetElement.getBoundingClientRect();
-        const elementTop = rect.top + currentY;
-        const targetPosition = elementTop - offset;
-        
-        // Animate to target
-        const startY = currentY;
-        const distance = targetPosition - startY;
-        const duration = Math.min(Math.abs(distance) * 1.2, 1500);
-        const startTime = performance.now();
-        
-        // Cancel existing animation
-        if (rafId) {
-            cancelAnimationFrame(rafId);
-            rafId = null;
-        }
-        
-        function scrollAnimation() {
-            const elapsed = performance.now() - startTime;
-            const progress = Math.min(elapsed / duration, 1);
-            
-            // Easing function
-            const eased = progress < 0.5 
-                ? 4 * progress * progress * progress 
-                : 1 - Math.pow(-2 * progress + 2, 3) / 2;
-            
-            currentY = startY + (distance * eased);
-            targetY = currentY;
-            velocity = 0;
-            
-            if (scrollContainer) {
-                scrollContainer.style.transform = `translate3d(0, ${-currentY}px, 0)`;
-            }
-            
-            updateNavbarBackground();
-            
-            if (progress < 1) {
-                requestAnimationFrame(scrollAnimation);
-            }
-        }
-        
-        scrollAnimation();
-    }
-    
-    // Handle keyboard navigation
-    function onKeyDown(e) {
-        let delta = 0;
-        
-        switch (e.key) {
-            case 'ArrowUp':
-                delta = -100;
-                break;
-            case 'ArrowDown':
-                delta = 100;
-                break;
-            case 'PageUp':
-                delta = -window.innerHeight * 0.8;
-                break;
-            case 'PageDown':
-                delta = window.innerHeight * 0.8;
-                break;
-            case 'Home':
-                targetY = 0;
-                velocity = 0;
-                if (!isScrolling) animate();
-                return;
-            case 'End':
-                targetY = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
-                velocity = 0;
-                if (!isScrolling) animate();
-                return;
-        }
-        
-        if (delta !== 0) {
-            e.preventDefault();
-            velocity += delta * 0.3;
-            velocity = Math.max(-CONFIG.maxVelocity, Math.min(CONFIG.maxVelocity, velocity));
-            
-            if (!isScrolling) {
-                animate();
-            }
-        }
-    }
-    
-    // Initialize everything
-    function initialize() {
-        // Set up scroll container
-        initScrollContainer();
-        
-        // Disable native scrolling
-        document.documentElement.style.overflow = 'hidden';
-        document.body.style.overflow = 'hidden';
-        
-        // Bind events with proper options
-        window.addEventListener('wheel', onWheel, { passive: false });
-        window.addEventListener('touchstart', onTouchStart, { passive: false });
-        window.addEventListener('touchmove', onTouchMove, { passive: false });
-        window.addEventListener('touchend', onTouchEnd, { passive: true });
-        window.addEventListener('keydown', onKeyDown, { passive: false });
-        
-        // Handle window resize
-        window.addEventListener('resize', debounce(() => {
-            // Recalculate bounds
-            const maxScroll = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
-            if (currentY > maxScroll) {
-                targetY = maxScroll;
-                currentY = maxScroll;
-                if (scrollContainer) {
-                    scrollContainer.style.transform = `translate3d(0, ${-currentY}px, 0)`;
-                }
-            }
-        }, 250));
         
         // Set up navigation links
         const navLinks = document.querySelectorAll('.nav-link[href^="#"]');
@@ -759,12 +468,12 @@ function initSmoothScrolling() {
                 
                 if (targetElement) {
                     smoothScrollToElement(targetElement, 80);
-                    debugLog('Smooth scrolling to:', targetId);
+                    debugLog('Lenis smooth scrolling to:', targetId);
                 }
             });
         });
         
-        // Add smooth scrolling to any element with data-scroll-to attribute
+        // Add smooth scrolling to elements with data-scroll-to attribute
         document.querySelectorAll('[data-scroll-to]').forEach(element => {
             element.addEventListener('click', function() {
                 const targetId = this.getAttribute('data-scroll-to');
@@ -772,27 +481,173 @@ function initSmoothScrolling() {
                 
                 if (targetElement) {
                     smoothScrollToElement(targetElement, 80);
-                    debugLog('Smooth scrolling to:', targetId);
+                    debugLog('Lenis smooth scrolling to:', targetId);
                 }
             });
         });
         
-        debugLog('Ultra-smooth scrolling system initialized (fixed version)');
+        // Update navbar background on scroll
+        lenis.on('scroll', (e) => {
+            updateNavbarBackground(e.scroll);
+        });
+        
+        // Expose functions globally
+        window.smoothScrollToElement = smoothScrollToElement;
+        window.lenis = lenis;
+        window.getCurrentScrollY = () => lenis.scroll;
+        
+        debugLog('Lenis smooth scrolling initialized (heraops.com style)');
+    }
+    
+    // Fallback smooth scroll if Lenis fails to load
+    function initFallbackSmoothScroll() {
+        // Simple fallback smooth scrolling
+        let isScrolling = false;
+        
+        function smoothScrollToElement(targetElement, offset = 80) {
+            if (!targetElement || isScrolling) return;
+            
+            const targetPosition = targetElement.offsetTop - offset;
+            const startPosition = window.scrollY;
+            const distance = targetPosition - startPosition;
+            const duration = Math.min(Math.abs(distance) * 1.2, 1500);
+            const startTime = performance.now();
+            
+            isScrolling = true;
+            
+            function easeInOutCubic(t) {
+                return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+            }
+            
+            function animateScroll() {
+                const elapsed = performance.now() - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                const easedProgress = easeInOutCubic(progress);
+                const currentPosition = startPosition + (distance * easedProgress);
+                
+                window.scrollTo(0, currentPosition);
+                
+                if (progress < 1) {
+                    requestAnimationFrame(animateScroll);
+                } else {
+                    isScrolling = false;
+                }
+            }
+            
+            animateScroll();
+        }
+        
+        // Set up navigation links for fallback
+        const navLinks = document.querySelectorAll('.nav-link[href^="#"]');
+        navLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                
+                if (targetElement) {
+                    smoothScrollToElement(targetElement, 80);
+                    debugLog('Fallback smooth scrolling to:', targetId);
+                }
+            });
+        });
+        
+        // Update navbar on scroll
+        window.addEventListener('scroll', () => {
+            updateNavbarBackground(window.scrollY);
+        });
+        
+        window.smoothScrollToElement = smoothScrollToElement;
+        window.getCurrentScrollY = () => window.scrollY;
+        
+        debugLog('Fallback smooth scrolling initialized');
+    }
+    
+    // Update navbar background based on scroll position
+    function updateNavbarBackground(scrollY) {
+        const navbar = document.querySelector('.navbar');
+        if (navbar) {
+            if (scrollY > 100) {
+                navbar.style.background = 'rgba(10, 10, 10, 0.95)';
+                navbar.style.backdropFilter = 'blur(20px)';
+            } else {
+                navbar.style.background = 'rgba(10, 10, 10, 0.9)';
+                navbar.style.backdropFilter = 'blur(10px)';
+            }
+        }
+    }
+    
+    // Add optimized CSS for Lenis
+    function addLenisCSS() {
+        const style = document.createElement('style');
+        style.textContent = `
+            html.lenis {
+                height: auto;
+            }
+            
+            .lenis.lenis-smooth {
+                scroll-behavior: auto;
+            }
+            
+            .lenis.lenis-smooth [data-lenis-prevent] {
+                overscroll-behavior: contain;
+            }
+            
+            .lenis.lenis-stopped {
+                overflow: hidden;
+            }
+            
+            .lenis.lenis-scrolling iframe {
+                pointer-events: none;
+            }
+            
+            /* Optimize elements for smooth scrolling */
+            .service-card, .product-card, .hero-content, .hero-visual,
+            .case-content, .about-feature, .stat-card, .navbar {
+                will-change: transform;
+                backface-visibility: hidden;
+                transform: translate3d(0, 0, 0);
+            }
+            
+            /* Ensure navbar stays fixed */
+            .navbar {
+                position: fixed !important;
+                top: 0 !important;
+                left: 0 !important;
+                right: 0 !important;
+                z-index: 9999 !important;
+                will-change: backdrop-filter, background-color;
+            }
+        `;
+        document.head.appendChild(style);
+    }
+    
+    // Initialize everything
+    async function initialize() {
+        // Add CSS first
+        addLenisCSS();
+        
+        // Load and initialize Lenis
+        try {
+            await loadLenis();
+            
+            // Small delay to ensure DOM is ready
+            setTimeout(() => {
+                initLenis();
+            }, 100);
+            
+        } catch (error) {
+            console.error('Error loading Lenis:', error);
+            initFallbackSmoothScroll();
+        }
     }
     
     // Initialize when DOM is ready
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', initialize);
     } else {
-        // Small delay to ensure all elements are ready
-        setTimeout(initialize, 100);
+        initialize();
     }
-    
-    // Expose functions globally
-    window.smoothScrollToElement = smoothScrollToElement;
-    
-    // Return current scroll position for other functions
-    window.getCurrentScrollY = () => currentY;
 }
 
 // Scroll to Contact Function with Ultra-Smooth Scrolling
