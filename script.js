@@ -218,7 +218,7 @@ function initNavigation() {
         debugLog('Mobile menu closed, restored scroll position:', scrollPositionBeforeMenu);
     }
     
-    // SIMPLE scroll to section function
+    // FIXED scroll to section function for mobile
     function scrollToSection(sectionId) {
         debugLog('🎯 Attempting to scroll to section:', sectionId);
         
@@ -228,28 +228,55 @@ function initNavigation() {
             return;
         }
         
-        // Get the actual position
-        const elementRect = targetElement.getBoundingClientRect();
-        const absoluteElementTop = elementRect.top + window.scrollY;
+        // Calculate scroll position differently for mobile vs desktop
+        const isMobile = window.innerWidth <= 768;
+        const navbarHeight = isMobile ? 70 : 80;
         
-        // Account for navbar
-        const navbarHeight = window.innerWidth <= 768 ? 70 : 80;
-        const targetScrollPosition = absoluteElementTop - navbarHeight;
-        
-        debugLog('📐 Scroll calculation:', {
-            elementTop: absoluteElementTop,
-            navbarHeight: navbarHeight,
-            targetPosition: targetScrollPosition,
-            currentScroll: window.scrollY
-        });
-        
-        // FORCE scroll to position
-        window.scrollTo({
-            top: Math.max(0, targetScrollPosition),
-            behavior: 'smooth'
-        });
-        
-        debugLog('✅ Scroll command executed to position:', targetScrollPosition);
+        if (isMobile) {
+            // For mobile: close menu first, then scroll with delay
+            closeMenu();
+            
+            // Wait for menu close animation to complete
+            setTimeout(() => {
+                const elementRect = targetElement.getBoundingClientRect();
+                const absoluteElementTop = elementRect.top + window.scrollY;
+                const targetScrollPosition = Math.max(0, absoluteElementTop - navbarHeight);
+                
+                debugLog('📐 Mobile scroll calculation:', {
+                    elementTop: absoluteElementTop,
+                    navbarHeight: navbarHeight,
+                    targetPosition: targetScrollPosition,
+                    currentScroll: window.scrollY
+                });
+                
+                // Use smooth scroll
+                window.scrollTo({
+                    top: targetScrollPosition,
+                    behavior: 'smooth'
+                });
+                
+                debugLog('✅ Mobile scroll executed to position:', targetScrollPosition);
+            }, 100); // Small delay for menu close animation
+        } else {
+            // Desktop: immediate scroll
+            const elementRect = targetElement.getBoundingClientRect();
+            const absoluteElementTop = elementRect.top + window.scrollY;
+            const targetScrollPosition = Math.max(0, absoluteElementTop - navbarHeight);
+            
+            debugLog('📐 Desktop scroll calculation:', {
+                elementTop: absoluteElementTop,
+                navbarHeight: navbarHeight,
+                targetPosition: targetScrollPosition,
+                currentScroll: window.scrollY
+            });
+            
+            window.scrollTo({
+                top: targetScrollPosition,
+                behavior: 'smooth'
+            });
+            
+            debugLog('✅ Desktop scroll executed to position:', targetScrollPosition);
+        }
     }
     
     // Mobile menu toggle
@@ -268,7 +295,7 @@ function initNavigation() {
         return false;
     });
     
-    // BULLETPROOF navigation link handling - PREVENT ALL OTHER HANDLERS
+    // BULLETPROOF navigation link handling
     const navLinks = document.querySelectorAll('.nav-link');
     navLinks.forEach(link => {
         // Remove any existing event listeners first
@@ -295,43 +322,8 @@ function initNavigation() {
             
             debugLog('🎯 Extracted section ID:', sectionId);
             
-            // IMMEDIATELY scroll on mobile (before closing menu)
-            if (window.innerWidth <= 768) {
-                // Calculate scroll position BEFORE closing menu
-                const targetElement = document.getElementById(sectionId);
-                if (targetElement) {
-                    const elementRect = targetElement.getBoundingClientRect();
-                    const absoluteElementTop = elementRect.top + window.scrollY;
-                    const navbarHeight = 70;
-                    const targetScrollPosition = Math.max(0, absoluteElementTop - navbarHeight);
-                    
-                    debugLog('📐 PRE-CLOSE Scroll calculation:', {
-                        elementTop: absoluteElementTop,
-                        navbarHeight: navbarHeight,
-                        targetPosition: targetScrollPosition,
-                        currentScroll: window.scrollY
-                    });
-                    
-                    // Store the target position
-                    const finalScrollPosition = targetScrollPosition;
-                    
-                    // Close menu
-                    closeMenu();
-                    
-                    // Immediately scroll to target (override the menu close scroll restoration)
-                    setTimeout(() => {
-                        window.scrollTo({
-                            top: finalScrollPosition,
-                            behavior: 'smooth'
-                        });
-                        debugLog('✅ FINAL scroll executed to position:', finalScrollPosition);
-                    }, 50); // Very quick delay
-                }
-            } else {
-                // Desktop - scroll immediately
-                if (sectionId) {
-                    scrollToSection(sectionId);
-                }
+            if (sectionId) {
+                scrollToSection(sectionId);
             }
             
             return false;
@@ -625,21 +617,6 @@ function initSmoothScrolling() {
                 });
             }
             
-            // DISABLED: Set up navigation links (conflicts with bulletproof nav)
-            // const navLinks = document.querySelectorAll('.nav-link[href^="#"], [data-scroll-to]');
-            // navLinks.forEach(link => {
-            //     link.addEventListener('click', function(e) {
-            //         e.preventDefault();
-            //         const targetId = this.getAttribute('href') || this.getAttribute('data-scroll-to');
-            //         const targetElement = document.querySelector(targetId);
-            //         
-            //         if (targetElement) {
-            //             smoothScrollToElement(targetElement, 80);
-            //             debugLog('🎯 Lenis smooth scrolling to:', targetId);
-            //         }
-            //     });
-            // });
-            
             // Add smooth scrolling to elements with data-scroll-to attribute
             document.querySelectorAll('[data-scroll-to]').forEach(element => {
                 element.addEventListener('click', function() {
@@ -829,21 +806,6 @@ function initSmoothScrolling() {
             
             scrollAnimation();
         }
-        
-        // DISABLED: Set up navigation links (conflicts with bulletproof nav)
-        // const navLinks = document.querySelectorAll('.nav-link[href^="#"], [data-scroll-to]');
-        // navLinks.forEach(link => {
-        //     link.addEventListener('click', function(e) {
-        //         e.preventDefault();
-        //         const targetId = this.getAttribute('href') || this.getAttribute('data-scroll-to');
-        //         const targetElement = document.querySelector(targetId);
-        //         
-        //         if (targetElement) {
-        //             smoothScrollToElement(targetElement, 80);
-        //             debugLog('🎯 Fallback smooth scrolling to:', targetId);
-        //         }
-        //     });
-        // });
         
         // Add smooth scrolling to elements with data-scroll-to attribute
         document.querySelectorAll('[data-scroll-to]').forEach(element => {
