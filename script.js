@@ -492,12 +492,12 @@ function initSmoothScrolling() {
                 });
             }
             
-            // Set up navigation links
-            const navLinks = document.querySelectorAll('.nav-link[href^="#"]');
+            // Set up navigation links - ENHANCED for merged site
+            const navLinks = document.querySelectorAll('.nav-link[href^="#"], [data-scroll-to]');
             navLinks.forEach(link => {
                 link.addEventListener('click', function(e) {
                     e.preventDefault();
-                    const targetId = this.getAttribute('href');
+                    const targetId = this.getAttribute('href') || this.getAttribute('data-scroll-to');
                     const targetElement = document.querySelector(targetId);
                     
                     if (targetElement) {
@@ -697,12 +697,12 @@ function initSmoothScrolling() {
             scrollAnimation();
         }
         
-        // Set up navigation links
-        const navLinks = document.querySelectorAll('.nav-link[href^="#"]');
+        // Set up navigation links - ENHANCED for merged site
+        const navLinks = document.querySelectorAll('.nav-link[href^="#"], [data-scroll-to]');
         navLinks.forEach(link => {
             link.addEventListener('click', function(e) {
                 e.preventDefault();
-                const targetId = this.getAttribute('href');
+                const targetId = this.getAttribute('href') || this.getAttribute('data-scroll-to');
                 const targetElement = document.querySelector(targetId);
                 
                 if (targetElement) {
@@ -767,11 +767,12 @@ function initSmoothScrolling() {
         updateActiveNavState(scrollY);
     }
     
-    // Update active navigation state with purple glow
+    // Update active navigation state with purple glow - ENHANCED for merged site
     function updateActiveNavState(scrollY) {
         const navLinks = document.querySelectorAll('.nav-link');
         const sections = [
             { id: 'services', element: document.getElementById('services') },
+            { id: 'products', element: document.getElementById('products') },
             { id: 'case-studies', element: document.getElementById('case-studies') },
             { id: 'about', element: document.getElementById('about') },
             { id: 'contact', element: document.getElementById('contact') }
@@ -1102,9 +1103,9 @@ function initAnimations() {
         });
     }, observerOptions);
     
-    // Observe elements for animation
+    // Observe elements for animation - ENHANCED for merged site
     const animateElements = document.querySelectorAll(
-        '.service-card, .case-content, .about-feature, .stat-card'
+        '.service-card, .product-card, .case-content, .about-feature, .stat-card, .featured-product'
     );
     
     animateElements.forEach(el => {
@@ -1162,17 +1163,30 @@ function initAnalytics() {
         });
     });
     
-    // Track CTA clicks
+    // Track CTA clicks - ENHANCED for merged site
     document.querySelectorAll('.btn-primary, .btn-secondary').forEach(btn => {
         btn.addEventListener('click', function() {
             const buttonText = this.textContent.trim();
             const isCalendly = this.href && this.href.includes('calendly');
+            const section = this.closest('section')?.id || 'unknown';
             
             trackEvent('cta_click', {
                 button_text: buttonText,
                 page: window.location.pathname,
+                section: section,
                 is_calendly: isCalendly,
                 button_type: this.classList.contains('btn-primary') ? 'primary' : 'secondary'
+            });
+        });
+    });
+    
+    // Track product interest
+    document.querySelectorAll('.product-card, .featured-product').forEach(card => {
+        card.addEventListener('click', function() {
+            const productName = this.querySelector('h3')?.textContent || 'Unknown Product';
+            trackEvent('product_interest', {
+                product_name: productName,
+                product_type: this.classList.contains('premium-card') ? 'premium' : 'mini'
             });
         });
     });
