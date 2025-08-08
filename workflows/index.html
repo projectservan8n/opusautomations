@@ -64,7 +64,7 @@
                 </div>
                 <div class="hero-cta">
                     <a href="https://calendly.com/tony-opusautomations/30min" class="btn btn-primary" target="_blank">Discuss Your Needs</a>
-                    <a href="#products" class="btn btn-secondary">Browse Products</a>
+                    <a href="#products" class="btn btn-secondary" data-scroll-to="#products">Browse Products</a>
                 </div>
             </div>
         </div>
@@ -461,10 +461,10 @@
                 <div class="footer-links">
                     <div class="footer-section">
                         <h4>Products</h4>
-                        <a href="#products">Performance Platforms</a>
-                        <a href="#products">KPI Automation</a>
-                        <a href="#products">Content Generation</a>
-                        <a href="#products">Custom Solutions</a>
+                        <a href="#products" data-scroll-to="#products">Performance Platforms</a>
+                        <a href="#products" data-scroll-to="#products">KPI Automation</a>
+                        <a href="#products" data-scroll-to="#products">Content Generation</a>
+                        <a href="#products" data-scroll-to="#products">Custom Solutions</a>
                     </div>
                     <div class="footer-section">
                         <h4>Services</h4>
@@ -481,8 +481,124 @@
         </div>
     </footer>
 
+    <!-- Load Lenis for smooth scrolling -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lenis/1.2.1/lenis.min.js"></script>
     <script>
-        // Enhanced Navigation Functionality for Workflows Page
+        // Enhanced Navigation and Smooth Scrolling for Workflows Page
+        let lenis;
+
+        // Initialize Lenis smooth scrolling
+        function initLenis() {
+            lenis = new Lenis({
+                duration: 1.2,
+                easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+                direction: 'vertical',
+                smooth: true,
+                mouseMultiplier: 1,
+                smoothTouch: false,
+                touchMultiplier: 2,
+                wheelMultiplier: 1,
+                normalizeWheel: true,
+                lerp: 0.1,
+                infinite: false,
+                orientation: 'vertical',
+                gestureOrientation: 'vertical'
+            });
+
+            function raf(time) {
+                lenis.raf(time);
+                requestAnimationFrame(raf);
+            }
+            requestAnimationFrame(raf);
+
+            // Enhanced smooth scroll to element function
+            function smoothScrollToElement(targetElement, offset = 80) {
+                if (!targetElement) return;
+                
+                const rect = targetElement.getBoundingClientRect();
+                const absoluteTop = rect.top + window.scrollY;
+                const targetPosition = absoluteTop - offset;
+                
+                lenis.scrollTo(targetPosition, {
+                    duration: 1.5,
+                    easing: (t) => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2,
+                    immediate: false
+                });
+            }
+
+            // Set up navigation links
+            const navLinks = document.querySelectorAll('.nav-link[href^="#"], [data-scroll-to]');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href') || this.getAttribute('data-scroll-to');
+                    const targetElement = document.querySelector(targetId);
+                    
+                    if (targetElement) {
+                        smoothScrollToElement(targetElement, 80);
+                        console.log('🎯 Lenis smooth scrolling to:', targetId);
+                    }
+                });
+            });
+
+            // Update navbar on scroll
+            lenis.on('scroll', (e) => {
+                updateNavbarBackground(e.scroll);
+            });
+
+            console.log('🚀 Lenis smooth scrolling initialized successfully');
+        }
+
+        // Fallback smooth scrolling if Lenis fails
+        function initFallbackSmoothScroll() {
+            function smoothScrollToElement(targetElement, offset = 80) {
+                if (!targetElement) return;
+                
+                const targetPosition = targetElement.offsetTop - offset;
+                const startPosition = window.scrollY;
+                const distance = targetPosition - startPosition;
+                const duration = Math.min(Math.abs(distance) * 1.2, 1500);
+                const startTime = performance.now();
+                
+                function easeInOutCubic(t) {
+                    return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+                }
+                
+                function scrollAnimation() {
+                    const elapsed = performance.now() - startTime;
+                    const progress = Math.min(elapsed / duration, 1);
+                    const easedProgress = easeInOutCubic(progress);
+                    
+                    const currentPosition = startPosition + (distance * easedProgress);
+                    window.scrollTo(0, currentPosition);
+                    
+                    if (progress < 1) {
+                        requestAnimationFrame(scrollAnimation);
+                    }
+                }
+                
+                scrollAnimation();
+            }
+
+            // Set up navigation links
+            const navLinks = document.querySelectorAll('.nav-link[href^="#"], [data-scroll-to]');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href') || this.getAttribute('data-scroll-to');
+                    const targetElement = document.querySelector(targetId);
+                    
+                    if (targetElement) {
+                        smoothScrollToElement(targetElement, 80);
+                        console.log('🎯 Fallback smooth scrolling to:', targetId);
+                    }
+                });
+            });
+
+            console.log('🚀 Fallback smooth scrolling initialized');
+        }
+
+        // Enhanced Navigation Functionality
         function initNavigation() {
             const navToggle = document.getElementById('nav-toggle');
             const navMenu = document.getElementById('nav-menu');
@@ -494,7 +610,7 @@
                     e.preventDefault();
                     e.stopPropagation();
                     
-                    console.log('Nav toggle clicked'); // Debug log
+                    console.log('Nav toggle clicked');
                     
                     const isActive = navMenu.classList.contains('active');
                     
@@ -556,20 +672,20 @@
                     }
                 });
             }
-            
-            // Navbar scroll effect
-            window.addEventListener('scroll', function() {
-                const navbar = document.querySelector('.navbar');
-                if (navbar) {
-                    if (window.scrollY > 100) {
-                        navbar.style.background = 'rgba(10, 10, 10, 0.95)';
-                        navbar.style.backdropFilter = 'blur(20px)';
-                    } else {
-                        navbar.style.background = 'rgba(10, 10, 10, 0.9)';
-                        navbar.style.backdropFilter = 'blur(10px)';
-                    }
+        }
+
+        // Update navbar background
+        function updateNavbarBackground(scrollY) {
+            const navbar = document.querySelector('.navbar');
+            if (navbar) {
+                if (scrollY > 100) {
+                    navbar.style.background = 'rgba(10, 10, 10, 0.95)';
+                    navbar.style.backdropFilter = 'blur(20px)';
+                } else {
+                    navbar.style.background = 'rgba(10, 10, 10, 0.9)';
+                    navbar.style.backdropFilter = 'blur(10px)';
                 }
-            });
+            }
         }
 
         // Floating Particles Animation
@@ -612,37 +728,38 @@
             setInterval(createParticle, 400);
         }
 
-        // Smooth Scrolling
-        function initSmoothScrolling() {
-            // Smooth scroll for navigation links
-            const navLinks = document.querySelectorAll('.nav-link[href^="#"]');
-            navLinks.forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const targetId = this.getAttribute('href');
-                    const targetElement = document.querySelector(targetId);
-                    
-                    if (targetElement) {
-                        const offsetTop = targetElement.offsetTop - 80; // Account for fixed navbar
-                        window.scrollTo({
-                            top: offsetTop,
-                            behavior: 'smooth'
-                        });
-                    }
-                });
-            });
-        }
-
         // Initialize everything when DOM is ready
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM Content Loaded - Initializing Workflows Page');
+            
             // Initialize particles
             initParticles();
             
             // Initialize navigation
             initNavigation();
             
-            // Initialize smooth scrolling
-            initSmoothScrolling();
+            // Initialize smooth scrolling with Lenis or fallback
+            if (window.Lenis) {
+                initLenis();
+            } else {
+                console.log('Lenis not available, using fallback');
+                initFallbackSmoothScroll();
+            }
+            
+            // Navbar scroll effect fallback
+            window.addEventListener('scroll', function() {
+                updateNavbarBackground(window.scrollY);
+            });
+            
+            console.log('All components initialized successfully');
+        });
+
+        // Error handling for Lenis
+        window.addEventListener('error', function(e) {
+            if (e.message.includes('Lenis')) {
+                console.log('Lenis error detected, initializing fallback');
+                initFallbackSmoothScroll();
+            }
         });
     </script>
 </body>
