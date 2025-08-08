@@ -392,8 +392,138 @@ function showNotification(message, type = 'info') {
     }, 5000);
 }
 
-// Smooth Scrolling
+// Buttery Smooth Scrolling with Momentum/Inertia Effect
 function initSmoothScrolling() {
+    // Enhanced momentum scrolling variables
+    let isScrolling = false;
+    let scrollVelocity = 0;
+    let lastScrollY = window.scrollY;
+    let lastScrollTime = Date.now();
+    let momentumAnimation = null;
+    let scrollDirection = 0;
+    
+    // Momentum scrolling configuration
+    const MOMENTUM_CONFIG = {
+        friction: 0.92,         // How quickly momentum decays (lower = more friction)
+        velocityMultiplier: 0.8, // How much of the velocity to apply
+        minVelocity: 0.5,       // Minimum velocity before stopping
+        maxVelocity: 50,        // Maximum velocity cap
+        trackingDuration: 100   // How long to track velocity (ms)
+    };
+    
+    // Track scroll velocity for momentum
+    function trackScrollVelocity() {
+        const currentTime = Date.now();
+        const currentScrollY = window.scrollY;
+        const timeDelta = currentTime - lastScrollTime;
+        const scrollDelta = currentScrollY - lastScrollY;
+        
+        if (timeDelta > 0) {
+            scrollVelocity = (scrollDelta / timeDelta) * 16; // Normalize to 60fps
+            scrollDirection = scrollDelta > 0 ? 1 : -1;
+        }
+        
+        lastScrollY = currentScrollY;
+        lastScrollTime = currentTime;
+    }
+    
+    // Apply momentum scrolling animation
+    function applyMomentum() {
+        if (Math.abs(scrollVelocity) < MOMENTUM_CONFIG.minVelocity) {
+            isScrolling = false;
+            momentumAnimation = null;
+            return;
+        }
+        
+        // Apply velocity to scroll position
+        const newScrollY = window.scrollY + scrollVelocity * MOMENTUM_CONFIG.velocityMultiplier;
+        
+        // Constrain to document bounds
+        const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+        const constrainedScrollY = Math.max(0, Math.min(newScrollY, maxScroll));
+        
+        window.scrollTo(0, constrainedScrollY);
+        
+        // Apply friction to velocity
+        scrollVelocity *= MOMENTUM_CONFIG.friction;
+        
+        // Continue animation
+        momentumAnimation = requestAnimationFrame(applyMomentum);
+    }
+    
+    // Handle scroll events
+    let scrollTimeout;
+    function handleScroll() {
+        trackScrollVelocity();
+        isScrolling = true;
+        
+        // Clear existing momentum animation
+        if (momentumAnimation) {
+            cancelAnimationFrame(momentumAnimation);
+            momentumAnimation = null;
+        }
+        
+        // Reset scroll timeout
+        clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(() => {
+            if (Math.abs(scrollVelocity) > MOMENTUM_CONFIG.minVelocity) {
+                // Cap velocity
+                scrollVelocity = Math.sign(scrollVelocity) * Math.min(Math.abs(scrollVelocity), MOMENTUM_CONFIG.maxVelocity);
+                applyMomentum();
+            } else {
+                isScrolling = false;
+            }
+        }, 50); // Small delay to ensure scrolling has stopped
+    }
+    
+    // Enhanced smooth scroll for navigation links
+    function smoothScrollToElement(targetElement, offset = 80) {
+        const targetPosition = targetElement.offsetTop - offset;
+        const startPosition = window.scrollY;
+        const distance = targetPosition - startPosition;
+        const duration = Math.min(Math.abs(distance) * 0.5, 1000); // Dynamic duration based on distance
+        const startTime = Date.now();
+        
+        // Cubic bezier easing function for ultra-smooth animation
+        function easeInOutCubic(t) {
+            return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+        }
+        
+        function animateScroll() {
+            const currentTime = Date.now();
+            const elapsed = currentTime - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            
+            const easedProgress = easeInOutCubic(progress);
+            const currentPosition = startPosition + (distance * easedProgress);
+            
+            window.scrollTo(0, currentPosition);
+            
+            if (progress < 1) {
+                requestAnimationFrame(animateScroll);
+            } else {
+                // Add a subtle bounce effect at the end
+                setTimeout(() => {
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: 'smooth'
+                    });
+                }, 50);
+            }
+        }
+        
+        // Cancel any existing momentum
+        if (momentumAnimation) {
+            cancelAnimationFrame(momentumAnimation);
+            momentumAnimation = null;
+        }
+        
+        animateScroll();
+    }
+    
+    // Add momentum scrolling to the page
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    
     // Smooth scroll for navigation links
     const navLinks = document.querySelectorAll('.nav-link[href^="#"]');
     navLinks.forEach(link => {
@@ -403,30 +533,78 @@ function initSmoothScrolling() {
             const targetElement = document.querySelector(targetId);
             
             if (targetElement) {
-                const offsetTop = targetElement.offsetTop - 80; // Account for fixed navbar
-                window.scrollTo({
-                    top: offsetTop,
-                    behavior: 'smooth'
-                });
+                smoothScrollToElement(targetElement, 80);
                 debugLog('Smooth scrolling to:', targetId);
             }
         });
     });
     
-    debugLog('Smooth scrolling initialized');
+    // Add smooth scrolling to any element with data-scroll-to attribute
+    document.querySelectorAll('[data-scroll-to]').forEach(element => {
+        element.addEventListener('click', function() {
+            const targetId = this.getAttribute('data-scroll-to');
+            const targetElement = document.querySelector(targetId);
+            
+            if (targetElement) {
+                smoothScrollToElement(targetElement, 80);
+                debugLog('Smooth scrolling to:', targetId);
+            }
+        });
+    });
+    
+    // Override browser's default smooth scrolling
+    document.documentElement.style.scrollBehavior = 'auto';
+    
+    debugLog('Buttery smooth scrolling with momentum initialized');
 }
 
-// Scroll to Contact Function
+// Scroll to Contact Function with Momentum
 function scrollToContact() {
     const contactSection = document.getElementById('contact');
     if (contactSection) {
-        const offsetTop = contactSection.offsetTop - 80;
-        window.scrollTo({
-            top: offsetTop,
-            behavior: 'smooth'
-        });
-        debugLog('Scrolled to contact section');
+        // Use the enhanced smooth scrolling function
+        smoothScrollToElement(contactSection, 80);
+        debugLog('Scrolled to contact section with momentum');
     }
+}
+
+// Enhanced smooth scroll function for global use
+function smoothScrollToElement(targetElement, offset = 80) {
+    const targetPosition = targetElement.offsetTop - offset;
+    const startPosition = window.scrollY;
+    const distance = targetPosition - startPosition;
+    const duration = Math.min(Math.abs(distance) * 0.5, 1000); // Dynamic duration based on distance
+    const startTime = Date.now();
+    
+    // Cubic bezier easing function for ultra-smooth animation
+    function easeInOutCubic(t) {
+        return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+    }
+    
+    function animateScroll() {
+        const currentTime = Date.now();
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        
+        const easedProgress = easeInOutCubic(progress);
+        const currentPosition = startPosition + (distance * easedProgress);
+        
+        window.scrollTo(0, currentPosition);
+        
+        if (progress < 1) {
+            requestAnimationFrame(animateScroll);
+        } else {
+            // Add a subtle bounce effect at the end
+            setTimeout(() => {
+                window.scrollTo({
+                    top: targetPosition,
+                    behavior: 'smooth'
+                });
+            }, 50);
+        }
+    }
+    
+    animateScroll();
 }
 
 // Schedule Call Function
