@@ -1,5 +1,22 @@
+// Hardcoded configuration - no environment variables needed
+const CONFIG = {
+    API_BASE_URL: window.location.origin, // Uses current domain automatically
+    ANALYTICS_ENABLED: true,
+    DEBUG_MODE: false, // Set to true for development debugging
+    CALENDLY_URL: 'https://calendly.com/tony-opusautomations/30min'
+};
+
+// Debug logging function
+function debugLog(message, data = null) {
+    if (CONFIG.DEBUG_MODE) {
+        console.log(`🐛 [DEBUG] ${message}`, data || '');
+    }
+}
+
 // DOM Content Loaded
 document.addEventListener('DOMContentLoaded', function() {
+    debugLog('DOM Content Loaded - Initializing Opus Automations');
+    
     // Initialize particles
     initParticles();
     
@@ -20,6 +37,8 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Initialize analytics
     initAnalytics();
+    
+    debugLog('All components initialized successfully');
 });
 
 // Initialize Twemoji
@@ -43,7 +62,10 @@ function initTwemoji() {
 // Floating Particles Animation
 function initParticles() {
     const particlesContainer = document.getElementById('particles');
-    if (!particlesContainer) return;
+    if (!particlesContainer) {
+        debugLog('Particles container not found');
+        return;
+    }
     
     const particleCount = 50;
     
@@ -78,6 +100,8 @@ function initParticles() {
     
     // Continuously create new particles
     setInterval(createParticle, 400);
+    
+    debugLog('Particles system initialized');
 }
 
 // Enhanced Navigation Functionality
@@ -92,7 +116,7 @@ function initNavigation() {
             e.preventDefault();
             e.stopPropagation();
             
-            console.log('Nav toggle clicked'); // Debug log
+            debugLog('Nav toggle clicked');
             
             const isActive = navMenu.classList.contains('active');
             
@@ -104,6 +128,7 @@ function initNavigation() {
                 body.style.overflow = '';
                 body.style.position = '';
                 body.style.width = '';
+                debugLog('Mobile menu closed');
             } else {
                 // Open menu
                 navMenu.classList.add('active');
@@ -112,6 +137,7 @@ function initNavigation() {
                 body.style.overflow = 'hidden';
                 body.style.position = 'fixed';
                 body.style.width = '100%';
+                debugLog('Mobile menu opened');
             }
         });
         
@@ -125,6 +151,7 @@ function initNavigation() {
                 body.style.overflow = '';
                 body.style.position = '';
                 body.style.width = '';
+                debugLog('Menu closed via nav link click');
             });
         });
         
@@ -139,6 +166,7 @@ function initNavigation() {
                 body.style.overflow = '';
                 body.style.position = '';
                 body.style.width = '';
+                debugLog('Menu closed via outside click');
             }
         });
         
@@ -151,6 +179,7 @@ function initNavigation() {
                 body.style.overflow = '';
                 body.style.position = '';
                 body.style.width = '';
+                debugLog('Menu closed due to window resize');
             }
         });
     }
@@ -168,24 +197,34 @@ function initNavigation() {
             }
         }
     });
+    
+    debugLog('Navigation system initialized');
 }
 
 // Contact Form Functionality
 function initContactForm() {
     const contactForm = document.getElementById('contactForm');
-    if (!contactForm) return;
+    if (!contactForm) {
+        debugLog('Contact form not found');
+        return;
+    }
     
     contactForm.addEventListener('submit', function(e) {
         e.preventDefault();
+        
+        debugLog('Contact form submitted');
         
         // Get form data
         const formData = new FormData(contactForm);
         const data = Object.fromEntries(formData);
         
+        debugLog('Form data collected:', data);
+        
         // Basic validation
         const errors = validateForm(data);
         if (errors.length > 0) {
             showNotification(errors.join('<br>'), 'error');
+            debugLog('Form validation failed:', errors);
             return;
         }
         
@@ -195,16 +234,27 @@ function initContactForm() {
         submitBtn.textContent = 'Sending...';
         submitBtn.disabled = true;
         
+        debugLog('Sending form data to API...');
+        
         // Send to server
-        fetch('/api/contact', {
+        fetch(`${CONFIG.API_BASE_URL}/api/contact`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(data)
         })
-        .then(response => response.json())
+        .then(response => {
+            debugLog('API response received:', {
+                status: response.status,
+                statusText: response.statusText,
+                ok: response.ok
+            });
+            return response.json();
+        })
         .then(result => {
+            debugLog('API response data:', result);
+            
             if (result.success) {
                 // Reset form
                 contactForm.reset();
@@ -216,15 +266,21 @@ function initContactForm() {
                 trackEvent('form_submit', {
                     form_type: 'contact',
                     company_size: data.revenue,
-                    manual_hours: data.operations
+                    manual_hours: data.operations,
+                    lead_score: result.nextSteps?.leadScore || 'unknown',
+                    business_stage: result.nextSteps?.businessStage || data.revenue
                 });
+                
+                debugLog('Form submission successful');
             } else {
                 showNotification(result.message || 'Sorry, there was an error. Please try again.', 'error');
+                debugLog('Form submission failed:', result);
             }
         })
         .catch(error => {
             console.error('Form submission error:', error);
             showNotification('Sorry, there was an error sending your message. Please try again.', 'error');
+            debugLog('Form submission error:', error);
         })
         .finally(() => {
             // Reset button
@@ -232,6 +288,8 @@ function initContactForm() {
             submitBtn.disabled = false;
         });
     });
+    
+    debugLog('Contact form initialized');
 }
 
 // Form Validation
@@ -260,6 +318,11 @@ function validateForm(data) {
         errors.push('Please select weekly hours on manual work');
     }
     
+    debugLog('Form validation completed:', { 
+        errors: errors.length,
+        details: errors 
+    });
+    
     return errors;
 }
 
@@ -268,6 +331,8 @@ function showNotification(message, type = 'info') {
     // Remove existing notifications
     const existingNotifications = document.querySelectorAll('.notification');
     existingNotifications.forEach(notif => notif.remove());
+    
+    debugLog('Showing notification:', { message, type });
     
     // Create notification element
     const notification = document.createElement('div');
@@ -343,9 +408,12 @@ function initSmoothScrolling() {
                     top: offsetTop,
                     behavior: 'smooth'
                 });
+                debugLog('Smooth scrolling to:', targetId);
             }
         });
     });
+    
+    debugLog('Smooth scrolling initialized');
 }
 
 // Scroll to Contact Function
@@ -357,12 +425,18 @@ function scrollToContact() {
             top: offsetTop,
             behavior: 'smooth'
         });
+        debugLog('Scrolled to contact section');
     }
 }
 
 // Schedule Call Function
 function scheduleCall() {
-    window.open('https://calendly.com/tony-opusautomations/30min', '_blank');
+    window.open(CONFIG.CALENDLY_URL, '_blank');
+    trackEvent('calendly_click', {
+        source: 'schedule_call_function',
+        url: CONFIG.CALENDLY_URL
+    });
+    debugLog('Opened Calendly link:', CONFIG.CALENDLY_URL);
 }
 
 // Animation on Scroll
@@ -376,6 +450,7 @@ function initAnimations() {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 entry.target.classList.add('animate-in');
+                debugLog('Element animated in:', entry.target.className);
             }
         });
     }, observerOptions);
@@ -389,14 +464,25 @@ function initAnimations() {
         el.classList.add('animate-element');
         observer.observe(el);
     });
+    
+    debugLog('Animations initialized for', animateElements.length, 'elements');
 }
 
 // Analytics and Performance Tracking
 function initAnalytics() {
+    if (!CONFIG.ANALYTICS_ENABLED) {
+        debugLog('Analytics disabled');
+        return;
+    }
+    
     // Track page load time
     window.addEventListener('load', function() {
         const loadTime = performance.timing.loadEventEnd - performance.timing.navigationStart;
-        console.log('Page load time:', loadTime + 'ms');
+        trackEvent('page_load_time', { 
+            load_time_ms: loadTime,
+            page: window.location.pathname
+        });
+        debugLog('Page load time tracked:', loadTime + 'ms');
     });
     
     // Track scroll depth
@@ -408,45 +494,80 @@ function initAnalytics() {
         }
     });
     
+    // Track max scroll on page unload
+    window.addEventListener('beforeunload', function() {
+        if (maxScroll > 0) {
+            trackEvent('max_scroll_depth', { 
+                scroll_percentage: maxScroll,
+                page: window.location.pathname
+            });
+        }
+    });
+    
     // Track form interactions
     const formInputs = document.querySelectorAll('#contactForm input, #contactForm select, #contactForm textarea');
     formInputs.forEach(input => {
         input.addEventListener('focus', function() {
-            trackEvent('form_field_focus', { field: this.name });
+            trackEvent('form_field_focus', { 
+                field: this.name,
+                form_type: 'contact'
+            });
         });
     });
     
     // Track CTA clicks
-    document.querySelectorAll('.btn-primary').forEach(btn => {
+    document.querySelectorAll('.btn-primary, .btn-secondary').forEach(btn => {
         btn.addEventListener('click', function() {
+            const buttonText = this.textContent.trim();
+            const isCalendly = this.href && this.href.includes('calendly');
+            
             trackEvent('cta_click', {
-                button_text: this.textContent.trim(),
-                page: window.location.pathname
+                button_text: buttonText,
+                page: window.location.pathname,
+                is_calendly: isCalendly,
+                button_type: this.classList.contains('btn-primary') ? 'primary' : 'secondary'
             });
         });
     });
+    
+    debugLog('Analytics initialized');
 }
 
 // Track Events Function
 function trackEvent(eventName, properties = {}) {
+    if (!CONFIG.ANALYTICS_ENABLED) {
+        return;
+    }
+    
+    const eventData = {
+        event: eventName,
+        data: {
+            ...properties,
+            timestamp: new Date().toISOString(),
+            url: window.location.href,
+            user_agent: navigator.userAgent,
+            referrer: document.referrer || 'direct',
+            page_title: document.title
+        }
+    };
+    
+    debugLog('Tracking event:', eventData);
+    
     // Send to server analytics endpoint
-    fetch('/api/analytics', {
+    fetch(`${CONFIG.API_BASE_URL}/api/analytics`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-            event: eventName,
-            data: properties,
-            timestamp: new Date().toISOString(),
-            url: window.location.href,
-            userAgent: navigator.userAgent
-        })
-    }).catch(err => console.log('Analytics error:', err));
+        body: JSON.stringify(eventData)
+    }).catch(err => {
+        debugLog('Analytics error:', err);
+    });
     
     // Google Analytics 4 event tracking (if available)
     if (typeof gtag !== 'undefined') {
         gtag('event', eventName, properties);
+        debugLog('Sent to Google Analytics:', eventName);
     }
 }
 
@@ -479,7 +600,8 @@ window.addEventListener('error', function(e) {
         message: e.message,
         filename: e.filename,
         lineno: e.lineno,
-        colno: e.colno
+        colno: e.colno,
+        stack: e.error?.stack || 'No stack trace'
     });
 });
 
@@ -487,18 +609,33 @@ window.addEventListener('error', function(e) {
 window.addEventListener('unhandledrejection', function(e) {
     console.error('Unhandled promise rejection:', e.reason);
     showNotification('An unexpected error occurred. Please try again.', 'error');
+    
+    trackEvent('unhandled_promise_rejection', {
+        reason: e.reason?.toString() || 'Unknown reason',
+        stack: e.reason?.stack || 'No stack trace'
+    });
+    
     e.preventDefault();
 });
 
 // Assessment Modal Functions
 function openAssessmentModal() {
-    document.getElementById('assessmentModal').style.display = 'block';
-    document.body.style.overflow = 'hidden';
+    const modal = document.getElementById('assessmentModal');
+    if (modal) {
+        modal.style.display = 'block';
+        document.body.style.overflow = 'hidden';
+        trackEvent('assessment_modal_open', { source: 'button_click' });
+        debugLog('Assessment modal opened');
+    }
 }
 
 function closeAssessmentModal() {
-    document.getElementById('assessmentModal').style.display = 'none';
-    document.body.style.overflow = 'auto';
+    const modal = document.getElementById('assessmentModal');
+    if (modal) {
+        modal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+        debugLog('Assessment modal closed');
+    }
 }
 
 // Close modal when clicking outside
@@ -512,10 +649,15 @@ window.addEventListener('click', function(event) {
 // Assessment Form Functionality
 function initAssessmentForm() {
     const assessmentForm = document.getElementById('assessmentForm');
-    if (!assessmentForm) return;
+    if (!assessmentForm) {
+        debugLog('Assessment form not found');
+        return;
+    }
     
     assessmentForm.addEventListener('submit', function(e) {
         e.preventDefault();
+        
+        debugLog('Assessment form submitted');
         
         const formData = new FormData(assessmentForm);
         const data = Object.fromEntries(formData);
@@ -523,12 +665,16 @@ function initAssessmentForm() {
         // Calculate assessment results
         const results = calculateAssessment(data);
         
+        debugLog('Assessment results calculated:', results);
+        
         // Show results
         showAssessmentResults(results);
         
         // Send to server
         submitAssessment(data, results);
     });
+    
+    debugLog('Assessment form initialized');
 }
 
 function calculateAssessment(data) {
@@ -573,10 +719,17 @@ function calculateAssessment(data) {
 }
 
 function showAssessmentResults(results) {
-    document.getElementById('savingsAmount').textContent = `$${results.savings.toLocaleString()}`;
-    document.getElementById('roiTimeline').textContent = `${results.roiMonths} months`;
-    document.getElementById('complexity').textContent = results.complexity;
-    document.getElementById('assessmentResult').style.display = 'block';
+    const savingsElement = document.getElementById('savingsAmount');
+    const timelineElement = document.getElementById('roiTimeline');
+    const complexityElement = document.getElementById('complexity');
+    const resultContainer = document.getElementById('assessmentResult');
+    
+    if (savingsElement) savingsElement.textContent = `$${results.savings.toLocaleString()}`;
+    if (timelineElement) timelineElement.textContent = `${results.roiMonths} months`;
+    if (complexityElement) complexityElement.textContent = results.complexity;
+    if (resultContainer) resultContainer.style.display = 'block';
+    
+    debugLog('Assessment results displayed:', results);
 }
 
 function submitAssessment(data, results) {
@@ -587,7 +740,9 @@ function submitAssessment(data, results) {
         type: 'assessment'
     };
     
-    fetch('/api/contact', {
+    debugLog('Submitting assessment to API:', assessmentData);
+    
+    fetch(`${CONFIG.API_BASE_URL}/api/contact`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -596,12 +751,27 @@ function submitAssessment(data, results) {
     })
     .then(response => response.json())
     .then(result => {
+        debugLog('Assessment submission result:', result);
+        
         if (result.success) {
             showNotification('Assessment complete! Check your email for detailed results.', 'success');
+            
+            trackEvent('assessment_completed', {
+                savings_potential: results.savings,
+                roi_months: results.roiMonths,
+                complexity: results.complexity,
+                process: data.process,
+                hours: data.hours,
+                revenue: data.revenue
+            });
+        } else {
+            showNotification('Assessment saved, but there was an issue sending results. We\'ll follow up manually.', 'warning');
         }
     })
     .catch(error => {
         console.error('Assessment submission error:', error);
+        showNotification('Assessment saved locally. We\'ll follow up via email.', 'warning');
+        debugLog('Assessment submission error:', error);
     });
 }
 
@@ -648,3 +818,11 @@ style.textContent = `
     }
 `;
 document.head.appendChild(style);
+
+// Make functions globally available for HTML onclick handlers
+window.openAssessmentModal = openAssessmentModal;
+window.closeAssessmentModal = closeAssessmentModal;
+window.scrollToContact = scrollToContact;
+window.scheduleCall = scheduleCall;
+
+debugLog('Script.js fully loaded and configured', CONFIG);
