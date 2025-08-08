@@ -180,19 +180,25 @@ function initNavigation() {
     
     debugLog('Navigation elements found, initializing...');
     
+    // Store current scroll position when menu opens
+    let scrollPositionBeforeMenu = 0;
+    
     // Helper functions for menu state
     function openMenu() {
+        // Store current scroll position
+        scrollPositionBeforeMenu = window.scrollY;
+        
         navMenu.classList.add('active');
         navToggle.classList.add('active');
         body.classList.add('menu-open');
         
-        // Prevent body scroll
+        // Prevent body scroll but maintain position
         body.style.overflow = 'hidden';
         body.style.position = 'fixed';
         body.style.width = '100%';
-        body.style.top = `-${window.scrollY}px`;
+        body.style.top = `-${scrollPositionBeforeMenu}px`;
         
-        debugLog('Mobile menu opened');
+        debugLog('Mobile menu opened at scroll position:', scrollPositionBeforeMenu);
     }
     
     function closeMenu() {
@@ -200,24 +206,25 @@ function initNavigation() {
         navToggle.classList.remove('active');
         body.classList.remove('menu-open');
         
-        // Restore body scroll
-        const scrollY = body.style.top;
+        // Restore body scroll and position
         body.style.overflow = '';
         body.style.position = '';
         body.style.width = '';
         body.style.top = '';
         
-        if (scrollY) {
-            window.scrollTo(0, parseInt(scrollY || '0') * -1);
+        // Restore scroll position immediately without smooth scrolling
+        if (scrollPositionBeforeMenu > 0) {
+            window.scrollTo(0, scrollPositionBeforeMenu);
         }
         
-        debugLog('Mobile menu closed');
+        debugLog('Mobile menu closed, restored scroll position:', scrollPositionBeforeMenu);
     }
     
-    // Mobile menu toggle with better event handling
+    // Mobile menu toggle with better event handling - FIXED SCROLL ISSUE
     navToggle.addEventListener('click', function(e) {
         e.preventDefault();
         e.stopPropagation();
+        e.stopImmediatePropagation(); // Prevent any other handlers
         
         debugLog('Nav toggle clicked');
         
@@ -229,11 +236,20 @@ function initNavigation() {
         } else {
             openMenu();
         }
+        
+        // Prevent any default scroll behavior
+        return false;
     });
     
-    // Prevent event bubbling on the toggle button
+    // Prevent event bubbling on the toggle button - ENHANCED
     navToggle.addEventListener('touchstart', function(e) {
         e.stopPropagation();
+        e.stopImmediatePropagation();
+    }, { passive: true });
+    
+    navToggle.addEventListener('touchend', function(e) {
+        e.stopPropagation();
+        e.stopImmediatePropagation();
     }, { passive: true });
     
     // Close menu when clicking nav links
