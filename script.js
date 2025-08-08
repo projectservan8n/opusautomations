@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize particles
     initParticles();
     
-    // Initialize navigation
+    // Initialize navigation - FIXED MOBILE
     initNavigation();
     
     // Initialize contact form
@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize assessment form
     initAssessmentForm();
     
-    // Initialize smooth scrolling
+    // Initialize smooth scrolling - FIXED CDN ERRORS
     initSmoothScrolling();
     
     // Initialize animations
@@ -44,9 +44,7 @@ document.addEventListener('DOMContentLoaded', function() {
     debugLog('All components initialized successfully');
 });
 
-// Twemoji removed - using native emojis only
-
-// Enhanced Floating Particles Animation - More Visible
+// Subtle Floating Particles Animation - Elegant and Minimal
 function initParticles() {
     const particlesContainer = document.getElementById('particles');
     if (!particlesContainer) {
@@ -54,7 +52,7 @@ function initParticles() {
         return;
     }
     
-    const particleCount = 80; // Increased count for more visibility
+    const particleCount = 25; // Reduced count for subtlety
     
     function createParticle() {
         const particle = document.createElement('div');
@@ -64,27 +62,27 @@ function initParticles() {
         particle.style.left = Math.random() * 100 + '%';
         particle.style.bottom = '-10px'; // Start from bottom
         
-        // More visible styling
-        const size = Math.random() * 6 + 3; // Larger particles (3-9px)
+        // Subtle styling
+        const size = Math.random() * 3 + 1.5; // Smaller particles (1.5-4.5px)
         particle.style.width = size + 'px';
         particle.style.height = size + 'px';
         
-        // Enhanced visibility
+        // Very subtle visibility
         particle.style.background = `linear-gradient(45deg, 
-            rgba(139, 92, 246, ${0.6 + Math.random() * 0.4}), 
-            rgba(236, 72, 153, ${0.5 + Math.random() * 0.3})
+            rgba(139, 92, 246, ${0.15 + Math.random() * 0.2}), 
+            rgba(236, 72, 153, ${0.1 + Math.random() * 0.15})
         )`;
         particle.style.borderRadius = '50%';
         particle.style.position = 'absolute';
         particle.style.pointerEvents = 'none';
         particle.style.zIndex = '1';
         
-        // Add glow effect for better visibility
-        particle.style.boxShadow = `0 0 ${size * 2}px rgba(139, 92, 246, 0.3)`;
+        // Very subtle glow effect
+        particle.style.boxShadow = `0 0 ${size * 1.5}px rgba(139, 92, 246, 0.1)`;
         
-        // Animation properties
-        const duration = Math.random() * 15 + 10; // 10-25 seconds
-        const horizontalDrift = (Math.random() - 0.5) * 200; // Drift left/right
+        // Slower animation properties
+        const duration = Math.random() * 25 + 20; // 20-45 seconds (slower)
+        const horizontalDrift = (Math.random() - 0.5) * 100; // Less drift
         
         particle.style.animation = `floatUp ${duration}s linear forwards`;
         particle.style.setProperty('--horizontal-drift', horizontalDrift + 'px');
@@ -99,21 +97,21 @@ function initParticles() {
         }, duration * 1000 + 1000);
     }
     
-    // Create initial burst of particles
+    // Create initial particles with staggered timing
     for (let i = 0; i < particleCount; i++) {
-        setTimeout(createParticle, Math.random() * 3000);
+        setTimeout(createParticle, Math.random() * 8000); // Spread over 8 seconds
     }
     
-    // Continuously create new particles more frequently
-    setInterval(createParticle, 200); // More frequent creation
+    // Create new particles less frequently
+    setInterval(createParticle, 800); // Much less frequent creation
     
     // Add the CSS animation
     addParticlesCSS();
     
-    debugLog('Enhanced particles system initialized with', particleCount, 'particles');
+    debugLog('Subtle particles system initialized with', particleCount, 'particles');
 }
 
-// Add enhanced particles CSS
+// Add subtle particles CSS
 function addParticlesCSS() {
     const style = document.createElement('style');
     style.textContent = `
@@ -122,14 +120,14 @@ function addParticlesCSS() {
                 transform: translateY(0) translateX(0) rotate(0deg);
                 opacity: 0;
             }
-            10% {
-                opacity: 1;
+            15% {
+                opacity: 0.3;
             }
-            90% {
-                opacity: 1;
+            85% {
+                opacity: 0.3;
             }
             100% {
-                transform: translateY(-100vh) translateX(var(--horizontal-drift, 0px)) rotate(360deg);
+                transform: translateY(-100vh) translateX(var(--horizontal-drift, 0px)) rotate(180deg);
                 opacity: 0;
             }
         }
@@ -152,125 +150,141 @@ function addParticlesCSS() {
             will-change: transform, opacity;
         }
         
-        /* Pulsing effect for some particles */
-        .particle:nth-child(3n) {
-            animation-name: floatUp, pulse;
-            animation-duration: inherit, 3s;
+        /* Subtle pulsing effect for some particles */
+        .particle:nth-child(5n) {
+            animation-name: floatUp, subtlePulse;
+            animation-duration: inherit, 4s;
             animation-timing-function: linear, ease-in-out;
             animation-iteration-count: 1, infinite;
             animation-fill-mode: forwards, none;
         }
         
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.2); }
+        @keyframes subtlePulse {
+            0%, 100% { transform: scale(1); opacity: inherit; }
+            50% { transform: scale(1.1); opacity: calc(inherit * 0.7); }
         }
     `;
     document.head.appendChild(style);
 }
 
-// Enhanced Navigation Functionality - FIXED MOBILE
+// FIXED Mobile Navigation Functionality
 function initNavigation() {
     const navToggle = document.getElementById('nav-toggle');
     const navMenu = document.getElementById('nav-menu');
     const body = document.body;
     
-    if (navToggle && navMenu) {
-        // Mobile menu toggle with better event handling
-        navToggle.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            
-            debugLog('Nav toggle clicked');
-            
-            // Toggle menu state
-            const isActive = navMenu.classList.contains('active');
-            
-            if (isActive) {
-                // Close menu
-                closeMenu();
-                debugLog('Mobile menu closed');
-            } else {
-                // Open menu
-                openMenu();
-                debugLog('Mobile menu opened');
-            }
-        });
-        
-        // Helper functions for menu state
-        function openMenu() {
-            navMenu.classList.add('active');
-            navToggle.classList.add('active');
-            body.classList.add('menu-open');
-            body.style.overflow = 'hidden';
-            body.style.position = 'fixed';
-            body.style.width = '100%';
-        }
-        
-        function closeMenu() {
-            navMenu.classList.remove('active');
-            navToggle.classList.remove('active');
-            body.classList.remove('menu-open');
-            body.style.overflow = '';
-            body.style.position = '';
-            body.style.width = '';
-        }
-        
-        // Close menu when clicking nav links - FIXED
-        const navLinks = document.querySelectorAll('.nav-link');
-        navLinks.forEach(link => {
-            link.addEventListener('click', function(e) {
-                // Don't prevent default for external links
-                if (!this.getAttribute('href').startsWith('#')) {
-                    closeMenu();
-                    return;
-                }
-                
-                // For anchor links, close menu after a short delay
-                setTimeout(() => {
-                    closeMenu();
-                }, 100);
-                
-                debugLog('Menu closed via nav link click');
-            });
-        });
-        
-        // Close menu when clicking outside - IMPROVED
-        document.addEventListener('click', function(e) {
-            // Check if click is outside nav elements
-            const isClickInsideNav = navMenu.contains(e.target) || navToggle.contains(e.target);
-            
-            if (!isClickInsideNav && navMenu.classList.contains('active')) {
-                closeMenu();
-                debugLog('Menu closed via outside click');
-            }
-        });
-        
-        // Close menu on escape key
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape' && navMenu.classList.contains('active')) {
-                closeMenu();
-                debugLog('Menu closed via escape key');
-            }
-        });
-        
-        // Handle window resize - IMPROVED
-        let resizeTimeout;
-        window.addEventListener('resize', function() {
-            clearTimeout(resizeTimeout);
-            resizeTimeout = setTimeout(() => {
-                if (window.innerWidth > 768 && navMenu.classList.contains('active')) {
-                    closeMenu();
-                    debugLog('Menu closed due to window resize');
-                }
-            }, 100);
-        });
-        
-        // Fix for touch devices
-        navToggle.addEventListener('touchstart', function(e) {
-            e.stopPropagation();
-        }, { passive: true });
+    if (!navToggle || !navMenu) {
+        debugLog('Navigation elements not found');
+        return;
     }
+    
+    debugLog('Navigation elements found, initializing...');
+    
+    // Helper functions for menu state
+    function openMenu() {
+        navMenu.classList.add('active');
+        navToggle.classList.add('active');
+        body.classList.add('menu-open');
+        
+        // Prevent body scroll
+        body.style.overflow = 'hidden';
+        body.style.position = 'fixed';
+        body.style.width = '100%';
+        body.style.top = `-${window.scrollY}px`;
+        
+        debugLog('Mobile menu opened');
+    }
+    
+    function closeMenu() {
+        navMenu.classList.remove('active');
+        navToggle.classList.remove('active');
+        body.classList.remove('menu-open');
+        
+        // Restore body scroll
+        const scrollY = body.style.top;
+        body.style.overflow = '';
+        body.style.position = '';
+        body.style.width = '';
+        body.style.top = '';
+        
+        if (scrollY) {
+            window.scrollTo(0, parseInt(scrollY || '0') * -1);
+        }
+        
+        debugLog('Mobile menu closed');
+    }
+    
+    // Mobile menu toggle with better event handling
+    navToggle.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        debugLog('Nav toggle clicked');
+        
+        // Toggle menu state
+        const isActive = navMenu.classList.contains('active');
+        
+        if (isActive) {
+            closeMenu();
+        } else {
+            openMenu();
+        }
+    });
+    
+    // Prevent event bubbling on the toggle button
+    navToggle.addEventListener('touchstart', function(e) {
+        e.stopPropagation();
+    }, { passive: true });
+    
+    // Close menu when clicking nav links
+    const navLinks = document.querySelectorAll('.nav-link');
+    navLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            // Don't prevent default for external links
+            if (!this.getAttribute('href').startsWith('#')) {
+                closeMenu();
+                return;
+            }
+            
+            // For anchor links, close menu after a short delay
+            setTimeout(() => {
+                closeMenu();
+            }, 100);
+            
+            debugLog('Menu closed via nav link click');
+        });
+    });
+    
+    // Close menu when clicking outside - IMPROVED
+    document.addEventListener('click', function(e) {
+        // Check if click is outside nav elements
+        const isClickInsideNav = navMenu.contains(e.target) || navToggle.contains(e.target);
+        
+        if (!isClickInsideNav && navMenu.classList.contains('active')) {
+            closeMenu();
+            debugLog('Menu closed via outside click');
+        }
+    });
+    
+    // Close menu on escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && navMenu.classList.contains('active')) {
+            closeMenu();
+            debugLog('Menu closed via escape key');
+        }
+    });
+    
+    // Handle window resize - IMPROVED
+    let resizeTimeout;
+    window.addEventListener('resize', function() {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+            if (window.innerWidth > 768 && navMenu.classList.contains('active')) {
+                closeMenu();
+                debugLog('Menu closed due to window resize');
+            }
+        }, 100);
+    });
     
     // Navbar scroll effect
     window.addEventListener('scroll', function() {
@@ -480,7 +494,7 @@ function showNotification(message, type = 'info') {
     }, 5000);
 }
 
-// Lenis Smooth Scrolling Implementation (Official from darkroomengineering/lenis)
+// FIXED Smooth Scrolling Implementation (NO CDN DEPENDENCIES)
 function initSmoothScrolling() {
     // Load Lenis library with correct CDN sources
     function loadLenis() {
@@ -492,38 +506,9 @@ function initSmoothScrolling() {
                 return;
             }
             
-            // Official Lenis CDN sources (CSP-approved)
-            const lenisUrls = [
-                'https://cdn.jsdelivr.net/npm/lenis@1.2.1/dist/lenis.min.js',
-                'https://cdnjs.cloudflare.com/ajax/libs/lenis/1.2.1/lenis.min.js',
-                'https://unpkg.com/lenis@1.2.1/dist/lenis.min.js'
-            ];
-            
-            let currentUrlIndex = 0;
-            
-            function tryLoadScript() {
-                if (currentUrlIndex >= lenisUrls.length) {
-                    debugLog('All Lenis CDNs failed, using enhanced fallback');
-                    initFallbackSmoothScroll();
-                    resolve();
-                    return;
-                }
-                
-                const script = document.createElement('script');
-                script.src = lenisUrls[currentUrlIndex];
-                script.onload = () => {
-                    debugLog('✅ Lenis loaded successfully from:', lenisUrls[currentUrlIndex]);
-                    resolve();
-                };
-                script.onerror = () => {
-                    debugLog('❌ Failed to load Lenis from:', lenisUrls[currentUrlIndex]);
-                    currentUrlIndex++;
-                    tryLoadScript();
-                };
-                document.head.appendChild(script);
-            }
-            
-            tryLoadScript();
+            // Official Lenis CDN sources (CSP-approved) - REMOVED FOR NO CDN DEPENDENCY
+            debugLog('Skipping external CDN loading, using built-in smooth scroll');
+            resolve();
         });
     }
     
@@ -631,7 +616,7 @@ function initSmoothScrolling() {
         }
     }
     
-    // Enhanced fallback smooth scroll (heraops.com inspired)
+    // Enhanced fallback smooth scroll (NO EXTERNAL LIBRARIES)
     function initFallbackSmoothScroll() {
         let isScrolling = false;
         let currentScrollY = window.scrollY;
@@ -639,9 +624,9 @@ function initSmoothScrolling() {
         let velocity = 0;
         let rafId = null;
         
-        // Smooth scrolling configuration (heraops.com style)
+        // Smooth scrolling configuration
         const config = {
-            lerp: 0.1,           // Linear interpolation (same as heraops.com)
+            lerp: 0.1,           // Linear interpolation
             friction: 0.9,       // Velocity friction
             maxVelocity: 30,     // Maximum scroll velocity
             wheelMultiplier: 1.2, // Wheel sensitivity
@@ -678,7 +663,7 @@ function initSmoothScrolling() {
             }
         }
         
-        // Enhanced wheel handling (heraops.com style)
+        // Enhanced wheel handling
         function onWheel(e) {
             e.preventDefault();
             
@@ -782,7 +767,7 @@ function initSmoothScrolling() {
             scrollAnimation();
         }
         
-        // Set up navigation links - ENHANCED for merged site
+        // Set up navigation links
         const navLinks = document.querySelectorAll('.nav-link[href^="#"], [data-scroll-to]');
         navLinks.forEach(link => {
             link.addEventListener('click', function(e) {
@@ -792,7 +777,7 @@ function initSmoothScrolling() {
                 
                 if (targetElement) {
                     smoothScrollToElement(targetElement, 80);
-                    debugLog('🎯 Fallback smooth scrolling to:', targetId);
+                    debugLog('🎯 Built-in smooth scrolling to:', targetId);
                 }
             });
         });
@@ -805,16 +790,20 @@ function initSmoothScrolling() {
                 
                 if (targetElement) {
                     smoothScrollToElement(targetElement, 80);
-                    debugLog('🎯 Fallback smooth scrolling to:', targetId);
+                    debugLog('🎯 Built-in smooth scrolling to:', targetId);
                 }
             });
         });
         
-        // Bind events
-        window.addEventListener('wheel', onWheel, { passive: false });
-        window.addEventListener('touchstart', onTouchStart, { passive: true });
-        window.addEventListener('touchmove', onTouchMove, { passive: false });
-        window.addEventListener('touchend', onTouchEnd, { passive: true });
+        // Bind events (only if device supports it)
+        try {
+            window.addEventListener('wheel', onWheel, { passive: false });
+            window.addEventListener('touchstart', onTouchStart, { passive: true });
+            window.addEventListener('touchmove', onTouchMove, { passive: false });
+            window.addEventListener('touchend', onTouchEnd, { passive: true });
+        } catch (error) {
+            debugLog('Some scroll events not supported on this device');
+        }
         
         // Sync with regular scroll events (for other scripts)
         window.addEventListener('scroll', () => {
@@ -832,7 +821,7 @@ function initSmoothScrolling() {
         window.smoothScrollToElement = smoothScrollToElement;
         window.getCurrentScrollY = () => currentScrollY;
         
-        debugLog('🚀 Enhanced fallback smooth scrolling initialized (heraops.com inspired)');
+        debugLog('🚀 Built-in smooth scrolling initialized (NO CDN DEPENDENCIES)');
     }
     
     // Update navbar background and active states based on scroll position
@@ -1089,26 +1078,23 @@ function initSmoothScrolling() {
     
     // Initialize everything
     async function initialize() {
-        debugLog('🎬 Initializing Lenis smooth scrolling system...');
+        debugLog('🎬 Initializing smooth scrolling system (NO EXTERNAL DEPENDENCIES)...');
         
         // Add CSS first
         addSmoothScrollCSS();
         
-        // Load and initialize Lenis
+        // Load and initialize - SKIPPING CDN, USING BUILT-IN
         try {
             await loadLenis();
             
             // Small delay to ensure DOM is ready
             setTimeout(() => {
-                if (window.Lenis) {
-                    initLenis();
-                } else {
-                    initFallbackSmoothScroll();
-                }
+                // Always use fallback (built-in) since we're not loading external CDNs
+                initFallbackSmoothScroll();
             }, 100);
             
         } catch (error) {
-            console.error('❌ Error loading Lenis:', error);
+            console.error('❌ Error in smooth scroll init:', error);
             initFallbackSmoothScroll();
         }
     }
@@ -1571,4 +1557,4 @@ window.closeAssessmentModal = closeAssessmentModal;
 window.scrollToContact = scrollToContact;
 window.scheduleCall = scheduleCall;
 
-debugLog('Script.js fully loaded and configured', CONFIG);
+debugLog('Script.js fully loaded and configured - MOBILE NAV FIXED, CDN ERRORS RESOLVED', CONFIG);
