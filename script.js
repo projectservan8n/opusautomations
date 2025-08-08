@@ -44,23 +44,7 @@ document.addEventListener('DOMContentLoaded', function() {
     debugLog('All components initialized successfully');
 });
 
-// Initialize Twemoji
-function initTwemoji() {
-    try {
-        if (window.twemoji) {
-            twemoji.parse(document.body, {
-                folder: 'svg',
-                ext: '.svg',
-                className: 'emoji'
-            });
-            console.log('✅ Twemoji initialized successfully');
-        } else {
-            console.log('❌ Twemoji not available');
-        }
-    } catch (error) {
-        console.log('❌ Twemoji error:', error);
-    }
-}
+// Twemoji removed - using native emojis only
 
 // Enhanced Floating Particles Animation - More Visible
 function initParticles() {
@@ -185,84 +169,107 @@ function addParticlesCSS() {
     document.head.appendChild(style);
 }
 
-// Enhanced Navigation Functionality
+// Enhanced Navigation Functionality - FIXED MOBILE
 function initNavigation() {
     const navToggle = document.getElementById('nav-toggle');
     const navMenu = document.getElementById('nav-menu');
     const body = document.body;
     
     if (navToggle && navMenu) {
-        // Mobile menu toggle
+        // Mobile menu toggle with better event handling
         navToggle.addEventListener('click', function(e) {
             e.preventDefault();
             e.stopPropagation();
             
             debugLog('Nav toggle clicked');
             
+            // Toggle menu state
             const isActive = navMenu.classList.contains('active');
             
             if (isActive) {
                 // Close menu
-                navMenu.classList.remove('active');
-                navToggle.classList.remove('active');
-                body.classList.remove('menu-open');
-                body.style.overflow = '';
-                body.style.position = '';
-                body.style.width = '';
+                closeMenu();
                 debugLog('Mobile menu closed');
             } else {
                 // Open menu
-                navMenu.classList.add('active');
-                navToggle.classList.add('active');
-                body.classList.add('menu-open');
-                body.style.overflow = 'hidden';
-                body.style.position = 'fixed';
-                body.style.width = '100%';
+                openMenu();
                 debugLog('Mobile menu opened');
             }
         });
         
-        // Close menu when clicking nav links
+        // Helper functions for menu state
+        function openMenu() {
+            navMenu.classList.add('active');
+            navToggle.classList.add('active');
+            body.classList.add('menu-open');
+            body.style.overflow = 'hidden';
+            body.style.position = 'fixed';
+            body.style.width = '100%';
+        }
+        
+        function closeMenu() {
+            navMenu.classList.remove('active');
+            navToggle.classList.remove('active');
+            body.classList.remove('menu-open');
+            body.style.overflow = '';
+            body.style.position = '';
+            body.style.width = '';
+        }
+        
+        // Close menu when clicking nav links - FIXED
         const navLinks = document.querySelectorAll('.nav-link');
         navLinks.forEach(link => {
-            link.addEventListener('click', function() {
-                navMenu.classList.remove('active');
-                navToggle.classList.remove('active');
-                body.classList.remove('menu-open');
-                body.style.overflow = '';
-                body.style.position = '';
-                body.style.width = '';
+            link.addEventListener('click', function(e) {
+                // Don't prevent default for external links
+                if (!this.getAttribute('href').startsWith('#')) {
+                    closeMenu();
+                    return;
+                }
+                
+                // For anchor links, close menu after a short delay
+                setTimeout(() => {
+                    closeMenu();
+                }, 100);
+                
                 debugLog('Menu closed via nav link click');
             });
         });
         
-        // Close menu when clicking outside
+        // Close menu when clicking outside - IMPROVED
         document.addEventListener('click', function(e) {
+            // Check if click is outside nav elements
             const isClickInsideNav = navMenu.contains(e.target) || navToggle.contains(e.target);
             
             if (!isClickInsideNav && navMenu.classList.contains('active')) {
-                navMenu.classList.remove('active');
-                navToggle.classList.remove('active');
-                body.classList.remove('menu-open');
-                body.style.overflow = '';
-                body.style.position = '';
-                body.style.width = '';
+                closeMenu();
                 debugLog('Menu closed via outside click');
             }
         });
         
-        // Handle window resize
-        window.addEventListener('resize', function() {
-            if (window.innerWidth > 768) {
-                navMenu.classList.remove('active');
-                navToggle.classList.remove('active');
-                body.classList.remove('menu-open');
-                body.style.overflow = '';
-                body.style.position = '';
-                body.style.width = '';
-                debugLog('Menu closed due to window resize');
+        // Close menu on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && navMenu.classList.contains('active')) {
+                closeMenu();
+                debugLog('Menu closed via escape key');
             }
         });
+        
+        // Handle window resize - IMPROVED
+        let resizeTimeout;
+        window.addEventListener('resize', function() {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                if (window.innerWidth > 768 && navMenu.classList.contains('active')) {
+                    closeMenu();
+                    debugLog('Menu closed due to window resize');
+                }
+            }, 100);
+        });
+        
+        // Fix for touch devices
+        navToggle.addEventListener('touchstart', function(e) {
+            e.stopPropagation();
+        }, { passive: true });
     }
     
     // Navbar scroll effect
@@ -279,7 +286,7 @@ function initNavigation() {
         }
     });
     
-    debugLog('Navigation system initialized');
+    debugLog('Enhanced navigation system initialized');
 }
 
 // Contact Form Functionality
