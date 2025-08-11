@@ -1,0 +1,1230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tony Herrera — AI Automation Consultant | n8n Specialist</title>
+  <meta name="description" content="Portfolio of Tony Herrera — AI Automation Consultant specializing in n8n and AI workflow design." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700&display=swap" rel="stylesheet">
+  <style>
+    /* Reset and Base Styles */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    /* Body and Main Content */
+    body {
+        font-family: 'Titillium Web', 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        background: #0a0a0a;
+        color: #ffffff;
+        line-height: 1.6;
+        overflow-x: hidden;
+        padding-top: 80px !important;
+    }
+
+    /* Fixed Navigation - Matching Your Style */
+    .navbar {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        width: 100% !important;
+        background: rgba(10, 10, 10, 0.95) !important;
+        backdrop-filter: blur(20px) !important;
+        -webkit-backdrop-filter: blur(20px) !important;
+        border-bottom: 1px solid rgba(139, 92, 246, 0.2) !important;
+        z-index: 9999 !important;
+        box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3) !important;
+        transition: all 0.3s ease !important;
+    }
+
+    .nav-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 1rem 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 80px;
+    }
+
+    .brand {
+        font-family: 'Titillium Web', sans-serif;
+        font-size: 1.5rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, #8b5cf6, #ec4899);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        letter-spacing: 0.02em;
+    }
+
+    .nav-menu {
+        display: flex;
+        gap: 2rem;
+    }
+
+    .nav-link {
+        font-family: 'Titillium Web', sans-serif;
+        color: #e5e7eb;
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 1rem;
+        padding: 0.5rem 1rem;
+        border-radius: 0.375rem;
+        transition: all 0.3s ease;
+        position: relative;
+        letter-spacing: 0.01em;
+    }
+
+    .nav-link:hover {
+        color: #8b5cf6;
+        background: rgba(139, 92, 246, 0.1);
+    }
+
+    .nav-toggle {
+        display: none;
+        flex-direction: column;
+        cursor: pointer;
+        padding: 0.5rem;
+        z-index: 1001;
+        position: relative;
+    }
+
+    .bar {
+        width: 25px;
+        height: 3px;
+        background: #8b5cf6;
+        margin: 3px 0;
+        transition: 0.3s;
+        border-radius: 2px;
+    }
+
+    /* Mobile Navigation */
+    @media (max-width: 768px) {
+        body {
+            padding-top: 70px !important;
+        }
+
+        .nav-container {
+            height: 70px !important;
+            padding: 0 1rem;
+        }
+
+        .nav-toggle {
+            display: flex !important;
+        }
+
+        .nav-menu {
+            position: fixed !important;
+            top: 0 !important;
+            right: -100% !important;
+            width: 100% !important;
+            max-width: 320px !important;
+            height: 100vh !important;
+            background: rgba(10, 10, 10, 0.98) !important;
+            backdrop-filter: blur(30px) !important;
+            flex-direction: column !important;
+            justify-content: flex-start !important;
+            align-items: stretch !important;
+            padding: 0 !important;
+            transition: right 0.4s ease !important;
+            z-index: 9999 !important;
+            border-left: 1px solid rgba(139, 92, 246, 0.2) !important;
+            box-shadow: -5px 0 25px rgba(0, 0, 0, 0.4) !important;
+        }
+
+        .nav-menu.active {
+            right: 0 !important;
+        }
+
+        .nav-menu::before {
+            content: 'Menu' !important;
+            display: block !important;
+            padding: 2rem 1.5rem 1rem 1.5rem !important;
+            font-size: 1.5rem !important;
+            font-weight: 700 !important;
+            color: #8b5cf6 !important;
+            letter-spacing: 0.5px !important;
+            border-bottom: 1px solid rgba(139, 92, 246, 0.1) !important;
+            text-transform: uppercase !important;
+        }
+
+        .nav-link {
+            font-size: 1rem !important;
+            margin: 0 !important;
+            padding: 1.2rem 1.5rem !important;
+            border-radius: 0 !important;
+            width: 100% !important;
+            border-bottom: 1px solid rgba(139, 92, 246, 0.08) !important;
+            color: #ffffff !important;
+            font-weight: 600 !important;
+            text-transform: uppercase !important;
+            font-size: 0.9rem !important;
+        }
+
+        .nav-link:hover {
+            background: rgba(139, 92, 246, 0.1) !important;
+        }
+
+        .nav-toggle.active .bar:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px) !important;
+            background: #ffffff !important;
+        }
+
+        .nav-toggle.active .bar:nth-child(2) {
+            opacity: 0 !important;
+        }
+
+        .nav-toggle.active .bar:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -6px) !important;
+            background: #ffffff !important;
+        }
+
+        body.menu-open {
+            overflow: hidden;
+            position: fixed;
+            width: 100%;
+        }
+
+        body.menu-open::before {
+            content: '' !important;
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100vw !important;
+            height: 100vh !important;
+            background: rgba(0, 0, 0, 0.6) !important;
+            z-index: 9998 !important;
+            backdrop-filter: blur(2px) !important;
+        }
+    }
+
+    /* Utility Classes */
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 2rem;
+    }
+
+    .gradient-text {
+        font-family: 'Titillium Web', sans-serif;
+        background: linear-gradient(135deg, #8b5cf6, #ec4899);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+    }
+
+    .btn {
+        font-family: 'Titillium Web', sans-serif;
+        padding: 0.75rem 1.5rem;
+        border: none;
+        border-radius: 0.5rem;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        font-size: 1rem;
+        min-height: 48px;
+        letter-spacing: 0.01em;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #8b5cf6, #a855f7);
+        color: white;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(139, 92, 246, 0.3);
+    }
+
+    .btn-secondary {
+        background: transparent;
+        color: #8b5cf6;
+        border: 2px solid #8b5cf6;
+    }
+
+    .btn-secondary:hover {
+        background: #8b5cf6;
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(139, 92, 246, 0.3);
+    }
+
+    /* Hero Section */
+    .hero {
+        min-height: calc(100vh - 80px);
+        display: flex;
+        align-items: center;
+        position: relative;
+        background: radial-gradient(ellipse at center, rgba(139, 92, 246, 0.1) 0%, transparent 70%);
+        z-index: 2;
+        scroll-margin-top: 80px;
+    }
+
+    .hero-container {
+        display: grid;
+        grid-template-columns: 1.2fr 1fr;
+        gap: 4rem;
+        align-items: center;
+    }
+
+    .hero-content h1 {
+        font-family: 'Titillium Web', sans-serif;
+        font-size: 3.5rem;
+        font-weight: 700;
+        line-height: 1.1;
+        margin: 0 0 1.5rem;
+        letter-spacing: -0.02em;
+    }
+
+    .hero-subtitle {
+        font-size: 1.25rem;
+        color: #d1d5db;
+        margin-bottom: 2rem;
+        line-height: 1.7;
+    }
+
+    .badge {
+        display: inline-block;
+        background: linear-gradient(135deg, #8b5cf6, #ec4899);
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 1rem;
+        font-size: 0.875rem;
+        font-weight: 600;
+        margin-bottom: 1.5rem;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+    }
+
+    .hero-actions {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .hero-image {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(139, 92, 246, 0.2);
+        border-radius: 1rem;
+        padding: 2rem;
+        box-shadow: 0 25px 50px rgba(139, 92, 246, 0.1);
+    }
+
+    .image-placeholder {
+        width: 100%;
+        height: 320px;
+        background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(236, 72, 153, 0.1));
+        border: 2px dashed rgba(139, 92, 246, 0.3);
+        border-radius: 0.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #9ca3af;
+        font-weight: 500;
+        font-size: 1.1rem;
+    }
+
+    .hero-photo {
+        width: 100%;
+        height: 320px;
+        object-fit: cover;
+        border-radius: 0.5rem;
+        border: 2px solid rgba(139, 92, 246, 0.3);
+    }
+
+    .project-video {
+        width: 100%;
+        height: 240px;
+        object-fit: cover;
+        border-radius: 0;
+    }
+
+    .project-image {
+        width: 100%;
+        height: 240px;
+        object-fit: cover;
+        border-radius: 0;
+    }
+
+    /* Section Styles */
+    section {
+        padding: 6rem 0;
+        position: relative;
+        z-index: 2;
+        scroll-margin-top: 80px;
+    }
+
+    .section-gray {
+        background: rgba(139, 92, 246, 0.03);
+    }
+
+    .section-header {
+        text-align: center;
+        margin-bottom: 4rem;
+    }
+
+    .section-title {
+        font-family: 'Titillium Web', sans-serif;
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin: 0 0 1rem;
+        letter-spacing: -0.01em;
+    }
+
+    .section-subtitle {
+        font-size: 1.125rem;
+        color: #9ca3af;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    /* Cards */
+    .cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 2rem;
+    }
+
+    .card {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(139, 92, 246, 0.2);
+        border-radius: 1rem;
+        padding: 2rem;
+        transition: all 0.3s ease;
+        position: relative;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        border-color: rgba(139, 92, 246, 0.5);
+        box-shadow: 0 20px 40px rgba(139, 92, 246, 0.1);
+    }
+
+    .card h3 {
+        font-size: 1.5rem;
+        margin: 0 0 1rem;
+        color: #8b5cf6;
+    }
+
+    .card p {
+        color: #d1d5db;
+        margin: 0;
+    }
+
+    /* Experience & Projects */
+    .experience-item, .project-item {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(139, 92, 246, 0.2);
+        border-radius: 1rem;
+        overflow: hidden;
+        box-shadow: 0 25px 50px rgba(139, 92, 246, 0.1);
+        margin-bottom: 2rem;
+        transition: all 0.3s ease;
+    }
+
+    .experience-item:hover, .project-item:hover {
+        transform: translateY(-5px);
+        border-color: rgba(139, 92, 246, 0.5);
+        box-shadow: 0 30px 60px rgba(139, 92, 246, 0.15);
+    }
+
+    .item-media {
+        width: 100%;
+        height: 240px;
+        background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(236, 72, 153, 0.1));
+        border-bottom: 1px solid rgba(139, 92, 246, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #9ca3af;
+        font-weight: 500;
+        position: relative;
+        font-size: 1.1rem;
+    }
+
+    .item-content {
+        padding: 2rem;
+    }
+
+    .item-content h3 {
+        font-size: 1.75rem;
+        font-weight: 700;
+        margin: 0 0 1rem;
+        color: #8b5cf6;
+    }
+
+    .item-content p {
+        color: #d1d5db;
+        margin: 0 0 1.5rem;
+        line-height: 1.6;
+        font-size: 1.1rem;
+    }
+
+    .item-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-top: 1rem;
+    }
+
+    .tag {
+        background: rgba(139, 92, 246, 0.2);
+        color: #a855f7;
+        padding: 0.25rem 0.75rem;
+        border-radius: 1rem;
+        font-size: 0.875rem;
+        font-weight: 600;
+        border: 1px solid rgba(139, 92, 246, 0.3);
+    }
+
+    .external-link {
+        color: #8b5cf6;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+
+    .external-link:hover {
+        color: #a855f7;
+        transform: translateY(-1px);
+    }
+
+    /* Contact */
+    .contact-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 2rem;
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(139, 92, 246, 0.2);
+        border-radius: 1rem;
+        padding: 2.5rem;
+        box-shadow: 0 25px 50px rgba(139, 92, 246, 0.1);
+    }
+
+    .contact-item {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .contact-label {
+        font-weight: 600;
+        color: #8b5cf6;
+        font-size: 0.875rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .contact-value {
+        color: #e5e7eb;
+        font-size: 1rem;
+    }
+
+    .contact-value a {
+        color: #8b5cf6;
+        font-weight: 500;
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+
+    .contact-value a:hover {
+        color: #a855f7;
+        text-decoration: underline;
+    }
+
+    /* Footer */
+    footer {
+        background: rgba(0, 0, 0, 0.5);
+        border-top: 1px solid rgba(139, 92, 246, 0.2);
+        padding: 2rem 0;
+        text-align: center;
+        color: #9ca3af;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .hero-container {
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        .hero-content h1 {
+            font-size: 2.5rem;
+        }
+
+        .hero-subtitle {
+            font-size: 1.125rem;
+        }
+
+        .cards {
+            grid-template-columns: 1fr;
+        }
+
+        .hero-actions {
+            flex-direction: column;
+        }
+
+        .btn {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .container {
+            padding: 0 1rem;
+        }
+
+        .section-title {
+            font-size: 2rem;
+        }
+
+        .hero {
+            min-height: calc(100vh - 70px);
+            scroll-margin-top: 70px;
+        }
+
+        section {
+            scroll-margin-top: 70px;
+        }
+    }
+
+    /* Floating particles background */
+    .particles-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 1;
+        overflow: hidden;
+    }
+
+    .particle {
+        position: absolute;
+        border-radius: 50%;
+        pointer-events: none;
+        will-change: transform, opacity;
+    }
+
+    @keyframes floatUp {
+        0% {
+            transform: translateY(0) translateX(0) rotate(0deg);
+            opacity: 0;
+        }
+        15% {
+            opacity: 0.3;
+        }
+        85% {
+            opacity: 0.3;
+        }
+        100% {
+            transform: translateY(-100vh) translateX(var(--horizontal-drift, 0px)) rotate(180deg);
+            opacity: 0;
+        }
+    }
+
+    /* Animation on scroll */
+    .animate-element {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: all 0.6s ease;
+    }
+
+    .animate-element.animate-in {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    /* Smooth scrolling */
+    html {
+        scroll-behavior: smooth;
+        scroll-padding-top: 80px;
+    }
+  </style>
+</head>
+<body>
+<!-- Floating particles background -->
+<div class="particles-container" id="particles"></div>
+
+<header class="navbar">
+  <div class="nav-container">
+    <div class="brand">TONY HERRERA</div>
+    <nav class="nav-menu" id="nav-menu">
+      <a href="#about" class="nav-link">About</a>
+      <a href="#skills" class="nav-link">Skills</a>
+      <a href="#experience" class="nav-link">Experience</a>
+      <a href="#portfolio" class="nav-link">Projects</a>
+      <a href="#contact" class="nav-link">Contact</a>
+    </nav>
+    <div class="nav-toggle" id="nav-toggle">
+      <span class="bar"></span>
+      <span class="bar"></span>
+      <span class="bar"></span>
+    </div>
+  </div>
+</header>
+
+<main>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container hero-container">
+      <div class="hero-content">
+        <div class="badge">AI AUTOMATION CONSULTANT</div>
+        <h1>Build once. <span class="gradient-text">Scale forever.</span></h1>
+        <p class="hero-subtitle">
+          I help ambitious businesses eliminate manual work through custom AI automation. 
+          From $100K startups to $50M+ enterprises — scalable solutions that grow with you.
+        </p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#portfolio">See My Work</a>
+          <a class="btn btn-secondary" href="https://opusautomations.com" target="_blank" rel="noopener">Software & Rates →</a>
+        </div>
+      </div>
+      <div class="hero-image">
+        <img src="https://raw.githubusercontent.com/projectservan8n/opusautomations/refs/heads/main/assets/video/TONY.JPEG" 
+             alt="Tony Herrera - AI Automation Consultant" 
+             class="hero-photo"
+             loading="lazy" />
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about" class="section-gray">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">About <span class="gradient-text">Tony</span></h2>
+        <p class="section-subtitle">
+          I'm an AI Automation Consultant focused on eliminating bottlenecks and scaling operations. 
+          I've managed product timelines, shipped features with dev teams, and built automation frameworks 
+          that save hundreds of hours each month.
+        </p>
+      </div>
+      <div class="cards">
+        <div class="card">
+          <h3>🎯 Scale-Appropriate Solutions</h3>
+          <p>Whether you need a $3K workflow improvement or a $150K enterprise transformation, I match the solution to your stage and budget.</p>
+        </div>
+        <div class="card">
+          <h3>🚀 Proven Track Record</h3>
+          <p>From bootstrapped startups to Fortune 500 companies — my automation strategies deliver 3x-15x ROI at any scale.</p>
+        </div>
+        <div class="card">
+          <h3>🛡️ Long-term Partnership</h3>
+          <p>I grow with your business. Start small, scale smart, and evolve your automation as you expand.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section id="skills">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Core <span class="gradient-text">Capabilities</span></h2>
+        <p class="section-subtitle">
+          Transform how your team works — measure, improve, excel.
+        </p>
+      </div>
+      <div class="cards">
+        <div class="card">
+          <h3>Automation & Workflow Design</h3>
+          <p>End-to-end web-based automation solutions with n8n backend integration tailored to your specific business needs.</p>
+        </div>
+        <div class="card">
+          <h3>Process Optimization</h3>
+          <p>Comprehensive analysis of your operations to identify the highest-impact automation opportunities.</p>
+        </div>
+        <div class="card">
+          <h3>AI Tool Integration</h3>
+          <p>n8n, OpenAI, webhooks, and custom APIs wired to measurable business outcomes.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPERIENCE -->
+  <section id="experience" class="section-gray">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Professional <span class="gradient-text">Experience</span></h2>
+        <p class="section-subtitle">
+          From bootstrapped startups to Fortune 500 companies — my automation strategies deliver results at any scale.
+        </p>
+      </div>
+
+      <div class="experience-item">
+        <div class="item-content">
+          <h3>AI Automation Consultant</h3>
+          <p>Built lead gen, reporting, content, and onboarding automations that save 15+ hours weekly. 
+          Specialized in connecting CRMs, email platforms, and analytics through n8n/APIs for seamless data flow 
+          and measurable business impact.</p>
+          <div class="item-tags">
+            <span class="tag">ROI: 3x-15x</span>
+            <span class="tag">Time Saved: 15+ hrs/week</span>
+            <span class="tag">Custom Solutions</span>
+            <span class="tag">Enterprise Ready</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="experience-item">
+        <div class="item-content">
+          <h3>Operations Manager</h3>
+          <p>Managed product timelines and cross‑functional launches for growing tech companies. 
+          Cut turnaround times up to 60% through strategic automation of reporting, communication, 
+          and project tracking systems.</p>
+          <div class="item-tags">
+            <span class="tag">60% Faster Delivery</span>
+            <span class="tag">Cross-functional Teams</span>
+            <span class="tag">Product Launches</span>
+            <span class="tag">Process Optimization</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="experience-item">
+        <div class="item-content">
+          <h3>Executive Assistant & Automation Specialist</h3>
+          <p>High‑level operations, scheduling, research, and lightweight automations for founders. 
+          Built foundational systems for calendar management, email processing, task coordination, 
+          and executive reporting that scaled with business growth.</p>
+          <div class="item-tags">
+            <span class="tag">Executive Support</span>
+            <span class="tag">Calendar Automation</span>
+            <span class="tag">Research & Analysis</span>
+            <span class="tag">Scalable Systems</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PORTFOLIO -->
+  <section id="portfolio">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Project <span class="gradient-text">Portfolio</span></h2>
+        <p class="section-subtitle">
+          Real results for real businesses — from startup efficiency to enterprise transformation.
+        </p>
+      </div>
+
+      <div class="project-item">
+        <div class="item-media">
+          <video class="project-video" autoplay muted loop playsinline controls>
+            <source src="https://github.com/projectservan8n/opusautomations/raw/refs/heads/main/assets/video/shredder.mp4" type="video/mp4">
+            <p>Shredder app demo video</p>
+          </video>
+        </div>
+        <div class="item-content">
+          <h3>Shredder — Operations & Systems</h3>
+          <p>Operations Manager for a ski/snowboard social app. Coordinated directly with developers, 
+          ran feature delivery pipelines, and implemented onboarding and payment automation for post‑launch scaling. 
+          Reduced development cycle time by 40% through improved communication workflows and automated project tracking.</p>
+          <p><a href="https://tryshredder.com" target="_blank" rel="noopener" class="external-link">tryshredder.com →</a></p>
+          <div class="item-tags">
+            <span class="tag">Product Management</span>
+            <span class="tag">Payment Automation</span>
+            <span class="tag">40% Faster Cycles</span>
+            <span class="tag">Developer Coordination</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="project-item">
+        <div class="item-media">
+          <video class="project-video" autoplay muted loop playsinline controls>
+            <source src="https://github.com/projectservan8n/opusautomations/raw/refs/heads/main/assets/video/Heraops%20Final.mp4" type="video/mp4">
+            <p>Hera Ops automation workflow demo</p>
+          </video>
+        </div>
+        <div class="item-content">
+          <h3>Hera Ops — Co‑founder</h3>
+          <p>VA + automation agency for startups and creators. Built cold outreach systems across LinkedIn, Discord, 
+          and email that generated 300+ qualified leads monthly. Launched Whop subscription platform and integrated 
+          AI tools across support and operations, reducing response time by 80% while scaling team productivity.</p>
+          <p><a href="https://heraops.com" target="_blank" rel="noopener" class="external-link">heraops.com →</a></p>
+          <div class="item-tags">
+            <span class="tag">300+ Leads/Month</span>
+            <span class="tag">80% Faster Response</span>
+            <span class="tag">Multi-platform Outreach</span>
+            <span class="tag">AI Integration</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="project-item">
+        <div class="item-media">
+          <img src="https://raw.githubusercontent.com/projectservan8n/opusautomations/refs/heads/main/assets/video/JELLY%20APP.JPEG" 
+               alt="Opus Automations Platform Screenshot" 
+               class="project-image"
+               loading="lazy" />
+        </div>
+        <div class="item-content">
+          <h3>Opus Automations — AI Systems Platform</h3>
+          <p>My main automation consultancy featuring scalable solutions from $3K startup workflows to $150K+ 
+          enterprise transformations. Current tool stack includes n8n, OpenAI integration, 
+          and custom API development for businesses at every stage. Proven ROI of 3x-15x across all project sizes.</p>
+          <p><a href="https://opusautomations.com" target="_blank" rel="noopener" class="external-link">OpusAutomations.com →</a></p>
+          <div class="item-tags">
+            <span class="tag">$3K - $150K+ Projects</span>
+            <span class="tag">Enterprise Ready</span>
+            <span class="tag">Custom APIs</span>
+            <span class="tag">3x-15x ROI</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact" class="section-gray">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Let's Build <span class="gradient-text">Something Together</span></h2>
+        <p class="section-subtitle">
+          Book a free strategy session to discover how AI automation can transform your business operations.
+        </p>
+      </div>
+      
+      <div class="contact-grid">
+        <div class="contact-item">
+          <div class="contact-label">Email</div>
+          <div class="contact-value"><a href="mailto:tony@opusautomations.com">tony@opusautomations.com</a></div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-label">Phone / WhatsApp / Telegram</div>
+          <div class="contact-value"><a href="tel:+639559918754">+63 955 991 8754</a></div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-label">Discord</div>
+          <div class="contact-value">tonyfyp</div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-label">Instagram</div>
+          <div class="contact-value"><a href="https://instagram.com/tonyfyp_" target="_blank" rel="noopener">@tonyfyp_</a></div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-label">Resume</div>
+          <div class="contact-value"><a href="#" aria-label="Download resume">Download Resume</a></div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-label">Software & Rates</div>
+          <div class="contact-value"><a href="https://opusautomations.com" target="_blank" rel="noopener">OpusAutomations.com</a></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="container">
+    © <span id="year"></span> Tony Herrera — Opus Automations
+  </div>
+</footer>
+
+<script>
+// Set current year
+document.getElementById('year').textContent = new Date().getFullYear();
+
+// Enhanced mobile navigation functionality matching your main site
+document.addEventListener('DOMContentLoaded', function() {
+    const navToggle = document.getElementById('nav-toggle');
+    const navMenu = document.getElementById('nav-menu');
+    const body = document.body;
+    let scrollPositionBeforeMenu = 0;
+
+    function openMenu() {
+        scrollPositionBeforeMenu = window.scrollY;
+        navMenu.classList.add('active');
+        navToggle.classList.add('active');
+        body.classList.add('menu-open');
+        body.style.overflow = 'hidden';
+        body.style.position = 'fixed';
+        body.style.width = '100%';
+        body.style.top = `-${scrollPositionBeforeMenu}px`;
+    }
+
+    function closeMenu() {
+        navMenu.classList.remove('active');
+        navToggle.classList.remove('active');
+        body.classList.remove('menu-open');
+        body.style.overflow = '';
+        body.style.position = '';
+        body.style.width = '';
+        body.style.top = '';
+        if (scrollPositionBeforeMenu > 0) {
+            window.scrollTo(0, scrollPositionBeforeMenu);
+        }
+    }
+
+    // Enhanced smooth scroll function
+    function smoothScrollToElement(targetElement, offset = 80) {
+        if (!targetElement) return;
+        
+        const isMobile = window.innerWidth <= 768;
+        const navbarHeight = isMobile ? 70 : 80;
+        const elementRect = targetElement.getBoundingClientRect();
+        const absoluteElementTop = elementRect.top + window.scrollY;
+        const targetScrollPosition = Math.max(0, absoluteElementTop - navbarHeight);
+        
+        // Use smooth scroll with enhanced easing
+        window.scrollTo({
+            top: targetScrollPosition,
+            behavior: 'smooth'
+        });
+    }
+
+    // Toggle menu
+    navToggle.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        const isActive = navMenu.classList.contains('active');
+        if (isActive) {
+            closeMenu();
+        } else {
+            openMenu();
+        }
+    });
+
+    // Handle navigation links with smooth scrolling
+    const navLinks = document.querySelectorAll('.nav-link');
+    navLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const href = this.getAttribute('href');
+            if (href && href.startsWith('#')) {
+                const sectionId = href.substring(1);
+                const targetElement = document.getElementById(sectionId);
+                if (targetElement) {
+                    const isMobile = window.innerWidth <= 768;
+                    if (isMobile) {
+                        closeMenu();
+                        setTimeout(() => {
+                            smoothScrollToElement(targetElement);
+                        }, 100);
+                    } else {
+                        smoothScrollToElement(targetElement);
+                    }
+                }
+            }
+        });
+    });
+
+    // Close menu on outside click
+    document.addEventListener('click', function(e) {
+        const isClickInsideNav = navMenu.contains(e.target) || navToggle.contains(e.target);
+        if (!isClickInsideNav && navMenu.classList.contains('active')) {
+            closeMenu();
+        }
+    });
+
+    // Close menu on escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && navMenu.classList.contains('active')) {
+            closeMenu();
+        }
+    });
+
+    // Handle window resize
+    let resizeTimeout;
+    window.addEventListener('resize', function() {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+            if (window.innerWidth > 768 && navMenu.classList.contains('active')) {
+                closeMenu();
+            }
+        }, 100);
+    });
+
+    // Enhanced navbar scroll effect
+    window.addEventListener('scroll', function() {
+        const navbar = document.querySelector('.navbar');
+        if (navbar) {
+            if (window.scrollY > 100) {
+                navbar.style.background = 'rgba(10, 10, 10, 0.95)';
+                navbar.style.backdropFilter = 'blur(20px)';
+            } else {
+                navbar.style.background = 'rgba(10, 10, 10, 0.9)';
+                navbar.style.backdropFilter = 'blur(10px)';
+            }
+        }
+    });
+
+    // Initialize particles
+    initParticles();
+
+    // Initialize smooth scrolling enhancements
+    initSmoothScrolling();
+
+    // Initialize animations on scroll
+    initScrollAnimations();
+});
+
+// Enhanced particle system matching your main site
+function initParticles() {
+    const particlesContainer = document.getElementById('particles');
+    if (!particlesContainer) return;
+    
+    const particleCount = 25;
+    
+    function createParticle() {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.left = Math.random() * 100 + '%';
+        particle.style.bottom = '-10px';
+        
+        const size = Math.random() * 3 + 1.5;
+        particle.style.width = size + 'px';
+        particle.style.height = size + 'px';
+        particle.style.background = `linear-gradient(45deg, 
+            rgba(139, 92, 246, ${0.15 + Math.random() * 0.2}), 
+            rgba(236, 72, 153, ${0.1 + Math.random() * 0.15})
+        )`;
+        particle.style.borderRadius = '50%';
+        particle.style.position = 'absolute';
+        particle.style.pointerEvents = 'none';
+        particle.style.zIndex = '1';
+        particle.style.boxShadow = `0 0 ${size * 1.5}px rgba(139, 92, 246, 0.1)`;
+        
+        const duration = Math.random() * 25 + 20;
+        const horizontalDrift = (Math.random() - 0.5) * 100;
+        particle.style.animation = `floatUp ${duration}s linear forwards`;
+        particle.style.setProperty('--horizontal-drift', horizontalDrift + 'px');
+        
+        particlesContainer.appendChild(particle);
+        
+        setTimeout(() => {
+            if (particle.parentNode) {
+                particle.parentNode.removeChild(particle);
+            }
+        }, duration * 1000 + 1000);
+    }
+    
+    for (let i = 0; i < particleCount; i++) {
+        setTimeout(createParticle, Math.random() * 8000);
+    }
+    
+    setInterval(createParticle, 800);
+}
+
+// Enhanced smooth scrolling with Lenis support
+function initSmoothScrolling() {
+    // Check if Lenis is available
+    if (typeof Lenis !== 'undefined') {
+        const lenis = new Lenis({
+            duration: 1.2,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            direction: 'vertical',
+            smooth: true,
+            mouseMultiplier: 1,
+            smoothTouch: false,
+            touchMultiplier: 2,
+            wheelMultiplier: 1,
+            normalizeWheel: true,
+            lerp: 0.1
+        });
+
+        function raf(time) {
+            lenis.raf(time);
+            requestAnimationFrame(raf);
+        }
+        requestAnimationFrame(raf);
+
+        // Update navbar on Lenis scroll
+        lenis.on('scroll', (e) => {
+            updateNavbarBackground(e.scroll);
+        });
+
+        // Add Lenis class to html
+        document.documentElement.classList.add('lenis');
+    } else {
+        // Fallback smooth scrolling
+        document.documentElement.style.scrollBehavior = 'smooth';
+    }
+}
+
+// Update navbar background based on scroll
+function updateNavbarBackground(scrollY) {
+    const navbar = document.querySelector('.navbar');
+    if (navbar) {
+        if (scrollY > 100) {
+            navbar.style.background = 'rgba(10, 10, 10, 0.95)';
+            navbar.style.backdropFilter = 'blur(20px)';
+        } else {
+            navbar.style.background = 'rgba(10, 10, 10, 0.9)';
+            navbar.style.backdropFilter = 'blur(10px)';
+        }
+    }
+}
+
+// Initialize scroll animations
+function initScrollAnimations() {
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('animate-in');
+            }
+        });
+    }, observerOptions);
+
+    // Observe elements for animation
+    const animateElements = document.querySelectorAll(
+        '.card, .experience-item, .project-item, .contact-grid'
+    );
+
+    animateElements.forEach(el => {
+        el.classList.add('animate-element');
+        observer.observe(el);
+    });
+}
+
+// Debounce utility for performance
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
+// Optimized scroll handler
+const optimizedScrollHandler = debounce(function() {
+    // Additional scroll handling if needed
+}, 16);
+
+window.addEventListener('scroll', optimizedScrollHandler, { passive: true });
+</script>
+</body>
+</html>
