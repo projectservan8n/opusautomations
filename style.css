@@ -76,22 +76,7 @@ body {
         opacity: 0;
     }
 }
-@keyframes floatUp {
-    0% {
-        transform: translateY(0) translateX(0) rotate(0deg);
-        opacity: 0;
-    }
-    15% {
-        opacity: 0.6;
-    }
-    85% {
-        opacity: 0.6;
-    }
-    100% {
-        transform: translateY(-100vh) translateX(var(--horizontal-drift, 0px)) rotate(180deg);
-        opacity: 0;
-    }
-}
+
 /* Navigation - STANDARDIZED FROZEN NAVBAR */
 .navbar {
     position: fixed !important;
