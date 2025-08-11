@@ -26,7 +26,8 @@ app.use(helmet({
             styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
             scriptSrc: ["'self'", "'unsafe-inline'", "https://twemoji.maxcdn.com", "https://cdn.jsdelivr.net", "https://unpkg.com", "https://cdnjs.cloudflare.com"],
             fontSrc: ["'self'", "https://fonts.gstatic.com", "https://github.com"],
-            imgSrc: ["'self'", "data:", "https:", "https://twemoji.maxcdn.com"],
+            imgSrc: ["'self'", "data:", "https:", "https://twemoji.maxcdn.com", "https://raw.githubusercontent.com"],
+            mediaSrc: ["'self'", "https://github.com", "https://raw.githubusercontent.com"], // ADD THIS LINE
             connectSrc: ["'self'"]
         }
     }
