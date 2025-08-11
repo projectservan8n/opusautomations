@@ -793,19 +793,19 @@
                 <form class="contact-form" id="contactForm">
                     <div class="form-group">
                         <label for="name">Your Name</label>
-                        <input type="text" id="name" name="name" required>
+                        <input type="text" id="name" name="name" autocomplete="name" required>
                     </div>
                     <div class="form-group">
                         <label for="email">Business Email</label>
-                        <input type="email" id="email" name="email" required>
+                        <input type="email" id="email" name="email" autocomplete="email" required>
                     </div>
                     <div class="form-group">
                         <label for="company">Company Name</label>
-                        <input type="text" id="company" name="company" required>
+                        <input type="text" id="company" name="company" autocomplete="organization" required>
                     </div>
                     <div class="form-group">
                         <label for="revenue">Company Size/Stage</label>
-                        <select id="revenue" name="revenue" required>
+                        <select id="revenue" name="revenue" autocomplete="off" required>
                             <option value="">Select your stage...</option>
                             <option value="startup">Startup ($100K - $500K)</option>
                             <option value="small">Small Business ($500K - $2M)</option>
@@ -816,7 +816,7 @@
                     </div>
                     <div class="form-group">
                         <label for="operations">Weekly Hours on Manual Work</label>
-                        <select id="operations" name="operations" required>
+                        <select id="operations" name="operations" autocomplete="off" required>
                             <option value="">Select range...</option>
                             <option value="5-15">5-15 hours</option>
                             <option value="15-25">15-25 hours</option>
@@ -826,7 +826,7 @@
                     </div>
                     <div class="form-group">
                         <label for="challenge">Biggest Operational Bottleneck</label>
-                        <textarea id="challenge" name="challenge" rows="4" 
+                        <textarea id="challenge" name="challenge" rows="4" autocomplete="off"
                                 placeholder="What manual process consumes the most time in your business?"></textarea>
                     </div>
                     <button type="submit" class="btn btn-primary btn-full">
@@ -887,8 +887,8 @@
             </div>
             <form id="assessmentForm" class="assessment-form">
                 <div class="form-group">
-                    <label>What's your biggest time-consuming manual process?</label>
-                    <select name="process" required>
+                    <label for="process">What's your biggest time-consuming manual process?</label>
+                    <select id="process" name="process" autocomplete="off" required>
                         <option value="">Select process...</option>
                         <option value="data-entry">Data entry and spreadsheets</option>
                         <option value="customer-communication">Customer communication</option>
@@ -899,8 +899,8 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>How many hours per week does this consume?</label>
-                    <select name="hours" required>
+                    <label for="hours">How many hours per week does this consume?</label>
+                    <select id="hours" name="hours" autocomplete="off" required>
                         <option value="">Select hours...</option>
                         <option value="5-10">5-10 hours</option>
                         <option value="10-20">10-20 hours</option>
@@ -909,8 +909,8 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>What's your annual revenue range?</label>
-                    <select name="revenue" required>
+                    <label for="revenue-assessment">What's your annual revenue range?</label>
+                    <select id="revenue-assessment" name="revenue" autocomplete="off" required>
                         <option value="">Select range...</option>
                         <option value="100k-500k">$100K - $500K</option>
                         <option value="500k-2m">$500K - $2M</option>
@@ -920,8 +920,8 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>Your email for results:</label>
-                    <input type="email" name="email" required placeholder="your@email.com">
+                    <label for="email-assessment">Your email for results:</label>
+                    <input type="email" id="email-assessment" name="email" autocomplete="email" required placeholder="your@email.com">
                 </div>
                 <div class="assessment-result" id="assessmentResult" style="display: none;">
                     <h4>Your Automation Potential:</h4>
@@ -945,63 +945,88 @@
         </div>
     </div>
 
-    <!-- FIXED PARTICLES JAVASCRIPT -->
+    <!-- BULLETPROOF PARTICLES SYSTEM - INLINE -->
     <script>
-        // FIXED Particle System - Creates particles immediately
-        function createParticles() {
-            console.log('🎬 Creating particles...');
-            const particlesContainer = document.getElementById('particles');
+        // BULLETPROOF Particle System - Runs immediately
+        (function() {
+            console.log('🎬 Starting bulletproof particles...');
             
+            // Create particles container if it doesn't exist
+            let particlesContainer = document.getElementById('particles');
             if (!particlesContainer) {
-                console.log('❌ Particles container not found');
-                return;
+                particlesContainer = document.createElement('div');
+                particlesContainer.id = 'particles';
+                particlesContainer.className = 'particles-container';
+                document.body.appendChild(particlesContainer);
             }
             
-            const particleCount = 25; // Subtle amount
+            // Add particle CSS if not present
+            const particleStyles = `
+                .particles-container {
+                    position: fixed !important;
+                    top: 0 !important;
+                    left: 0 !important;
+                    width: 100% !important;
+                    height: 100vh !important;
+                    pointer-events: none !important;
+                    z-index: 0 !important;
+                    overflow: hidden !important;
+                }
+                
+                @keyframes particleFloat {
+                    0% {
+                        transform: translateY(0) translateX(0) rotate(0deg);
+                        opacity: 0;
+                    }
+                    15% {
+                        opacity: 0.6;
+                    }
+                    85% {
+                        opacity: 0.6;
+                    }
+                    100% {
+                        transform: translateY(-100vh) translateX(var(--drift, 0px)) rotate(180deg);
+                        opacity: 0;
+                    }
+                }
+            `;
             
-            // Clear existing particles
-            particlesContainer.innerHTML = '';
+            // Add styles to head
+            const styleSheet = document.createElement('style');
+            styleSheet.textContent = particleStyles;
+            document.head.appendChild(styleSheet);
             
-            for (let i = 0; i < particleCount; i++) {
+            function createParticle() {
                 const particle = document.createElement('div');
-                particle.className = 'particle';
                 
-                // Random horizontal position
-                const leftPosition = Math.random() * 100;
-                particle.style.left = leftPosition + '%';
-                particle.style.bottom = '-10px';
+                // Set all styles inline for bulletproof behavior
+                const size = Math.random() * 4 + 2;
+                const opacity = 0.3 + Math.random() * 0.4;
+                const duration = Math.random() * 25 + 20;
+                const delay = Math.random() * 5;
+                const drift = (Math.random() - 0.5) * 100;
                 
-                // Particle styling
-                const size = Math.random() * 3 + 1.5; // 1.5-4.5px
-                particle.style.width = size + 'px';
-                particle.style.height = size + 'px';
-                
-                // Purple gradient background
-                particle.style.background = `linear-gradient(45deg, 
-                    rgba(139, 92, 246, ${0.4 + Math.random() * 0.4}), 
-                    rgba(236, 72, 153, ${0.3 + Math.random() * 0.3})
-                )`;
-                particle.style.borderRadius = '50%';
-                particle.style.position = 'absolute';
-                particle.style.pointerEvents = 'none';
-                
-                // Subtle glow
-                particle.style.boxShadow = `0 0 ${size * 2}px rgba(139, 92, 246, 0.3)`;
-                
-                // Animation properties
-                const duration = Math.random() * 25 + 20; // 20-45 seconds
-                const horizontalDrift = (Math.random() - 0.5) * 100;
-                
-                particle.style.animation = `floatUp ${duration}s linear forwards`;
-                particle.style.setProperty('--horizontal-drift', horizontalDrift + 'px');
-                
-                // Random delay
-                const delay = Math.random() * 10;
-                particle.style.animationDelay = delay + 's';
+                particle.style.cssText = `
+                    position: absolute;
+                    left: ${Math.random() * 100}%;
+                    bottom: -10px;
+                    width: ${size}px;
+                    height: ${size}px;
+                    background: linear-gradient(45deg, 
+                        rgba(139, 92, 246, ${opacity}), 
+                        rgba(236, 72, 153, ${opacity * 0.8}));
+                    border-radius: 50%;
+                    pointer-events: none;
+                    z-index: 1;
+                    animation: particleFloat ${duration}s linear forwards;
+                    animation-delay: ${delay}s;
+                    --drift: ${drift}px;
+                    box-shadow: 0 0 ${size * 2}px rgba(139, 92, 246, ${opacity * 0.5});
+                `;
                 
                 particlesContainer.appendChild(particle);
                 
-                // Remove after animation
+                // Clean up particle after animation
                 setTimeout(() => {
                     if (particle.parentNode) {
                         particle.parentNode.removeChild(particle);
@@ -1009,16 +1034,26 @@
                 }, (duration + delay) * 1000 + 1000);
             }
             
-            console.log(`✅ Created ${particleCount} particles`);
-        }
-
-        // Start particles immediately
-        createParticles();
-        
-        // Create new particles periodically
-        setInterval(createParticles, 15000); // Every 15 seconds
-        
-        console.log('🎨 Particles system initialized');
+            // Create initial burst of particles
+            function initParticles() {
+                console.log('✨ Creating initial particle burst...');
+                for (let i = 0; i < 20; i++) {
+                    setTimeout(createParticle, Math.random() * 3000);
+                }
+            }
+            
+            // Start particles immediately
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', initParticles);
+            } else {
+                initParticles();
+            }
+            
+            // Continue creating particles
+            setInterval(createParticle, 800);
+            
+            console.log('🚀 Bulletproof particles system initialized!');
+        })();
     </script>
 
     <!-- Load Lenis for smooth scrolling (FIXED CDN) -->
