@@ -296,6 +296,17 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
+// Portfolio route - hidden page
+app.get('/portfolio', (req, res) => {
+    console.log('📄 Serving portfolio page (hidden)');
+    res.sendFile(path.join(__dirname, 'portfolio.html'));
+});
+
+app.get('/portfolio/', (req, res) => {
+    console.log('📄 Serving portfolio page (hidden)');
+    res.sendFile(path.join(__dirname, 'portfolio.html'));
+});
+
 // Handle old workflows routes - redirect to main page with anchor
 app.get('/workflows', (req, res) => {
     console.log('🔄 Redirecting /workflows to /#products');
@@ -418,6 +429,7 @@ app.get('/api/docs', (req, res) => {
             'POST /api/webhook/material-order': 'Material order webhook',
             'GET /health': 'Health check',
             'GET /': 'Main homepage (merged site)',
+            'GET /portfolio': 'Hidden portfolio page',
             'GET /products': 'Redirect to /#products',
             'GET /services': 'Redirect to /#services',
             'GET /about': 'Redirect to /#about',
@@ -483,6 +495,12 @@ app.get('/sitemap.xml', (req, res) => {
         <changefreq>monthly</changefreq>
         <priority>0.7</priority>
     </url>
+    <url>
+        <loc>${req.protocol}://${req.get('host')}/portfolio</loc>
+        <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
 </urlset>`;
     
     res.set('Content-Type', 'text/xml');
@@ -534,7 +552,8 @@ app.listen(PORT, '0.0.0.0', () => {
     console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
     console.log(`🔗 Health check: http://localhost:${PORT}/health`);
     console.log(`🏠 Homepage (merged): http://localhost:${PORT}/`);
+    console.log(`🎯 Portfolio (hidden): http://localhost:${PORT}/portfolio`);
     console.log(`📦 Products: http://localhost:${PORT}/#products`);
     console.log(`🔄 All old routes redirect to main page with anchors`);
-    console.log('✅ Server startup complete - MERGED SITE READY');
+    console.log('✅ Server startup complete - MERGED SITE + PORTFOLIO READY');
 });
