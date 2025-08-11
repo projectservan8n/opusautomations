@@ -46,69 +46,48 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Subtle Floating Particles Animation - Elegant and Minimal
 function initParticles() {
+    console.log('🎬 Creating simple particles...');
     const particlesContainer = document.getElementById('particles');
+    
     if (!particlesContainer) {
-        debugLog('Particles container not found');
+        console.log('❌ Particles container not found');
         return;
     }
     
-    const particleCount = 25; // Reduced count for subtlety
-    
     function createParticle() {
         const particle = document.createElement('div');
-        particle.className = 'particle';
-        
-        // Random starting position
-        particle.style.left = Math.random() * 100 + '%';
-        particle.style.bottom = '-10px'; // Start from bottom
-        
-        // Subtle styling
-        const size = Math.random() * 3 + 1.5; // Smaller particles (1.5-4.5px)
-        particle.style.width = size + 'px';
-        particle.style.height = size + 'px';
-        
-        // Very subtle visibility
-        particle.style.background = `linear-gradient(45deg, 
-            rgba(139, 92, 246, ${0.15 + Math.random() * 0.2}), 
-            rgba(236, 72, 153, ${0.1 + Math.random() * 0.15})
-        )`;
-        particle.style.borderRadius = '50%';
-        particle.style.position = 'absolute';
-        particle.style.pointerEvents = 'none';
-        particle.style.zIndex = '1';
-        
-        // Very subtle glow effect
-        particle.style.boxShadow = `0 0 ${size * 1.5}px rgba(139, 92, 246, 0.1)`;
-        
-        // Slower animation properties
-        const duration = Math.random() * 25 + 20; // 20-45 seconds (slower)
-        const horizontalDrift = (Math.random() - 0.5) * 100; // Less drift
-        
-        particle.style.animation = `floatUp ${duration}s linear forwards`;
-        particle.style.setProperty('--horizontal-drift', horizontalDrift + 'px');
+        particle.style.cssText = `
+            position: absolute;
+            left: ${Math.random() * 100}%;
+            bottom: -10px;
+            width: ${Math.random() * 4 + 2}px;
+            height: ${Math.random() * 4 + 2}px;
+            background: linear-gradient(45deg, rgba(139, 92, 246, 0.4), rgba(236, 72, 153, 0.3));
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 1;
+            animation: floatUp ${Math.random() * 20 + 15}s linear forwards;
+            --horizontal-drift: ${(Math.random() - 0.5) * 100}px;
+        `;
         
         particlesContainer.appendChild(particle);
         
-        // Remove particle after animation
         setTimeout(() => {
             if (particle.parentNode) {
                 particle.parentNode.removeChild(particle);
             }
-        }, duration * 1000 + 1000);
+        }, 35000);
     }
     
-    // Create initial particles with staggered timing
-    for (let i = 0; i < particleCount; i++) {
-        setTimeout(createParticle, Math.random() * 8000); // Spread over 8 seconds
+    // Create initial particles
+    for (let i = 0; i < 20; i++) {
+        setTimeout(createParticle, Math.random() * 5000);
     }
     
-    // Create new particles less frequently
-    setInterval(createParticle, 800); // Much less frequent creation
+    // Keep creating particles
+    setInterval(createParticle, 800);
     
-    // Add the CSS animation
-    addParticlesCSS();
-    
-    debugLog('Subtle particles system initialized with', particleCount, 'particles');
+    console.log('✅ Simple particles created');
 }
 
 // Add subtle particles CSS
