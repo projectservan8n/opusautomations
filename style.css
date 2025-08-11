@@ -38,7 +38,7 @@ body {
     padding-top: 2rem; /* Additional padding for better spacing */
 }
 
-/* Floating Particles Background */
+/* FIXED Floating Particles Background */
 .particles-container {
     position: fixed;
     top: 0;
@@ -46,8 +46,9 @@ body {
     width: 100%;
     height: 100%;
     pointer-events: none;
-    z-index: 0; /* CHANGED FROM 1 TO 0 */
-    overflow: hidden;
+    z-index: 0; /* FIXED: Changed from 1 to 0 to be behind everything */
+    overflow: hidden; /* FIXED: Added to prevent particles from causing scrollbars */
+    display: block; /* FIXED: Ensure particles are visible */
 }
 
 .particle {
@@ -58,6 +59,8 @@ body {
     border-radius: 50%;
     opacity: 0.6;
     animation: float 20s infinite linear;
+    pointer-events: none;
+    will-change: transform, opacity;
 }
 
 @keyframes float {
@@ -75,6 +78,38 @@ body {
         transform: translateY(-100px) translateX(100px);
         opacity: 0;
     }
+}
+
+/* ADDED: FloatUp animation for JavaScript particles */
+@keyframes floatUp {
+    0% {
+        transform: translateY(0) translateX(0) rotate(0deg);
+        opacity: 0;
+    }
+    15% {
+        opacity: 0.6;
+    }
+    85% {
+        opacity: 0.6;
+    }
+    100% {
+        transform: translateY(-100vh) translateX(var(--horizontal-drift, 0px)) rotate(180deg);
+        opacity: 0;
+    }
+}
+
+/* Subtle pulsing effect for some particles */
+.particle:nth-child(5n) {
+    animation-name: floatUp, subtlePulse;
+    animation-duration: inherit, 4s;
+    animation-timing-function: linear, ease-in-out;
+    animation-iteration-count: 1, infinite;
+    animation-fill-mode: forwards, none;
+}
+
+@keyframes subtlePulse {
+    0%, 100% { transform: scale(1); opacity: inherit; }
+    50% { transform: scale(1.1); opacity: calc(inherit * 0.7); }
 }
 
 /* Navigation - STANDARDIZED FROZEN NAVBAR */
@@ -2451,8 +2486,11 @@ body.menu-open {
         scroll-behavior: auto !important;
     }
     
-    .particles-container {
-        display: block;
+    /* FIXED: Don't hide particles, just reduce animation */
+    .particle {
+        animation: none !important;
+        opacity: 0.3 !important;
+        position: static !important;
     }
     
     .animate-element {
