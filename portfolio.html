@@ -354,14 +354,18 @@
         border-radius: 0;
         transition: transform 0.3s ease;
         cursor: pointer;
+        display: block;
+        max-width: 100%;
     }
 
     .project-video:hover, .project-image:hover {
-        transform: scale(1.05);
+        transform: scale(1.02);
     }
 
     .project-video {
         background: #000;
+        object-fit: cover !important;
+        object-position: center;
     }
 
     /* Hide video controls completely */
@@ -467,11 +471,10 @@
         backdrop-filter: blur(10px);
         border: 1px solid rgba(139, 92, 246, 0.2);
         border-radius: 1rem;
-        overflow: visible;
+        overflow: hidden;
         box-shadow: 0 25px 50px rgba(139, 92, 246, 0.1);
         margin-bottom: 2rem;
         transition: all 0.3s ease;
-        padding: 2rem;
     }
 
     .experience-item:hover, .project-item:hover {
@@ -492,10 +495,11 @@
         font-weight: 500;
         position: relative;
         font-size: 1.1rem;
+        overflow: hidden;
     }
 
     .item-content {
-        padding: 0;
+        padding: 2rem;
     }
 
     .item-content h3 {
@@ -867,7 +871,6 @@
       </div>
 
       <div class="project-item">
-        <h3>Jelly App — Operations Manager</h3>
         <div class="item-media">
           <img src="https://raw.githubusercontent.com/projectservan8n/opusautomations/refs/heads/main/assets/video/JELLY%20APP.JPEG" 
                alt="Jelly App - TikTok Creator Management Platform" 
@@ -875,6 +878,7 @@
                loading="lazy" />
         </div>
         <div class="item-content">
+          <h3>Jelly App — Operations Manager</h3>
           <p>Operations Manager for a TikTok creator-brand deal platform. Managed creator onboarding, campaign 
           delivery, and outreach systems. Built repeatable UGC workflows (e.g., 30 videos in 30 days), structured brand 
           partnerships, and streamlined campaign execution with automated tracking and performance metrics.</p>
@@ -889,7 +893,6 @@
       </div>
 
       <div class="project-item">
-        <h3>Shredder — Operations Manager</h3>
         <div class="item-media">
           <video class="project-video" 
                  autoplay
@@ -905,6 +908,7 @@
           </video>
         </div>
         <div class="item-content">
+          <h3>Shredder — Operations Manager</h3>
           <p>Operations Manager for a ski/snowboard social app. Oversaw timelines and coordinated directly with 
           developers to ensure feature delivery. Managed client-dev communication, tracked payments, and supported 
           post-launch planning to scale the ultimate mobile app that brings skiers and snowboarders together.</p>
@@ -919,7 +923,6 @@
       </div>
 
       <div class="project-item">
-        <h3>Hera Ops — Co‑founder</h3>
         <div class="item-media">
           <video class="project-video" 
                  autoplay
@@ -935,6 +938,7 @@
           </video>
         </div>
         <div class="item-content">
+          <h3>Hera Ops — Co‑founder</h3>
           <p>Co-founder of a VA agency for startups and creators. Led ops, hiring, SOPs, pricing, and AI automation. Built 
           cold outreach systems (LinkedIn, Discord, email), managed VA deployment, and launched Whop subscriptions. 
           Specialized in Discord customer support and executive assistance to stop overpaying and overcomplicating operations teams.</p>
@@ -949,7 +953,6 @@
       </div>
 
       <div class="project-item">
-        <h3>Opus Automations — AI Systems Platform</h3>
         <div class="item-media">
           <img src="https://raw.githubusercontent.com/projectservan8n/opusautomations/refs/heads/main/assets/video/OpusMainPage.PNG" 
                alt="Opus Automations Main Platform" 
@@ -957,6 +960,7 @@
                loading="lazy" />
         </div>
         <div class="item-content">
+          <h3>Opus Automations — AI Systems Platform</h3>
           <p>My main automation consultancy featuring scalable solutions from $3K startup workflows to $150K+ 
           enterprise transformations. Current tool stack includes n8n, OpenAI integration, 
           and custom API development for businesses at every stage. Proven ROI of 3x-15x across all project sizes.</p>
@@ -1281,7 +1285,7 @@ function initParticles() {
     setInterval(createParticle, 600); // More frequent
 }
 
-// Video handling for autoplay looping with full aspect ratio
+// Video handling for autoplay looping with proper sizing
 function initVideoHandling() {
     const videos = document.querySelectorAll('.project-video');
     
@@ -1291,16 +1295,13 @@ function initVideoHandling() {
         video.setAttribute('disablepictureinpicture', '');
         video.setAttribute('controlslist', 'nodownload nofullscreen noremoteplayback');
         
-        // Ensure video maintains its natural aspect ratio
+        // Force video to fit container properly
         video.addEventListener('loadedmetadata', function() {
             console.log('Video metadata loaded:', this.src);
-            console.log('Video dimensions:', this.videoWidth, 'x', this.videoHeight);
-            
-            // Let the video display at its natural aspect ratio
             this.style.width = '100%';
-            this.style.height = 'auto';
-            this.style.maxWidth = '100%';
-            this.style.objectFit = 'contain';
+            this.style.height = '240px';
+            this.style.objectFit = 'cover';
+            this.style.objectPosition = 'center';
         });
         
         // Ensure video is properly loaded and autoplays
@@ -1315,10 +1316,9 @@ function initVideoHandling() {
             console.error('Video failed to load:', e, this.src);
             // Hide the video element if it fails
             this.style.display = 'none';
-            // Show fallback image (already in video element as fallback)
         });
         
-        // Gentle hover effect - smaller scale for full videos
+        // Gentle hover effect
         video.addEventListener('mouseenter', function() {
             this.style.transform = 'scale(1.02)';
         });
@@ -1342,8 +1342,10 @@ function initVideoHandling() {
         video.style.opacity = '0';
         video.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
         video.style.display = 'block';
-        video.style.maxWidth = '100%';
-        video.style.height = 'auto';
+        video.style.width = '100%';
+        video.style.height = '240px';
+        video.style.objectFit = 'cover';
+        video.style.objectPosition = 'center';
         
         // Ensure video keeps looping
         video.addEventListener('ended', function() {
