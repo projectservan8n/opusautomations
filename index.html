@@ -23,36 +23,36 @@
     
     <!-- FIXED PARTICLES CSS -->
     <style>
-        /* Fixed Particles Container */
+        /* Fixed Particles Container - ENHANCED Z-INDEX */
         .particles-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100vh;
-            pointer-events: none;
-            z-index: 0; /* Behind everything */
-            overflow: hidden;
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100vw !important;
+            height: 100vh !important;
+            pointer-events: none !important;
+            z-index: 5 !important; /* INCREASED from 1 to 5 - above content but below navbar */
+            overflow: hidden !important;
         }
 
         .particle {
-            position: absolute;
-            border-radius: 50%;
-            pointer-events: none;
-            will-change: transform, opacity;
+            position: absolute !important;
+            border-radius: 50% !important;
+            pointer-events: none !important;
+            will-change: transform, opacity !important;
         }
 
-        /* Floating animation */
+        /* Subtle floating animation - MATCHING PORTFOLIO */
         @keyframes floatUp {
             0% {
                 transform: translateY(0) translateX(0) rotate(0deg);
                 opacity: 0;
             }
             15% {
-                opacity: 0.6;
+                opacity: 0.3; /* Subtle visibility */
             }
             85% {
-                opacity: 0.6;
+                opacity: 0.3; /* Stay subtle */
             }
             100% {
                 transform: translateY(-100vh) translateX(var(--horizontal-drift, 0px)) rotate(180deg);
@@ -71,7 +71,12 @@
 
         @keyframes subtlePulse {
             0%, 100% { transform: scale(1); opacity: inherit; }
-            50% { transform: scale(1.1); opacity: calc(inherit * 0.7); }
+            50% { transform: scale(1.2); opacity: calc(inherit * 0.9); }
+        }
+
+        /* Debug mode - REMOVE AFTER TESTING */
+        .particles-debug {
+            border: 2px dashed rgba(255, 0, 0, 0.3) !important;
         }
     </style>
 </head>
@@ -945,68 +950,47 @@
         </div>
     </div>
 
-    <!-- SUBTLE PARTICLES SYSTEM - COPIED FROM WORKING VERSION -->
+    <!-- ENHANCED PARTICLES SYSTEM - HIGHER Z-INDEX AND MORE VISIBLE -->
     <script>
-        console.log('🎬 Starting subtle particles system...');
+        console.log('🎬 Starting ENHANCED particles system...');
         
-        // Create container
+        let particleCount = 0;
+        let animationRunning = false;
+        
+        // Create container with enhanced settings
         function setupParticlesContainer() {
             let container = document.getElementById('particles');
             if (!container) {
                 container = document.createElement('div');
                 container.id = 'particles';
-                container.style.cssText = `
-                    position: fixed;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 100%;
-                    pointer-events: none;
-                    z-index: 1;
-                    overflow: hidden;
-                `;
+                container.className = 'particles-container';
                 document.body.appendChild(container);
+                console.log('✅ Created particles container');
             }
+            
+            // Add debug border (remove in production)
+            // container.classList.add('particles-debug');
+            
             return container;
         }
         
-        // Add subtle animation CSS
-        const animationCSS = `
-            @keyframes floatUp {
-                0% {
-                    transform: translateY(0) translateX(0) rotate(0deg);
-                    opacity: 0;
-                }
-                15% {
-                    opacity: 0.3;
-                }
-                85% {
-                    opacity: 0.3;
-                }
-                100% {
-                    transform: translateY(-100vh) translateX(var(--horizontal-drift, 0px)) rotate(180deg);
-                    opacity: 0;
-                }
-            }
-        `;
-        
-        const styleSheet = document.createElement('style');
-        styleSheet.textContent = animationCSS;
-        document.head.appendChild(styleSheet);
-        
-        // Create subtle particles (copied from working version)
-        function createParticle() {
+        // Subtle particle creation (matching portfolio style)
+        function createEnhancedParticle() {
             const container = setupParticlesContainer();
             const particle = document.createElement('div');
+            particle.className = 'particle';
             
+            // Random positioning
             particle.style.left = Math.random() * 100 + '%';
-            particle.style.bottom = '-10px';
+            particle.style.bottom = '-10px'; // Start below viewport
             
-            const size = Math.random() * 4 + 2; // Slightly larger particles
+            // Subtle size (matching portfolio)
+            const size = Math.random() * 4 + 2; // Slightly larger particles (2-6px)
             particle.style.width = size + 'px';
             particle.style.height = size + 'px';
             
-            const opacity = 0.1 + Math.random() * 0.3; // Very subtle visibility
+            // Subtle opacity (matching portfolio)
+            const opacity = 0.1 + Math.random() * 0.3; // 0.1 to 0.4 opacity (subtle)
             particle.style.background = `linear-gradient(45deg, 
                 rgba(139, 92, 246, ${opacity}), 
                 rgba(236, 72, 153, ${opacity * 0.8})
@@ -1015,43 +999,85 @@
             particle.style.borderRadius = '50%';
             particle.style.position = 'absolute';
             particle.style.pointerEvents = 'none';
-            particle.style.zIndex = '1';
-            particle.style.boxShadow = `0 0 ${size * 1.5}px rgba(139, 92, 246, 0.1)`;
+            particle.style.zIndex = '5'; // FIXED: Higher z-index but keep subtle
+            particle.style.boxShadow = `0 0 ${size * 2}px rgba(139, 92, 246, ${opacity * 0.5})`;
             
+            // Subtle animation properties (matching portfolio)
             const duration = Math.random() * 30 + 25; // Longer duration (25-55 seconds)
-            const horizontalDrift = (Math.random() - 0.5) * 150;
+            const horizontalDrift = (Math.random() - 0.5) * 150; // Less horizontal movement
+            
             particle.style.animation = `floatUp ${duration}s linear forwards`;
             particle.style.setProperty('--horizontal-drift', horizontalDrift + 'px');
             
+            // Add to container
             container.appendChild(particle);
+            particleCount++;
             
+            console.log(`✨ Created subtle particle #${particleCount}:`, {
+                size: size.toFixed(1) + 'px',
+                duration: duration.toFixed(1) + 's',
+                drift: horizontalDrift.toFixed(0) + 'px',
+                opacity: opacity.toFixed(2)
+            });
+            
+            // Remove particle after animation
             setTimeout(() => {
                 if (particle.parentNode) {
                     particle.parentNode.removeChild(particle);
+                    particleCount--;
                 }
             }, duration * 1000 + 1000);
         }
         
-        // Initialize subtle particles
-        function startSubtleParticles() {
-            const particleCount = 30; // Same as working version
+        // Initialize subtle particles system (matching portfolio)
+        function startEnhancedParticles() {
+            if (animationRunning) return;
             
-            // Create initial particles with staggered timing
-            for (let i = 0; i < particleCount; i++) {
-                setTimeout(createParticle, Math.random() * 10000); // Spread over 10 seconds
+            console.log('🚀 Starting SUBTLE particles system (portfolio style)...');
+            animationRunning = true;
+            
+            const particleCreationCount = 30; // Matching portfolio count
+            
+            // Create initial burst with staggered timing (matching portfolio)
+            for (let i = 0; i < particleCreationCount; i++) {
+                setTimeout(createEnhancedParticle, Math.random() * 10000); // Spread over 10 seconds
             }
             
-            // Create new particles less frequently
-            setInterval(createParticle, 600); // Same frequency as working version
+            // Continue creating particles (matching portfolio frequency)
+            setInterval(createEnhancedParticle, 600); // Every 600ms
             
-            console.log('✨ Subtle particles system initialized with', particleCount, 'particles');
+            console.log('✅ SUBTLE particles system initialized (portfolio style) with higher z-index fix');
+        }
+        
+        // Debug function to check container
+        function debugParticlesContainer() {
+            const container = document.getElementById('particles');
+            console.log('🔍 Particles container debug:', {
+                exists: !!container,
+                className: container?.className,
+                zIndex: container ? getComputedStyle(container).zIndex : 'N/A',
+                position: container ? getComputedStyle(container).position : 'N/A',
+                display: container ? getComputedStyle(container).display : 'N/A',
+                width: container ? getComputedStyle(container).width : 'N/A',
+                height: container ? getComputedStyle(container).height : 'N/A',
+                childCount: container ? container.children.length : 0,
+                activeParticles: particleCount
+            });
         }
         
         // Start immediately
-        startSubtleParticles();
+        startEnhancedParticles();
+        
+        // Also ensure it starts on DOM ready
         if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', startSubtleParticles);
+            document.addEventListener('DOMContentLoaded', startEnhancedParticles);
         }
+        
+        // Debug every 10 seconds
+        setInterval(debugParticlesContainer, 10000);
+        
+        // Initial debug after 2 seconds
+        setTimeout(debugParticlesContainer, 2000);
     </script>
 
     <!-- Load Lenis for smooth scrolling (FIXED CDN) -->
