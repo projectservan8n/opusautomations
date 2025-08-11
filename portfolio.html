@@ -350,6 +350,17 @@
         height: 240px;
         object-fit: cover;
         border-radius: 0;
+        background: #000;
+    }
+
+    .project-video::-webkit-media-controls-panel {
+        background-color: rgba(0, 0, 0, 0.8);
+    }
+
+    .project-video::-webkit-media-controls-play-button,
+    .project-video::-webkit-media-controls-volume-slider,
+    .project-video::-webkit-media-controls-timeline {
+        filter: invert(1);
     }
 
     .project-image {
@@ -831,9 +842,12 @@
 
       <div class="project-item">
         <div class="item-media">
-          <video class="project-video" autoplay muted loop playsinline controls>
+          <video class="project-video" 
+                 controls 
+                 preload="metadata"
+                 poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3Crect fill='%23000' width='1' height='1'/%3E%3C/svg%3E">
             <source src="https://github.com/projectservan8n/opusautomations/raw/refs/heads/main/assets/video/shredder.mp4" type="video/mp4">
-            <p>Shredder app demo video</p>
+            <p>Your browser doesn't support video playback. <a href="https://github.com/projectservan8n/opusautomations/raw/refs/heads/main/assets/video/shredder.mp4">Download the video</a></p>
           </video>
         </div>
         <div class="item-content">
@@ -853,9 +867,12 @@
 
       <div class="project-item">
         <div class="item-media">
-          <video class="project-video" autoplay muted loop playsinline controls>
+          <video class="project-video" 
+                 controls 
+                 preload="metadata"
+                 poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3Crect fill='%23000' width='1' height='1'/%3E%3C/svg%3E">
             <source src="https://github.com/projectservan8n/opusautomations/raw/refs/heads/main/assets/video/Heraops%20Final.mp4" type="video/mp4">
-            <p>Hera Ops automation workflow demo</p>
+            <p>Your browser doesn't support video playback. <a href="https://github.com/projectservan8n/opusautomations/raw/refs/heads/main/assets/video/Heraops%20Final.mp4">Download the video</a></p>
           </video>
         </div>
         <div class="item-content">
@@ -944,15 +961,16 @@
 </footer>
 
 <script>
-// Set current year
-document.getElementById('year').textContent = new Date().getFullYear();
-
-// Enhanced mobile navigation functionality matching your main site
+// Enhanced mobile navigation with butter-smooth scrolling
 document.addEventListener('DOMContentLoaded', function() {
     const navToggle = document.getElementById('nav-toggle');
     const navMenu = document.getElementById('nav-menu');
     const body = document.body;
     let scrollPositionBeforeMenu = 0;
+    let isScrolling = false;
+
+    // Add custom scroll class
+    body.classList.add('custom-scroll');
 
     function openMenu() {
         scrollPositionBeforeMenu = window.scrollY;
@@ -978,21 +996,43 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Enhanced smooth scroll function
-    function smoothScrollToElement(targetElement, offset = 80) {
-        if (!targetElement) return;
+    // Ultra-smooth scroll function with custom easing
+    function ultraSmoothScrollTo(targetElement, offset = 80) {
+        if (!targetElement || isScrolling) return;
         
+        isScrolling = true;
         const isMobile = window.innerWidth <= 768;
         const navbarHeight = isMobile ? 70 : 80;
         const elementRect = targetElement.getBoundingClientRect();
         const absoluteElementTop = elementRect.top + window.scrollY;
         const targetScrollPosition = Math.max(0, absoluteElementTop - navbarHeight);
         
-        // Use smooth scroll with enhanced easing
-        window.scrollTo({
-            top: targetScrollPosition,
-            behavior: 'smooth'
-        });
+        const startPosition = window.scrollY;
+        const distance = targetScrollPosition - startPosition;
+        const duration = Math.min(Math.abs(distance) * 0.8, 1200); // Responsive duration
+        const startTime = performance.now();
+
+        // Custom easing function for ultra-smooth animation
+        function easeInOutCubic(t) {
+            return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+        }
+
+        function animateScroll(currentTime) {
+            const elapsed = currentTime - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            const easedProgress = easeInOutCubic(progress);
+            
+            const currentPosition = startPosition + (distance * easedProgress);
+            window.scrollTo(0, currentPosition);
+            
+            if (progress < 1) {
+                requestAnimationFrame(animateScroll);
+            } else {
+                isScrolling = false;
+            }
+        }
+        
+        requestAnimationFrame(animateScroll);
     }
 
     // Toggle menu
@@ -1007,7 +1047,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Handle navigation links with smooth scrolling
+    // Handle navigation links with ultra-smooth scrolling
     const navLinks = document.querySelectorAll('.nav-link');
     navLinks.forEach(link => {
         link.addEventListener('click', function(e) {
@@ -1023,10 +1063,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     if (isMobile) {
                         closeMenu();
                         setTimeout(() => {
-                            smoothScrollToElement(targetElement);
-                        }, 100);
+                            ultraSmoothScrollTo(targetElement);
+                        }, 150); // Slightly longer delay for menu close
                     } else {
-                        smoothScrollToElement(targetElement);
+                        ultraSmoothScrollTo(targetElement);
                     }
                 }
             }
@@ -1059,36 +1099,48 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 100);
     });
 
-    // Enhanced navbar scroll effect
-    window.addEventListener('scroll', function() {
+    // Enhanced navbar scroll effect with smoother transitions
+    let ticking = false;
+    function updateNavbar() {
         const navbar = document.querySelector('.navbar');
         if (navbar) {
-            if (window.scrollY > 100) {
+            const scrollY = window.scrollY;
+            if (scrollY > 100) {
                 navbar.style.background = 'rgba(10, 10, 10, 0.95)';
                 navbar.style.backdropFilter = 'blur(20px)';
+                navbar.style.borderBottom = '1px solid rgba(139, 92, 246, 0.3)';
             } else {
                 navbar.style.background = 'rgba(10, 10, 10, 0.9)';
                 navbar.style.backdropFilter = 'blur(10px)';
+                navbar.style.borderBottom = '1px solid rgba(139, 92, 246, 0.2)';
             }
         }
-    });
+        ticking = false;
+    }
+
+    window.addEventListener('scroll', function() {
+        if (!ticking) {
+            requestAnimationFrame(updateNavbar);
+            ticking = true;
+        }
+    }, { passive: true });
 
     // Initialize particles
     initParticles();
 
-    // Initialize smooth scrolling enhancements
-    initSmoothScrolling();
-
-    // Initialize animations on scroll
+    // Initialize scroll animations
     initScrollAnimations();
+
+    // Initialize video handling
+    initVideoHandling();
 });
 
-// Enhanced particle system matching your main site
+// Enhanced particle system
 function initParticles() {
     const particlesContainer = document.getElementById('particles');
     if (!particlesContainer) return;
     
-    const particleCount = 25;
+    const particleCount = 30; // Increased for more visual impact
     
     function createParticle() {
         const particle = document.createElement('div');
@@ -1096,21 +1148,24 @@ function initParticles() {
         particle.style.left = Math.random() * 100 + '%';
         particle.style.bottom = '-10px';
         
-        const size = Math.random() * 3 + 1.5;
+        const size = Math.random() * 4 + 2; // Slightly larger particles
         particle.style.width = size + 'px';
         particle.style.height = size + 'px';
+        
+        const opacity = 0.1 + Math.random() * 0.3;
         particle.style.background = `linear-gradient(45deg, 
-            rgba(139, 92, 246, ${0.15 + Math.random() * 0.2}), 
-            rgba(236, 72, 153, ${0.1 + Math.random() * 0.15})
+            rgba(139, 92, 246, ${opacity}), 
+            rgba(236, 72, 153, ${opacity * 0.8})
         )`;
+        
         particle.style.borderRadius = '50%';
         particle.style.position = 'absolute';
         particle.style.pointerEvents = 'none';
         particle.style.zIndex = '1';
-        particle.style.boxShadow = `0 0 ${size * 1.5}px rgba(139, 92, 246, 0.1)`;
+        particle.style.boxShadow = `0 0 ${size * 2}px rgba(139, 92, 246, ${opacity * 0.5})`;
         
-        const duration = Math.random() * 25 + 20;
-        const horizontalDrift = (Math.random() - 0.5) * 100;
+        const duration = Math.random() * 30 + 25; // Longer duration
+        const horizontalDrift = (Math.random() - 0.5) * 150;
         particle.style.animation = `floatUp ${duration}s linear forwards`;
         particle.style.setProperty('--horizontal-drift', horizontalDrift + 'px');
         
@@ -1123,74 +1178,61 @@ function initParticles() {
         }, duration * 1000 + 1000);
     }
     
+    // Create initial burst
     for (let i = 0; i < particleCount; i++) {
-        setTimeout(createParticle, Math.random() * 8000);
+        setTimeout(createParticle, Math.random() * 10000);
     }
     
-    setInterval(createParticle, 800);
+    // Continue creating particles
+    setInterval(createParticle, 600); // More frequent
 }
 
-// Enhanced smooth scrolling with Lenis support
-function initSmoothScrolling() {
-    // Check if Lenis is available
-    if (typeof Lenis !== 'undefined') {
-        const lenis = new Lenis({
-            duration: 1.2,
-            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-            direction: 'vertical',
-            smooth: true,
-            mouseMultiplier: 1,
-            smoothTouch: false,
-            touchMultiplier: 2,
-            wheelMultiplier: 1,
-            normalizeWheel: true,
-            lerp: 0.1
+// Video handling for better compatibility
+function initVideoHandling() {
+    const videos = document.querySelectorAll('.project-video');
+    
+    videos.forEach(video => {
+        // Ensure video is properly loaded
+        video.addEventListener('loadedmetadata', function() {
+            console.log('Video metadata loaded:', this.src);
         });
-
-        function raf(time) {
-            lenis.raf(time);
-            requestAnimationFrame(raf);
-        }
-        requestAnimationFrame(raf);
-
-        // Update navbar on Lenis scroll
-        lenis.on('scroll', (e) => {
-            updateNavbarBackground(e.scroll);
+        
+        video.addEventListener('error', function(e) {
+            console.error('Video error:', e, this.src);
+            // Replace with fallback image if video fails
+            const fallbackImg = document.createElement('img');
+            fallbackImg.src = 'https://raw.githubusercontent.com/projectservan8n/opusautomations/refs/heads/main/assets/video/JELLY%20APP.JPEG';
+            fallbackImg.alt = 'Video preview';
+            fallbackImg.className = 'project-image';
+            fallbackImg.style.cssText = this.style.cssText;
+            this.parentNode.replaceChild(fallbackImg, this);
         });
-
-        // Add Lenis class to html
-        document.documentElement.classList.add('lenis');
-    } else {
-        // Fallback smooth scrolling
-        document.documentElement.style.scrollBehavior = 'smooth';
-    }
+        
+        // Add loading indicator
+        video.addEventListener('loadstart', function() {
+            this.style.backgroundColor = '#000';
+        });
+        
+        video.addEventListener('canplay', function() {
+            this.style.backgroundColor = 'transparent';
+        });
+    });
 }
 
-// Update navbar background based on scroll
-function updateNavbarBackground(scrollY) {
-    const navbar = document.querySelector('.navbar');
-    if (navbar) {
-        if (scrollY > 100) {
-            navbar.style.background = 'rgba(10, 10, 10, 0.95)';
-            navbar.style.backdropFilter = 'blur(20px)';
-        } else {
-            navbar.style.background = 'rgba(10, 10, 10, 0.9)';
-            navbar.style.backdropFilter = 'blur(10px)';
-        }
-    }
-}
-
-// Initialize scroll animations
+// Enhanced scroll animations
 function initScrollAnimations() {
     const observerOptions = {
         threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
+        rootMargin: '0px 0px -100px 0px'
     };
 
     const observer = new IntersectionObserver(function(entries) {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 entry.target.classList.add('animate-in');
+                // Add slight delay for staggered effect
+                const delay = Array.from(entry.target.parentNode.children).indexOf(entry.target) * 100;
+                entry.target.style.animationDelay = delay + 'ms';
             }
         });
     }, observerOptions);
@@ -1206,25 +1248,8 @@ function initScrollAnimations() {
     });
 }
 
-// Debounce utility for performance
-function debounce(func, wait) {
-    let timeout;
-    return function executedFunction(...args) {
-        const later = () => {
-            clearTimeout(timeout);
-            func(...args);
-        };
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-    };
-}
-
-// Optimized scroll handler
-const optimizedScrollHandler = debounce(function() {
-    // Additional scroll handling if needed
-}, 16);
-
-window.addEventListener('scroll', optimizedScrollHandler, { passive: true });
+// Set current year
+document.getElementById('year').textContent = new Date().getFullYear();
 </script>
 </body>
 </html>
