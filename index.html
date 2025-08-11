@@ -945,16 +945,12 @@
         </div>
     </div>
 
-    <!-- BULLETPROOF PARTICLES SYSTEM - INLINE -->
+    <!-- WORKING PARTICLES SYSTEM -->
     <script>
-        // IMMEDIATE TEST - Run right now
-        console.log('🧪 PARTICLE DEBUG TEST STARTING...');
+        console.log('🎬 Starting working particles system...');
         
-        // Test 1: Create visible static particles immediately
-        function createTestParticles() {
-            console.log('Creating test particles...');
-            
-            // Create container
+        // Create container (we know this works now)
+        function setupParticlesContainer() {
             let container = document.getElementById('particles');
             if (!container) {
                 container = document.createElement('div');
@@ -966,49 +962,98 @@
                     width: 100%;
                     height: 100%;
                     pointer-events: none;
-                    z-index: 999;
-                    background: rgba(255,0,0,0.1);
+                    z-index: 0;
+                    overflow: hidden;
                 `;
                 document.body.appendChild(container);
-                console.log('✅ Container created');
             }
-            
-            // Clear existing
-            container.innerHTML = '';
-            
-            // Create 5 BIG, BRIGHT test particles
-            for (let i = 0; i < 5; i++) {
-                const particle = document.createElement('div');
-                particle.style.cssText = `
-                    position: absolute;
-                    width: 20px;
-                    height: 20px;
-                    background: #ff0000;
-                    border-radius: 50%;
-                    left: ${20 + i * 20}%;
-                    top: ${20 + i * 10}%;
-                    z-index: 1000;
-                    border: 2px solid yellow;
-                `;
-                container.appendChild(particle);
-                console.log(`✅ Test particle ${i + 1} created at ${20 + i * 20}%, ${20 + i * 10}%`);
-            }
-            
-            console.log('🎯 5 RED test particles should be visible now!');
+            return container;
         }
         
-        // Run immediately
-        createTestParticles();
+        // Add animation CSS
+        const animationCSS = `
+            @keyframes floatUp {
+                0% {
+                    transform: translateY(0) translateX(0) rotate(0deg);
+                    opacity: 0;
+                }
+                15% {
+                    opacity: 0.8;
+                }
+                85% {
+                    opacity: 0.8;
+                }
+                100% {
+                    transform: translateY(-100vh) translateX(var(--drift, 0px)) rotate(180deg);
+                    opacity: 0;
+                }
+            }
+        `;
         
-        // Also run after DOM loads
+        const styleSheet = document.createElement('style');
+        styleSheet.textContent = animationCSS;
+        document.head.appendChild(styleSheet);
+        
+        // Create beautiful floating particles
+        function createFloatingParticle() {
+            const container = setupParticlesContainer();
+            const particle = document.createElement('div');
+            
+            // Particle properties
+            const size = Math.random() * 4 + 2; // 2-6px
+            const opacity = 0.4 + Math.random() * 0.4; // 0.4-0.8
+            const duration = Math.random() * 20 + 15; // 15-35 seconds
+            const delay = Math.random() * 3; // 0-3 second delay
+            const drift = (Math.random() - 0.5) * 150; // horizontal movement
+            
+            particle.style.cssText = `
+                position: absolute;
+                left: ${Math.random() * 100}%;
+                bottom: -10px;
+                width: ${size}px;
+                height: ${size}px;
+                background: linear-gradient(45deg, 
+                    rgba(139, 92, 246, ${opacity}), 
+                    rgba(236, 72, 153, ${opacity * 0.8}));
+                border-radius: 50%;
+                pointer-events: none;
+                z-index: 1;
+                animation: floatUp ${duration}s linear forwards;
+                animation-delay: ${delay}s;
+                --drift: ${drift}px;
+                box-shadow: 0 0 ${size * 2}px rgba(139, 92, 246, ${opacity * 0.3});
+            `;
+            
+            container.appendChild(particle);
+            
+            // Clean up after animation
+            setTimeout(() => {
+                if (particle.parentNode) {
+                    particle.parentNode.removeChild(particle);
+                }
+            }, (duration + delay) * 1000 + 2000);
+        }
+        
+        // Initialize particles
+        function startParticles() {
+            console.log('✨ Creating beautiful floating particles...');
+            
+            // Create initial burst
+            for (let i = 0; i < 25; i++) {
+                setTimeout(createFloatingParticle, Math.random() * 5000);
+            }
+            
+            // Continue creating particles
+            setInterval(createFloatingParticle, 600);
+            
+            console.log('🚀 Beautiful particles are now floating!');
+        }
+        
+        // Start immediately and after DOM loads
+        startParticles();
         if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', createTestParticles);
+            document.addEventListener('DOMContentLoaded', startParticles);
         }
-        
-        // Run again after 2 seconds
-        setTimeout(createTestParticles, 2000);
-        
-        console.log('🚀 Debug test particles system initialized!');
     </script>
 
     <!-- Load Lenis for smooth scrolling (FIXED CDN) -->
