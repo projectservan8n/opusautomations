@@ -8,6 +8,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700&display=swap" rel="stylesheet">
+  <!-- Load Lenis for smooth scrolling (matching main site) -->
+  <script src="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
   <style>
     /* Reset and Base Styles */
     * {
@@ -994,16 +996,93 @@
 </footer>
 
 <script>
-// Enhanced mobile navigation with butter-smooth scrolling
+// Enhanced mobile navigation with Lenis smooth scrolling (matching main site)
 document.addEventListener('DOMContentLoaded', function() {
     const navToggle = document.getElementById('nav-toggle');
     const navMenu = document.getElementById('nav-menu');
     const body = document.body;
     let scrollPositionBeforeMenu = 0;
-    let isScrolling = false;
+    let lenis;
 
-    // Add custom scroll class
-    body.classList.add('custom-scroll');
+    // Initialize Lenis smooth scrolling (matching your main site)
+    function initLenis() {
+        if (!window.Lenis) {
+            console.log('Lenis not available');
+            return;
+        }
+        
+        try {
+            // Create Lenis instance with same settings as main site
+            lenis = new window.Lenis({
+                duration: 1.2,
+                easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+                direction: 'vertical',
+                smooth: true,
+                mouseMultiplier: 1,
+                smoothTouch: false,
+                touchMultiplier: 2,
+                wheelMultiplier: 1,
+                normalizeWheel: true,
+                lerp: 0.1,
+                infinite: false,
+                orientation: 'vertical',
+                gestureOrientation: 'vertical'
+            });
+            
+            // Lenis animation loop
+            function raf(time) {
+                lenis.raf(time);
+                requestAnimationFrame(raf);
+            }
+            requestAnimationFrame(raf);
+            
+            // Add Lenis class to html
+            document.documentElement.classList.add('lenis');
+            
+            // Update navbar on Lenis scroll
+            lenis.on('scroll', (e) => {
+                updateNavbarBackground(e.scroll);
+            });
+            
+            // Handle window resize
+            window.addEventListener('resize', () => {
+                lenis.resize();
+            });
+            
+            console.log('🚀 Lenis smooth scrolling initialized on portfolio');
+            
+        } catch (error) {
+            console.error('❌ Error initializing Lenis:', error);
+            // Fallback to regular smooth scrolling
+            document.documentElement.style.scrollBehavior = 'smooth';
+        }
+    }
+
+    // Enhanced smooth scroll function using Lenis
+    function lenisScrollTo(targetElement, offset = 80) {
+        if (!targetElement) return;
+        
+        const isMobile = window.innerWidth <= 768;
+        const navbarHeight = isMobile ? 70 : 80;
+        const elementRect = targetElement.getBoundingClientRect();
+        const absoluteElementTop = elementRect.top + window.scrollY;
+        const targetScrollPosition = Math.max(0, absoluteElementTop - navbarHeight);
+        
+        if (lenis) {
+            // Use Lenis scrollTo for buttery smooth scrolling
+            lenis.scrollTo(targetScrollPosition, {
+                duration: 1.5,
+                easing: (t) => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2,
+                immediate: false
+            });
+        } else {
+            // Fallback to regular smooth scroll
+            window.scrollTo({
+                top: targetScrollPosition,
+                behavior: 'smooth'
+            });
+        }
+    }
 
     function openMenu() {
         scrollPositionBeforeMenu = window.scrollY;
@@ -1014,6 +1093,11 @@ document.addEventListener('DOMContentLoaded', function() {
         body.style.position = 'fixed';
         body.style.width = '100%';
         body.style.top = `-${scrollPositionBeforeMenu}px`;
+        
+        // Stop Lenis when menu is open
+        if (lenis) {
+            lenis.stop();
+        }
     }
 
     function closeMenu() {
@@ -1024,48 +1108,15 @@ document.addEventListener('DOMContentLoaded', function() {
         body.style.position = '';
         body.style.width = '';
         body.style.top = '';
+        
+        // Restart Lenis when menu closes
+        if (lenis) {
+            lenis.start();
+        }
+        
         if (scrollPositionBeforeMenu > 0) {
             window.scrollTo(0, scrollPositionBeforeMenu);
         }
-    }
-
-    // Ultra-smooth scroll function with custom easing
-    function ultraSmoothScrollTo(targetElement, offset = 80) {
-        if (!targetElement || isScrolling) return;
-        
-        isScrolling = true;
-        const isMobile = window.innerWidth <= 768;
-        const navbarHeight = isMobile ? 70 : 80;
-        const elementRect = targetElement.getBoundingClientRect();
-        const absoluteElementTop = elementRect.top + window.scrollY;
-        const targetScrollPosition = Math.max(0, absoluteElementTop - navbarHeight);
-        
-        const startPosition = window.scrollY;
-        const distance = targetScrollPosition - startPosition;
-        const duration = Math.min(Math.abs(distance) * 0.8, 1200); // Responsive duration
-        const startTime = performance.now();
-
-        // Custom easing function for ultra-smooth animation
-        function easeInOutCubic(t) {
-            return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-        }
-
-        function animateScroll(currentTime) {
-            const elapsed = currentTime - startTime;
-            const progress = Math.min(elapsed / duration, 1);
-            const easedProgress = easeInOutCubic(progress);
-            
-            const currentPosition = startPosition + (distance * easedProgress);
-            window.scrollTo(0, currentPosition);
-            
-            if (progress < 1) {
-                requestAnimationFrame(animateScroll);
-            } else {
-                isScrolling = false;
-            }
-        }
-        
-        requestAnimationFrame(animateScroll);
     }
 
     // Toggle menu
@@ -1080,7 +1131,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Handle navigation links with ultra-smooth scrolling
+    // Handle navigation links with Lenis smooth scrolling
     const navLinks = document.querySelectorAll('.nav-link');
     navLinks.forEach(link => {
         link.addEventListener('click', function(e) {
@@ -1096,10 +1147,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     if (isMobile) {
                         closeMenu();
                         setTimeout(() => {
-                            ultraSmoothScrollTo(targetElement);
-                        }, 150); // Slightly longer delay for menu close
+                            lenisScrollTo(targetElement);
+                        }, 150);
                     } else {
-                        ultraSmoothScrollTo(targetElement);
+                        lenisScrollTo(targetElement);
                     }
                 }
             }
@@ -1132,12 +1183,10 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 100);
     });
 
-    // Enhanced navbar scroll effect with smoother transitions
-    let ticking = false;
-    function updateNavbar() {
+    // Update navbar background based on scroll
+    function updateNavbarBackground(scrollY) {
         const navbar = document.querySelector('.navbar');
         if (navbar) {
-            const scrollY = window.scrollY;
             if (scrollY > 100) {
                 navbar.style.background = 'rgba(10, 10, 10, 0.95)';
                 navbar.style.backdropFilter = 'blur(20px)';
@@ -1148,23 +1197,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 navbar.style.borderBottom = '1px solid rgba(139, 92, 246, 0.2)';
             }
         }
-        ticking = false;
     }
 
-    window.addEventListener('scroll', function() {
-        if (!ticking) {
-            requestAnimationFrame(updateNavbar);
-            ticking = true;
-        }
-    }, { passive: true });
-
-    // Initialize particles
+    // Initialize everything
+    initLenis();
     initParticles();
-
-    // Initialize scroll animations
     initScrollAnimations();
-
-    // Initialize video handling
     initVideoHandling();
 });
 
@@ -1220,7 +1258,7 @@ function initParticles() {
     setInterval(createParticle, 600); // More frequent
 }
 
-// Video handling for autoplay looping
+// Video handling for autoplay looping with full aspect ratio
 function initVideoHandling() {
     const videos = document.querySelectorAll('.project-video');
     
@@ -1229,6 +1267,18 @@ function initVideoHandling() {
         video.removeAttribute('controls');
         video.setAttribute('disablepictureinpicture', '');
         video.setAttribute('controlslist', 'nodownload nofullscreen noremoteplayback');
+        
+        // Ensure video maintains its natural aspect ratio
+        video.addEventListener('loadedmetadata', function() {
+            console.log('Video metadata loaded:', this.src);
+            console.log('Video dimensions:', this.videoWidth, 'x', this.videoHeight);
+            
+            // Let the video display at its natural aspect ratio
+            this.style.width = '100%';
+            this.style.height = 'auto';
+            this.style.maxWidth = '100%';
+            this.style.objectFit = 'contain';
+        });
         
         // Ensure video is properly loaded and autoplays
         video.addEventListener('loadeddata', function() {
@@ -1245,9 +1295,9 @@ function initVideoHandling() {
             // Show fallback image (already in video element as fallback)
         });
         
-        // Simple hover effect - just scale, no brightness change
+        // Gentle hover effect - smaller scale for full videos
         video.addEventListener('mouseenter', function() {
-            this.style.transform = 'scale(1.05)';
+            this.style.transform = 'scale(1.02)';
         });
         
         video.addEventListener('mouseleave', function() {
@@ -1265,9 +1315,12 @@ function initVideoHandling() {
             e.preventDefault();
         });
         
-        // Set initial opacity for smooth loading
+        // Set initial styles for proper display
         video.style.opacity = '0';
         video.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+        video.style.display = 'block';
+        video.style.maxWidth = '100%';
+        video.style.height = 'auto';
         
         // Ensure video keeps looping
         video.addEventListener('ended', function() {
