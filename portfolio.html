@@ -345,29 +345,52 @@
         border: 2px solid rgba(139, 92, 246, 0.3);
     }
 
-    .project-video {
+    .project-video, .project-image {
         width: 100%;
         height: 240px;
         object-fit: cover;
         border-radius: 0;
+        transition: transform 0.3s ease;
+        cursor: pointer;
+    }
+
+    .project-video:hover, .project-image:hover {
+        transform: scale(1.05);
+    }
+
+    .project-video {
         background: #000;
     }
 
+    /* Hide video controls completely */
+    .project-video::-webkit-media-controls {
+        display: none !important;
+    }
+
     .project-video::-webkit-media-controls-panel {
-        background-color: rgba(0, 0, 0, 0.8);
+        display: none !important;
     }
 
-    .project-video::-webkit-media-controls-play-button,
-    .project-video::-webkit-media-controls-volume-slider,
-    .project-video::-webkit-media-controls-timeline {
-        filter: invert(1);
+    .project-video::-webkit-media-controls-play-button {
+        display: none !important;
     }
 
-    .project-image {
-        width: 100%;
-        height: 240px;
-        object-fit: cover;
-        border-radius: 0;
+    .project-video::-webkit-media-controls-start-playback-button {
+        display: none !important;
+    }
+
+    /* For Firefox */
+    .project-video::-moz-media-controls {
+        display: none !important;
+    }
+
+    /* Ensure no controls attribute interference */
+    .project-video {
+        outline: none;
+    }
+
+    .project-video:focus {
+        outline: none;
     }
 
     /* Section Styles */
@@ -843,11 +866,16 @@
       <div class="project-item">
         <div class="item-media">
           <video class="project-video" 
-                 controls 
-                 preload="metadata"
-                 poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3Crect fill='%23000' width='1' height='1'/%3E%3C/svg%3E">
+                 autoplay
+                 muted 
+                 loop 
+                 playsinline
+                 preload="auto">
             <source src="https://github.com/projectservan8n/opusautomations/raw/refs/heads/main/assets/video/shredder.mp4" type="video/mp4">
-            <p>Your browser doesn't support video playback. <a href="https://github.com/projectservan8n/opusautomations/raw/refs/heads/main/assets/video/shredder.mp4">Download the video</a></p>
+            <img src="https://raw.githubusercontent.com/projectservan8n/opusautomations/refs/heads/main/assets/video/JELLY%20APP.JPEG" 
+                 alt="Shredder app preview" 
+                 class="project-image"
+                 style="object-fit: cover; width: 100%; height: 240px;" />
           </video>
         </div>
         <div class="item-content">
@@ -868,11 +896,16 @@
       <div class="project-item">
         <div class="item-media">
           <video class="project-video" 
-                 controls 
-                 preload="metadata"
-                 poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3Crect fill='%23000' width='1' height='1'/%3E%3C/svg%3E">
+                 autoplay
+                 muted 
+                 loop 
+                 playsinline
+                 preload="auto">
             <source src="https://github.com/projectservan8n/opusautomations/raw/refs/heads/main/assets/video/Heraops%20Final.mp4" type="video/mp4">
-            <p>Your browser doesn't support video playback. <a href="https://github.com/projectservan8n/opusautomations/raw/refs/heads/main/assets/video/Heraops%20Final.mp4">Download the video</a></p>
+            <img src="https://raw.githubusercontent.com/projectservan8n/opusautomations/refs/heads/main/assets/video/JELLY%20APP.JPEG" 
+                 alt="Hera Ops preview" 
+                 class="project-image"
+                 style="object-fit: cover; width: 100%; height: 240px;" />
           </video>
         </div>
         <div class="item-content">
@@ -1187,34 +1220,59 @@ function initParticles() {
     setInterval(createParticle, 600); // More frequent
 }
 
-// Video handling for better compatibility
+// Video handling for autoplay looping
 function initVideoHandling() {
     const videos = document.querySelectorAll('.project-video');
     
     videos.forEach(video => {
-        // Ensure video is properly loaded
-        video.addEventListener('loadedmetadata', function() {
-            console.log('Video metadata loaded:', this.src);
+        // Remove any default controls
+        video.removeAttribute('controls');
+        video.setAttribute('disablepictureinpicture', '');
+        video.setAttribute('controlslist', 'nodownload nofullscreen noremoteplayback');
+        
+        // Ensure video is properly loaded and autoplays
+        video.addEventListener('loadeddata', function() {
+            console.log('Video loaded successfully:', this.src);
+            this.style.opacity = '1';
+            // Force play in case autoplay didn't work
+            this.play().catch(e => console.log('Autoplay prevented:', e));
         });
         
         video.addEventListener('error', function(e) {
-            console.error('Video error:', e, this.src);
-            // Replace with fallback image if video fails
-            const fallbackImg = document.createElement('img');
-            fallbackImg.src = 'https://raw.githubusercontent.com/projectservan8n/opusautomations/refs/heads/main/assets/video/JELLY%20APP.JPEG';
-            fallbackImg.alt = 'Video preview';
-            fallbackImg.className = 'project-image';
-            fallbackImg.style.cssText = this.style.cssText;
-            this.parentNode.replaceChild(fallbackImg, this);
+            console.error('Video failed to load:', e, this.src);
+            // Hide the video element if it fails
+            this.style.display = 'none';
+            // Show fallback image (already in video element as fallback)
         });
         
-        // Add loading indicator
-        video.addEventListener('loadstart', function() {
-            this.style.backgroundColor = '#000';
+        // Simple hover effect - just scale, no brightness change
+        video.addEventListener('mouseenter', function() {
+            this.style.transform = 'scale(1.05)';
         });
         
-        video.addEventListener('canplay', function() {
-            this.style.backgroundColor = 'transparent';
+        video.addEventListener('mouseleave', function() {
+            this.style.transform = 'scale(1)';
+        });
+        
+        // Prevent right-click context menu
+        video.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+            return false;
+        });
+        
+        // Prevent video controls from showing on click
+        video.addEventListener('click', function(e) {
+            e.preventDefault();
+        });
+        
+        // Set initial opacity for smooth loading
+        video.style.opacity = '0';
+        video.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+        
+        // Ensure video keeps looping
+        video.addEventListener('ended', function() {
+            this.currentTime = 0;
+            this.play();
         });
     });
 }
