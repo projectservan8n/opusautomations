@@ -9,7 +9,7 @@ const CONFIG = {
 // Debug logging function
 function debugLog(message, data = null) {
     if (CONFIG.DEBUG_MODE) {
-        console.log(`🐛 [DEBUG] ${message}`, data || '');
+        console.log(`🛠 [DEBUG] ${message}`, data || '');
     }
 }
 
@@ -19,6 +19,9 @@ let lenis;
 // DOM Content Loaded
 document.addEventListener('DOMContentLoaded', function() {
     debugLog('DOM Content Loaded - Initializing Opus Automations');
+    
+    // Initialize visual effects
+    initVisualEffects();
     
     // Initialize navigation - FIXED MOBILE
     initNavigation();
@@ -40,6 +43,84 @@ document.addEventListener('DOMContentLoaded', function() {
     
     debugLog('All components initialized successfully');
 });
+
+// VISUAL EFFECTS INITIALIZATION
+function initVisualEffects() {
+    initMagneticCTAButtons();
+    initGlowCards();
+    debugLog('✅ Visual effects initialized');
+}
+
+// MAGNETIC EFFECT FOR CTA BUTTONS ONLY - FIXED SMOOTH ANIMATION
+function initMagneticCTAButtons() {
+    // Apply magnetic effect to ALL CTA buttons including submit buttons
+    const ctaButtons = document.querySelectorAll(
+        'a.btn[href], button.btn, .btn[onclick], button[type="submit"]'
+    );
+    
+    ctaButtons.forEach(button => {
+        let isHovering = false;
+        
+        // Set initial transition for smooth return animation
+        button.style.transition = 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+        
+        button.addEventListener('mouseenter', () => {
+            isHovering = true;
+            // Remove transition during mouse move for immediate response
+            button.style.transition = 'none';
+        });
+        
+        button.addEventListener('mouseleave', () => {
+            isHovering = false;
+            // Restore smooth transition for return animation
+            button.style.transition = 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+            button.style.transform = 'translate(0, 0) scale(1)';
+        });
+        
+        button.addEventListener('mousemove', e => {
+            if (!isHovering) return;
+            
+            const rect = button.getBoundingClientRect();
+            const x = (e.clientX - rect.left - rect.width/2) * 0.15;
+            const y = (e.clientY - rect.top - rect.height/2) * 0.15;
+            
+            button.style.transform = `translate(${x}px, ${y}px) scale(1.02)`;
+        });
+    });
+    
+    debugLog('✅ Magnetic CTA button effects initialized for', ctaButtons.length, 'buttons');
+}
+
+// GLOW EFFECT FOR CARDS WITH ROTATING EMOJIS
+function initGlowCards() {
+    const glowElements = document.querySelectorAll('.service-card, .product-card, .featured-product, .stat-card, .case-content, .card, .experience-item, .project-item');
+    
+    glowElements.forEach(card => {
+        card.addEventListener('mouseenter', () => {
+            // Add glow class
+            card.classList.add('card-glow');
+            
+            // Rotate emojis
+            const emojis = card.querySelectorAll('.service-icon, .product-icon');
+            emojis.forEach(emoji => {
+                emoji.style.transform = 'rotate(360deg)';
+            });
+        });
+        
+        card.addEventListener('mouseleave', () => {
+            // Remove glow class
+            card.classList.remove('card-glow');
+            
+            // Reset emoji rotation
+            const emojis = card.querySelectorAll('.service-icon, .product-icon');
+            emojis.forEach(emoji => {
+                emoji.style.transform = 'rotate(0deg)';
+            });
+        });
+    });
+    
+    debugLog('✅ Glow card effects with rotating emojis initialized');
+}
 
 // COMPLETELY FIXED Mobile Navigation Functionality - BULLETPROOF VERSION
 function initNavigation() {
@@ -116,7 +197,7 @@ function initNavigation() {
                 const absoluteElementTop = elementRect.top + window.scrollY;
                 const targetScrollPosition = Math.max(0, absoluteElementTop - navbarHeight);
                 
-                debugLog('📐 Mobile scroll calculation:', {
+                debugLog('🔍 Mobile scroll calculation:', {
                     elementTop: absoluteElementTop,
                     navbarHeight: navbarHeight,
                     targetPosition: targetScrollPosition,
@@ -137,7 +218,7 @@ function initNavigation() {
             const absoluteElementTop = elementRect.top + window.scrollY;
             const targetScrollPosition = Math.max(0, absoluteElementTop - navbarHeight);
             
-            debugLog('📐 Desktop scroll calculation:', {
+            debugLog('🔍 Desktop scroll calculation:', {
                 elementTop: absoluteElementTop,
                 navbarHeight: navbarHeight,
                 targetPosition: targetScrollPosition,
@@ -532,193 +613,12 @@ function initSmoothScrolling() {
     
     // Enhanced fallback smooth scroll (if Lenis fails)
     function initFallbackSmoothScroll() {
-        let isScrolling = false;
-        let currentScrollY = window.scrollY;
-        let targetScrollY = window.scrollY;
-        let velocity = 0;
-        let rafId = null;
-        
-        // Smooth scrolling configuration
-        const config = {
-            lerp: 0.1,           // Linear interpolation
-            friction: 0.9,       // Velocity friction
-            maxVelocity: 30,     // Maximum scroll velocity
-            wheelMultiplier: 1.2, // Wheel sensitivity
-            touchMultiplier: 2   // Touch sensitivity
-        };
-        
-        // Smooth animation loop
-        function animate() {
-            // Apply velocity to target
-            if (Math.abs(velocity) > 0.1) {
-                targetScrollY += velocity;
-                velocity *= config.friction;
-                
-                // Clamp to bounds
-                const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-                targetScrollY = Math.max(0, Math.min(targetScrollY, maxScroll));
-            }
-            
-            // Smooth interpolation towards target
-            const diff = targetScrollY - currentScrollY;
-            
-            if (Math.abs(diff) > 0.1) {
-                currentScrollY += diff * config.lerp;
-                window.scrollTo(0, currentScrollY);
-                
-                updateNavbarBackground(currentScrollY);
-                
-                rafId = requestAnimationFrame(animate);
-                isScrolling = true;
-            } else {
-                currentScrollY = targetScrollY;
-                isScrolling = false;
-                rafId = null;
-            }
-        }
-        
-        // Enhanced wheel handling
-        function onWheel(e) {
-            e.preventDefault();
-            
-            // Normalize wheel delta
-            let delta = 0;
-            if (e.deltaY) {
-                delta = e.deltaY;
-            } else if (e.wheelDelta) {
-                delta = -e.wheelDelta;
-            }
-            
-            // Apply wheel delta to velocity
-            velocity += delta * config.wheelMultiplier * 0.4;
-            velocity = Math.max(-config.maxVelocity, Math.min(config.maxVelocity, velocity));
-            
-            // Start animation if not already running
-            if (!isScrolling && rafId === null) {
-                animate();
-            }
-        }
-        
-        // Touch handling for mobile
-        let touchStartY = 0;
-        let lastTouchY = 0;
-        let touchVelocity = 0;
-        
-        function onTouchStart(e) {
-            touchStartY = e.touches[0].clientY;
-            lastTouchY = touchStartY;
-            touchVelocity = 0;
-        }
-        
-        function onTouchMove(e) {
-            if (e.touches.length > 1) return; // Ignore multi-touch
-            
-            const touchY = e.touches[0].clientY;
-            const deltaY = lastTouchY - touchY;
-            
-            touchVelocity = deltaY * config.touchMultiplier;
-            velocity += touchVelocity * 0.3;
-            velocity = Math.max(-config.maxVelocity, Math.min(config.maxVelocity, velocity));
-            
-            lastTouchY = touchY;
-            
-            if (!isScrolling && rafId === null) {
-                animate();
-            }
-            
-            e.preventDefault();
-        }
-        
-        function onTouchEnd() {
-            // Apply final momentum
-            velocity *= 0.8;
-            if (Math.abs(velocity) > 1 && !isScrolling && rafId === null) {
-                animate();
-            }
-        }
-        
-        // Smooth scroll to element function
-        function smoothScrollToElement(targetElement, offset = 80) {
-            if (!targetElement) return;
-            
-            const targetPosition = targetElement.offsetTop - offset;
-            const startPosition = currentScrollY;
-            const distance = targetPosition - startPosition;
-            const duration = Math.min(Math.abs(distance) * 1.2, 1500);
-            const startTime = performance.now();
-            
-            // Cancel existing animations
-            if (rafId) {
-                cancelAnimationFrame(rafId);
-                rafId = null;
-            }
-            
-            velocity = 0; // Stop momentum
-            isScrolling = true;
-            
-            function easeInOutCubic(t) {
-                return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-            }
-            
-            function scrollAnimation() {
-                const elapsed = performance.now() - startTime;
-                const progress = Math.min(elapsed / duration, 1);
-                const easedProgress = easeInOutCubic(progress);
-                
-                currentScrollY = startPosition + (distance * easedProgress);
-                targetScrollY = currentScrollY;
-                
-                window.scrollTo(0, currentScrollY);
-                updateNavbarBackground(currentScrollY);
-                
-                if (progress < 1) {
-                    requestAnimationFrame(scrollAnimation);
-                } else {
-                    isScrolling = false;
-                }
-            }
-            
-            scrollAnimation();
-        }
-        
-        // Add smooth scrolling to elements with data-scroll-to attribute
-        document.querySelectorAll('[data-scroll-to]').forEach(element => {
-            element.addEventListener('click', function() {
-                const targetId = this.getAttribute('data-scroll-to');
-                const targetElement = document.querySelector(targetId);
-                
-                if (targetElement) {
-                    smoothScrollToElement(targetElement, 80);
-                    debugLog('🎯 Fallback smooth scrolling to:', targetId);
-                }
-            });
-        });
-        
-        // Bind events (only if device supports it)
-        try {
-            window.addEventListener('wheel', onWheel, { passive: false });
-            window.addEventListener('touchstart', onTouchStart, { passive: true });
-            window.addEventListener('touchmove', onTouchMove, { passive: false });
-            window.addEventListener('touchend', onTouchEnd, { passive: true });
-        } catch (error) {
-            debugLog('Some scroll events not supported on this device');
-        }
-        
-        // Sync with regular scroll events (for other scripts)
-        window.addEventListener('scroll', () => {
-            if (!isScrolling) {
-                currentScrollY = window.scrollY;
-                targetScrollY = currentScrollY;
-                updateNavbarBackground(currentScrollY);
-            }
-        }, { passive: true });
-        
         // Initialize nav click effects
         addNavClickEffects();
         
         // Expose functions
         window.smoothScrollToElement = smoothScrollToElement;
-        window.getCurrentScrollY = () => currentScrollY;
+        window.getCurrentScrollY = () => window.scrollY;
         
         debugLog('🚀 Fallback smooth scrolling initialized');
     }
@@ -846,17 +746,8 @@ function initSmoothScrolling() {
     }
 }
 
-// Scroll to Contact Function with Ultra-Smooth Scrolling
-function scrollToContact() {
-    const contactSection = document.getElementById('contact');
-    if (contactSection && window.smoothScrollToElement) {
-        window.smoothScrollToElement(contactSection, 80);
-        debugLog('Ultra-smooth scrolled to contact section');
-    }
-}
-
 // Enhanced smooth scroll function for global use (fallback)
-function fallbackSmoothScrollToElement(targetElement, offset = 80) {
+function smoothScrollToElement(targetElement, offset = 80) {
     if (!targetElement) return;
     
     const targetPosition = targetElement.offsetTop - offset;
@@ -885,6 +776,15 @@ function fallbackSmoothScrollToElement(targetElement, offset = 80) {
     }
     
     animateScroll();
+}
+
+// Scroll to Contact Function with Ultra-Smooth Scrolling
+function scrollToContact() {
+    const contactSection = document.getElementById('contact');
+    if (contactSection && window.smoothScrollToElement) {
+        window.smoothScrollToElement(contactSection, 80);
+        debugLog('Ultra-smooth scrolled to contact section');
+    }
 }
 
 // Schedule Call Function
@@ -1054,13 +954,6 @@ function debounce(func, wait) {
         timeout = setTimeout(later, wait);
     };
 }
-
-// Optimize scroll performance
-const optimizedScrollHandler = debounce(function() {
-    // Handle scroll events here if needed
-}, 16); // ~60fps
-
-window.addEventListener('scroll', optimizedScrollHandler);
 
 // Error Handling
 window.addEventListener('error', function(e) {
@@ -1246,54 +1139,10 @@ function submitAssessment(data, results) {
     });
 }
 
-// Add notification animations
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes slideInRight {
-        from {
-            transform: translateX(100%);
-            opacity: 0;
-        }
-        to {
-            transform: translateX(0);
-            opacity: 1;
-        }
-    }
-    
-    @keyframes slideOutRight {
-        from {
-            transform: translateX(0);
-            opacity: 1;
-        }
-        to {
-            transform: translateX(100%);
-            opacity: 0;
-        }
-    }
-    
-    .animate-element {
-        opacity: 0;
-        transform: translateY(30px);
-        transition: all 0.6s ease;
-    }
-    
-    .animate-element.animate-in {
-        opacity: 1;
-        transform: translateY(0);
-    }
-    
-    .notification-content {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
-`;
-document.head.appendChild(style);
-
 // Make functions globally available for HTML onclick handlers
 window.openAssessmentModal = openAssessmentModal;
 window.closeAssessmentModal = closeAssessmentModal;
 window.scrollToContact = scrollToContact;
 window.scheduleCall = scheduleCall;
 
-debugLog('Script.js fully loaded and configured - NO PARTICLES (handled in HTML)', CONFIG);
+debugLog('Script.js fully loaded and configured with enhanced visual effects', CONFIG);
