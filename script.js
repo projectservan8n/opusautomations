@@ -58,15 +58,27 @@ function initMagneticCTAButtons() {
     );
     
     ctaButtons.forEach(button => {
+        // Initialize CSS variables
+        button.style.setProperty('--mouse-x', '0px');
+        button.style.setProperty('--mouse-y', '0px');
+        button.style.setProperty('--hover-scale', '1');
+        
+        // Add magnetic class for CSS transitions
+        button.classList.add('magnetic-cursor-effect');
+        
         let isHovering = false;
         
         button.addEventListener('mouseenter', () => {
             isHovering = true;
+            button.style.setProperty('--hover-scale', '1.02');
         });
         
         button.addEventListener('mouseleave', () => {
             isHovering = false;
-            button.style.transform = 'translate(0, 0) scale(1)';
+            // Reset to original position - CSS will handle slow transition
+            button.style.setProperty('--mouse-x', '0px');
+            button.style.setProperty('--mouse-y', '0px');
+            button.style.setProperty('--hover-scale', '1');
         });
         
         button.addEventListener('mousemove', e => {
@@ -76,7 +88,9 @@ function initMagneticCTAButtons() {
             const x = (e.clientX - rect.left - rect.width/2) * 0.15;
             const y = (e.clientY - rect.top - rect.height/2) * 0.15;
             
-            button.style.transform = `translate(${x}px, ${y}px) scale(1.02)`;
+            // Update CSS variables instead of transform directly
+            button.style.setProperty('--mouse-x', `${x}px`);
+            button.style.setProperty('--mouse-y', `${y}px`);
         });
     });
     
