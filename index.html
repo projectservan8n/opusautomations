@@ -1,4 +1,7 @@
-<!DOCTYPE html>
+<!-- Main Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="https://raw.githubusercontent.com/projectservan8n/opusautomations/refs/heads/main/assets/images/Opus%20Automation%20Icon%20-%20White.png">
+    <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/projectservan8n/opusautomations/refs/heads/main/assets/images/<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -21,69 +24,8 @@
     <link rel="icon" href="https://raw.githubusercontent.com/projectservan8n/opusautomations/refs/heads/main/assets/images/Opus%20Automation%20Icon%20-%20White.png">
     <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/projectservan8n/opusautomations/refs/heads/main/assets/images/Opus%20Automation%20Icon%20-%20White.png">
     
-    <!-- FIXED PARTICLES CSS -->
-    <style>
-        /* Fixed Particles Container - ENHANCED Z-INDEX */
-        .particles-container {
-            position: fixed !important;
-            top: 0 !important;
-            left: 0 !important;
-            width: 100vw !important;
-            height: 100vh !important;
-            pointer-events: none !important;
-            z-index: 5 !important; /* INCREASED from 1 to 5 - above content but below navbar */
-            overflow: hidden !important;
-        }
-
-        .particle {
-            position: absolute !important;
-            border-radius: 50% !important;
-            pointer-events: none !important;
-            will-change: transform, opacity !important;
-        }
-
-        /* Subtle floating animation - MATCHING PORTFOLIO */
-        @keyframes floatUp {
-            0% {
-                transform: translateY(0) translateX(0) rotate(0deg);
-                opacity: 0;
-            }
-            15% {
-                opacity: 0.3; /* Subtle visibility */
-            }
-            85% {
-                opacity: 0.3; /* Stay subtle */
-            }
-            100% {
-                transform: translateY(-100vh) translateX(var(--horizontal-drift, 0px)) rotate(180deg);
-                opacity: 0;
-            }
-        }
-
-        /* Subtle pulsing effect for some particles */
-        .particle:nth-child(5n) {
-            animation-name: floatUp, subtlePulse;
-            animation-duration: inherit, 4s;
-            animation-timing-function: linear, ease-in-out;
-            animation-iteration-count: 1, infinite;
-            animation-fill-mode: forwards, none;
-        }
-
-        @keyframes subtlePulse {
-            0%, 100% { transform: scale(1); opacity: inherit; }
-            50% { transform: scale(1.2); opacity: calc(inherit * 0.9); }
-        }
-
-        /* Debug mode - REMOVE AFTER TESTING */
-        .particles-debug {
-            border: 2px dashed rgba(255, 0, 0, 0.3) !important;
-        }
-    </style>
 </head>
 <body>
-    <!-- FIXED Floating particles background -->
-    <div class="particles-container" id="particles"></div>
-    
     <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-container">
@@ -950,18 +892,15 @@
         </div>
     </div>
 
+    <!-- Load Lenis for smooth scrolling -->
+    <script src="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+    
     <!-- ENHANCED CONNECTED PARTICLE NETWORK -->
     <script>
         console.log('🎬 Starting enhanced connected particle network...');
         
         // Setup canvas for particle network
         function initParticleNetwork() {
-            // Remove old particle container if it exists
-            const oldContainer = document.getElementById('particles');
-            if (oldContainer) {
-                oldContainer.remove();
-            }
-            
             // Create canvas for particle network
             const canvas = document.createElement('canvas');
             canvas.id = 'particle-canvas';
@@ -986,17 +925,17 @@
                 
                 // Create subtle particles with brand colors
                 particles = [];
-                const particleCount = Math.floor((canvas.width * canvas.height) / 35000); // Fewer particles for subtlety
+                const particleCount = Math.floor((canvas.width * canvas.height) / 35000);
                 
                 for(let i = 0; i < particleCount; i++) {
                     particles.push({
                         x: Math.random() * canvas.width,
                         y: Math.random() * canvas.height,
-                        vx: (Math.random() - 0.5) * 0.3, // Slower movement
+                        vx: (Math.random() - 0.5) * 0.3,
                         vy: (Math.random() - 0.5) * 0.3,
-                        radius: Math.random() * 1.5 + 0.5, // Smaller particles
-                        color: Math.random() > 0.5 ? 'rgba(139, 92, 246, 0.6)' : 'rgba(236, 72, 153, 0.5)', // Brand colors with transparency
-                        opacity: Math.random() * 0.5 + 0.2 // Variable opacity
+                        radius: Math.random() * 1.5 + 0.5,
+                        color: Math.random() > 0.5 ? 'rgba(139, 92, 246, 0.6)' : 'rgba(236, 72, 153, 0.5)',
+                        opacity: Math.random() * 0.5 + 0.2
                     });
                 }
             }
@@ -1006,11 +945,9 @@
                     particle.x += particle.vx;
                     particle.y += particle.vy;
                     
-                    // Bounce off edges
                     if (particle.x < 0 || particle.x > canvas.width) particle.vx *= -1;
                     if (particle.y < 0 || particle.y > canvas.height) particle.vy *= -1;
                     
-                    // Keep particles in bounds
                     particle.x = Math.max(0, Math.min(canvas.width, particle.x));
                     particle.y = Math.max(0, Math.min(canvas.height, particle.y));
                 });
@@ -1019,7 +956,6 @@
             function drawParticles() {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 
-                // Draw particles
                 particles.forEach(particle => {
                     ctx.beginPath();
                     ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
@@ -1027,18 +963,17 @@
                     ctx.fill();
                 });
                 
-                // Draw subtle connections
                 for(let i = 0; i < particles.length; i++) {
                     for(let j = i + 1; j < particles.length; j++) {
                         const dx = particles[i].x - particles[j].x;
                         const dy = particles[i].y - particles[j].y;
                         const distance = Math.sqrt(dx * dx + dy * dy);
                         
-                        if(distance < 100) { // Shorter connection distance for subtlety
+                        if(distance < 100) {
                             ctx.beginPath();
                             ctx.moveTo(particles[i].x, particles[i].y);
                             ctx.lineTo(particles[j].x, particles[j].y);
-                            ctx.strokeStyle = `rgba(139, 92, 246, ${(1 - (distance / 100)) * 0.15})`; // Very subtle connections
+                            ctx.strokeStyle = `rgba(139, 92, 246, ${(1 - (distance / 100)) * 0.15})`;
                             ctx.lineWidth = 0.5;
                             ctx.stroke();
                         }
@@ -1052,10 +987,7 @@
                 requestAnimationFrame(animate);
             }
             
-            // Handle window resize
             window.addEventListener('resize', resizeCanvas);
-            
-            // Initialize
             resizeCanvas();
             animate();
             
@@ -1069,86 +1001,7 @@
             initParticleNetwork();
         }
     </script>
-
-    <!-- SELECTIVE VISUAL EFFECTS - MAGNETIC CTA BUTTONS + GLOW CARDS -->
-    <script>
-        // MAGNETIC EFFECT FOR CTA BUTTONS ONLY
-        function initMagneticCTAButtons() {
-            // Only apply magnetic effect to CTA buttons (with href or onclick)
-            const ctaButtons = document.querySelectorAll('a.btn[href], button.btn[onclick], .btn[onclick]');
-            
-            ctaButtons.forEach(button => {
-                let isHovering = false;
-                
-                button.addEventListener('mouseenter', () => {
-                    isHovering = true;
-                });
-                
-                button.addEventListener('mouseleave', () => {
-                    isHovering = false;
-                    button.style.transform = 'translate(0, 0) scale(1)';
-                });
-                
-                button.addEventListener('mousemove', e => {
-                    if (!isHovering) return;
-                    
-                    const rect = button.getBoundingClientRect();
-                    const x = (e.clientX - rect.left - rect.width/2) * 0.15;
-                    const y = (e.clientY - rect.top - rect.height/2) * 0.15;
-                    
-                    button.style.transform = `translate(${x}px, ${y}px) scale(1.02)`;
-                });
-            });
-            
-            console.log('✅ Magnetic CTA button effects initialized');
-        }
-
-        // GLOW EFFECT FOR CARDS WITH ROTATING EMOJIS
-        function initGlowCards() {
-            const glowElements = document.querySelectorAll('.service-card, .product-card, .featured-product, .stat-card, .case-content');
-            
-            glowElements.forEach(card => {
-                card.addEventListener('mouseenter', () => {
-                    // Add glow class
-                    card.classList.add('card-glow');
-                    
-                    // Rotate emojis
-                    const emojis = card.querySelectorAll('.service-icon, .product-icon');
-                    emojis.forEach(emoji => {
-                        emoji.style.transform = 'rotate(360deg)';
-                    });
-                });
-                
-                card.addEventListener('mouseleave', () => {
-                    // Remove glow class
-                    card.classList.remove('card-glow');
-                    
-                    // Reset emoji rotation
-                    const emojis = card.querySelectorAll('.service-icon, .product-icon');
-                    emojis.forEach(emoji => {
-                        emoji.style.transform = 'rotate(0deg)';
-                    });
-                });
-            });
-            
-            console.log('✅ Glow card effects with rotating emojis initialized');
-        }
-
-        // Initialize effects when DOM is ready
-        function initVisualEffects() {
-            initMagneticCTAButtons();
-            initGlowCards();
-        }
-        
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', initVisualEffects);
-        } else {
-            initVisualEffects();
-        }
-    </script>
-
-    <!-- Load Lenis for smooth scrolling (FIXED CDN) -->
-    <script src="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+    
     <script src="script.js"></script>
 </body>
 </html>
