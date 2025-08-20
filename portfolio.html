@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Tony Herrera — AI Automation Consultant | n8n Specialist</title>
-  <meta name="description" content="Portfolio of Tony Herrera — AI Automation Consultant specializing in n8n and AI workflow design." />
+  <title>Tony Herrera – AI Automation Consultant | n8n Specialist</title>
+  <meta name="description" content="Portfolio of Tony Herrera – AI Automation Consultant specializing in n8n and AI workflow design." />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700&display=swap" rel="stylesheet">
@@ -223,6 +223,7 @@
         letter-spacing: -0.01em;
     }
 
+    /* ENHANCED BUTTON STYLES WITH MAGNETIC EFFECT */
     .btn {
         font-family: 'Titillium Web', sans-serif;
         padding: 0.75rem 1.5rem;
@@ -233,34 +234,59 @@
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        transition: all 0.3s ease;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         cursor: pointer;
         font-size: 1rem;
         min-height: 48px;
         letter-spacing: 0.01em;
+        position: relative;
+        overflow: hidden;
+        will-change: transform;
+    }
+
+    /* Ripple effect for CTA buttons */
+    .btn::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0) 70%);
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        opacity: 0;
+        transition: width 0.6s ease, height 0.6s ease, opacity 0.6s ease;
+        pointer-events: none;
+    }
+
+    .btn:hover::before {
+        width: 300px;
+        height: 300px;
+        opacity: 1;
     }
 
     .btn-primary {
         background: linear-gradient(135deg, #8b5cf6, #a855f7);
         color: white;
+        box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
     }
 
     .btn-primary:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 10px 25px rgba(139, 92, 246, 0.3);
+        box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4);
     }
 
     .btn-secondary {
         background: transparent;
         color: #8b5cf6;
         border: 2px solid #8b5cf6;
+        box-shadow: 0 4px 15px rgba(139, 92, 246, 0.2);
     }
 
     .btn-secondary:hover {
         background: #8b5cf6;
         color: white;
-        transform: translateY(-2px);
-        box-shadow: 0 8px 20px rgba(139, 92, 246, 0.3);
+        box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4);
     }
 
     /* Hero Section */
@@ -431,7 +457,7 @@
         margin: 0 auto;
     }
 
-    /* Cards */
+    /* ENHANCED CARD STYLES WITH GLOW EFFECT */
     .cards {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -444,14 +470,15 @@
         border: 1px solid rgba(139, 92, 246, 0.2);
         border-radius: 1rem;
         padding: 2rem;
-        transition: all 0.3s ease;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         position: relative;
     }
 
-    .card:hover {
-        transform: translateY(-5px);
-        border-color: rgba(139, 92, 246, 0.5);
-        box-shadow: 0 20px 40px rgba(139, 92, 246, 0.1);
+    /* Glow effect for cards */
+    .card-glow {
+        border-color: rgba(139, 92, 246, 0.6) !important;
+        box-shadow: 0 0 30px rgba(139, 92, 246, 0.3), 0 0 60px rgba(139, 92, 246, 0.1) !important;
+        transform: translateY(-3px) !important;
     }
 
     .card h3 {
@@ -474,13 +501,7 @@
         overflow: hidden;
         box-shadow: 0 25px 50px rgba(139, 92, 246, 0.1);
         margin-bottom: 2rem;
-        transition: all 0.3s ease;
-    }
-
-    .experience-item:hover, .project-item:hover {
-        transform: translateY(-5px);
-        border-color: rgba(139, 92, 246, 0.5);
-        box-shadow: 0 30px 60px rgba(139, 92, 246, 0.15);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .item-media {
@@ -531,6 +552,8 @@
         font-size: 0.875rem;
         font-weight: 600;
         border: 1px solid rgba(139, 92, 246, 0.3);
+        transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        display: inline-block;
     }
 
     .external-link {
@@ -559,6 +582,7 @@
         border-radius: 1rem;
         padding: 2.5rem;
         box-shadow: 0 25px 50px rgba(139, 92, 246, 0.1);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .contact-item {
@@ -647,42 +671,6 @@
         }
     }
 
-    /* Floating particles background */
-    .particles-container {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        pointer-events: none;
-        z-index: 1;
-        overflow: hidden;
-    }
-
-    .particle {
-        position: absolute;
-        border-radius: 50%;
-        pointer-events: none;
-        will-change: transform, opacity;
-    }
-
-    @keyframes floatUp {
-        0% {
-            transform: translateY(0) translateX(0) rotate(0deg);
-            opacity: 0;
-        }
-        15% {
-            opacity: 0.3;
-        }
-        85% {
-            opacity: 0.3;
-        }
-        100% {
-            transform: translateY(-100vh) translateX(var(--horizontal-drift, 0px)) rotate(180deg);
-            opacity: 0;
-        }
-    }
-
     /* Animation on scroll */
     .animate-element {
         opacity: 0;
@@ -703,8 +691,6 @@
   </style>
 </head>
 <body>
-<!-- Floating particles background -->
-<div class="particles-container" id="particles"></div>
 
 <header class="navbar">
   <div class="nav-container">
@@ -761,15 +747,15 @@
         </p>
       </div>
       <div class="cards">
-        <div class="card">
+        <div class="card animate-element">
           <h3>🎯 Scale-Appropriate Solutions</h3>
           <p>Whether you need a $3K workflow improvement or a $150K enterprise transformation, I match the solution to your stage and budget.</p>
         </div>
-        <div class="card">
+        <div class="card animate-element">
           <h3>🚀 Proven Track Record</h3>
           <p>From bootstrapped startups to Fortune 500 companies — my automation strategies deliver 3x-15x ROI at any scale.</p>
         </div>
-        <div class="card">
+        <div class="card animate-element">
           <h3>🛡️ Long-term Partnership</h3>
           <p>I grow with your business. Start small, scale smart, and evolve your automation as you expand.</p>
         </div>
@@ -787,15 +773,15 @@
         </p>
       </div>
       <div class="cards">
-        <div class="card">
+        <div class="card animate-element">
           <h3>Automation & Workflow Design</h3>
           <p>End-to-end web-based automation solutions with n8n backend integration tailored to your specific business needs.</p>
         </div>
-        <div class="card">
+        <div class="card animate-element">
           <h3>Process Optimization</h3>
           <p>Comprehensive analysis of your operations to identify the highest-impact automation opportunities.</p>
         </div>
-        <div class="card">
+        <div class="card animate-element">
           <h3>AI Tool Integration</h3>
           <p>n8n, OpenAI, webhooks, and custom APIs wired to measurable business outcomes.</p>
         </div>
@@ -813,7 +799,7 @@
         </p>
       </div>
 
-      <div class="experience-item">
+      <div class="experience-item animate-element">
         <div class="item-content">
           <h3>AI Automation Consultant</h3>
           <p>Built lead gen, reporting, content, and onboarding automations that save 15+ hours weekly. 
@@ -828,7 +814,7 @@
         </div>
       </div>
 
-      <div class="experience-item">
+      <div class="experience-item animate-element">
         <div class="item-content">
           <h3>Operations Manager</h3>
           <p>Managed product timelines and cross‑functional launches for growing tech companies. 
@@ -843,7 +829,7 @@
         </div>
       </div>
 
-      <div class="experience-item">
+      <div class="experience-item animate-element">
         <div class="item-content">
           <h3>Executive Assistant & Automation Specialist</h3>
           <p>High‑level operations, scheduling, research, and lightweight automations for founders. 
@@ -870,7 +856,7 @@
         </p>
       </div>
 
-      <div class="project-item">
+      <div class="project-item animate-element">
         <div class="item-media">
           <img src="https://raw.githubusercontent.com/projectservan8n/opusautomations/refs/heads/main/assets/video/JELLY%20APP.JPEG" 
                alt="Jelly App - TikTok Creator Management Platform" 
@@ -892,7 +878,7 @@
         </div>
       </div>
 
-      <div class="project-item">
+      <div class="project-item animate-element">
         <div class="item-media">
           <video class="project-video" 
                  autoplay
@@ -922,7 +908,7 @@
         </div>
       </div>
 
-      <div class="project-item">
+      <div class="project-item animate-element">
         <div class="item-media">
           <video class="project-video" 
                  autoplay
@@ -952,7 +938,7 @@
         </div>
       </div>
 
-      <div class="project-item">
+      <div class="project-item animate-element">
         <div class="item-media">
           <img src="https://raw.githubusercontent.com/projectservan8n/opusautomations/refs/heads/main/assets/video/OpusMainPage.PNG" 
                alt="Opus Automations Main Platform" 
@@ -986,7 +972,7 @@
         </p>
       </div>
       
-      <div class="contact-grid">
+      <div class="contact-grid animate-element">
         <div class="contact-item">
           <div class="contact-label">Email</div>
           <div class="contact-value"><a href="mailto:tony@opusautomations.com">tony@opusautomations.com</a></div>
@@ -1025,91 +1011,204 @@
 <script>
 // Enhanced mobile navigation with Lenis smooth scrolling (matching main site)
 document.addEventListener('DOMContentLoaded', function() {
+    // Initialize particle network
+    initParticleNetwork();
+    
+    // Initialize visual effects
+    initVisualEffects();
+    
+    // Initialize navigation
+    initNavigation();
+    
+    // Initialize smooth scrolling
+    initSmoothScrolling();
+    
+    // Initialize scroll animations
+    initScrollAnimations();
+    
+    // Initialize video handling
+    initVideoHandling();
+});
+
+// ENHANCED CONNECTED PARTICLE NETWORK (SAME AS MAIN SITE)
+function initParticleNetwork() {
+    console.log('🎬 Starting enhanced connected particle network...');
+    
+    // Create canvas for particle network
+    const canvas = document.createElement('canvas');
+    canvas.id = 'particle-canvas';
+    canvas.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+        pointer-events: none;
+        opacity: 0.7;
+    `;
+    document.body.appendChild(canvas);
+    
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    
+    function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        // Create subtle particles with brand colors
+        particles = [];
+        const particleCount = Math.floor((canvas.width * canvas.height) / 35000); // Fewer particles for subtlety
+        
+        for(let i = 0; i < particleCount; i++) {
+            particles.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                vx: (Math.random() - 0.5) * 0.3, // Slower movement
+                vy: (Math.random() - 0.5) * 0.3,
+                radius: Math.random() * 1.5 + 0.5, // Smaller particles
+                color: Math.random() > 0.5 ? 'rgba(139, 92, 246, 0.6)' : 'rgba(236, 72, 153, 0.5)', // Brand colors with transparency
+                opacity: Math.random() * 0.5 + 0.2 // Variable opacity
+            });
+        }
+    }
+    
+    function updateParticles() {
+        particles.forEach(particle => {
+            particle.x += particle.vx;
+            particle.y += particle.vy;
+            
+            // Bounce off edges
+            if (particle.x < 0 || particle.x > canvas.width) particle.vx *= -1;
+            if (particle.y < 0 || particle.y > canvas.height) particle.vy *= -1;
+            
+            // Keep particles in bounds
+            particle.x = Math.max(0, Math.min(canvas.width, particle.x));
+            particle.y = Math.max(0, Math.min(canvas.height, particle.y));
+        });
+    }
+    
+    function drawParticles() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        // Draw particles
+        particles.forEach(particle => {
+            ctx.beginPath();
+            ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
+            ctx.fillStyle = particle.color;
+            ctx.fill();
+        });
+        
+        // Draw subtle connections
+        for(let i = 0; i < particles.length; i++) {
+            for(let j = i + 1; j < particles.length; j++) {
+                const dx = particles[i].x - particles[j].x;
+                const dy = particles[i].y - particles[j].y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                
+                if(distance < 100) { // Shorter connection distance for subtlety
+                    ctx.beginPath();
+                    ctx.moveTo(particles[i].x, particles[i].y);
+                    ctx.lineTo(particles[j].x, particles[j].y);
+                    ctx.strokeStyle = `rgba(139, 92, 246, ${(1 - (distance / 100)) * 0.15})`; // Very subtle connections
+                    ctx.lineWidth = 0.5;
+                    ctx.stroke();
+                }
+            }
+        }
+    }
+    
+    function animate() {
+        updateParticles();
+        drawParticles();
+        requestAnimationFrame(animate);
+    }
+    
+    // Handle window resize
+    window.addEventListener('resize', resizeCanvas);
+    
+    // Initialize
+    resizeCanvas();
+    animate();
+    
+    console.log('✅ Enhanced particle network initialized');
+}
+
+// VISUAL EFFECTS INITIALIZATION
+function initVisualEffects() {
+    initMagneticCTAButtons();
+    initGlowCards();
+    console.log('✅ Visual effects initialized');
+}
+
+// MAGNETIC EFFECT FOR CTA BUTTONS ONLY
+function initMagneticCTAButtons() {
+    // Only apply magnetic effect to CTA buttons (with href or onclick)
+    const ctaButtons = document.querySelectorAll('a.btn[href], button.btn[onclick], .btn[onclick]');
+    
+    ctaButtons.forEach(button => {
+        let isHovering = false;
+        
+        button.addEventListener('mouseenter', () => {
+            isHovering = true;
+        });
+        
+        button.addEventListener('mouseleave', () => {
+            isHovering = false;
+            button.style.transform = 'translate(0, 0) scale(1)';
+        });
+        
+        button.addEventListener('mousemove', e => {
+            if (!isHovering) return;
+            
+            const rect = button.getBoundingClientRect();
+            const x = (e.clientX - rect.left - rect.width/2) * 0.15;
+            const y = (e.clientY - rect.top - rect.height/2) * 0.15;
+            
+            button.style.transform = `translate(${x}px, ${y}px) scale(1.02)`;
+        });
+    });
+    
+    console.log('✅ Magnetic CTA button effects initialized');
+}
+
+// GLOW EFFECT FOR CARDS WITH ROTATING EMOJIS
+function initGlowCards() {
+    const glowElements = document.querySelectorAll('.card, .experience-item, .project-item, .contact-grid');
+    
+    glowElements.forEach(card => {
+        card.addEventListener('mouseenter', () => {
+            // Add glow class
+            card.classList.add('card-glow');
+            
+            // Rotate emojis/tags
+            const emojis = card.querySelectorAll('.tag');
+            emojis.forEach(emoji => {
+                emoji.style.transform = 'rotate(360deg)';
+            });
+        });
+        
+        card.addEventListener('mouseleave', () => {
+            // Remove glow class
+            card.classList.remove('card-glow');
+            
+            // Reset emoji rotation
+            const emojis = card.querySelectorAll('.tag');
+            emojis.forEach(emoji => {
+                emoji.style.transform = 'rotate(0deg)';
+            });
+        });
+    });
+    
+    console.log('✅ Glow card effects with rotating emojis initialized');
+}
+
+// Navigation functionality (simplified for portfolio)
+function initNavigation() {
     const navToggle = document.getElementById('nav-toggle');
     const navMenu = document.getElementById('nav-menu');
     const body = document.body;
     let scrollPositionBeforeMenu = 0;
-    let lenis;
-
-    // Initialize Lenis smooth scrolling (matching your main site)
-    function initLenis() {
-        if (!window.Lenis) {
-            console.log('Lenis not available');
-            return;
-        }
-        
-        try {
-            // Create Lenis instance with same settings as main site
-            lenis = new window.Lenis({
-                duration: 1.2,
-                easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-                direction: 'vertical',
-                smooth: true,
-                mouseMultiplier: 1,
-                smoothTouch: false,
-                touchMultiplier: 2,
-                wheelMultiplier: 1,
-                normalizeWheel: true,
-                lerp: 0.1,
-                infinite: false,
-                orientation: 'vertical',
-                gestureOrientation: 'vertical'
-            });
-            
-            // Lenis animation loop
-            function raf(time) {
-                lenis.raf(time);
-                requestAnimationFrame(raf);
-            }
-            requestAnimationFrame(raf);
-            
-            // Add Lenis class to html
-            document.documentElement.classList.add('lenis');
-            
-            // Update navbar on Lenis scroll
-            lenis.on('scroll', (e) => {
-                updateNavbarBackground(e.scroll);
-            });
-            
-            // Handle window resize
-            window.addEventListener('resize', () => {
-                lenis.resize();
-            });
-            
-            console.log('🚀 Lenis smooth scrolling initialized on portfolio');
-            
-        } catch (error) {
-            console.error('❌ Error initializing Lenis:', error);
-            // Fallback to regular smooth scrolling
-            document.documentElement.style.scrollBehavior = 'smooth';
-        }
-    }
-
-    // Enhanced smooth scroll function using Lenis
-    function lenisScrollTo(targetElement, offset = 80) {
-        if (!targetElement) return;
-        
-        const isMobile = window.innerWidth <= 768;
-        const navbarHeight = isMobile ? 70 : 80;
-        const elementRect = targetElement.getBoundingClientRect();
-        const absoluteElementTop = elementRect.top + window.scrollY;
-        const targetScrollPosition = Math.max(0, absoluteElementTop - navbarHeight);
-        
-        if (lenis) {
-            // Use Lenis scrollTo for buttery smooth scrolling
-            lenis.scrollTo(targetScrollPosition, {
-                duration: 1.5,
-                easing: (t) => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2,
-                immediate: false
-            });
-        } else {
-            // Fallback to regular smooth scroll
-            window.scrollTo({
-                top: targetScrollPosition,
-                behavior: 'smooth'
-            });
-        }
-    }
 
     function openMenu() {
         scrollPositionBeforeMenu = window.scrollY;
@@ -1120,11 +1219,6 @@ document.addEventListener('DOMContentLoaded', function() {
         body.style.position = 'fixed';
         body.style.width = '100%';
         body.style.top = `-${scrollPositionBeforeMenu}px`;
-        
-        // Stop Lenis when menu is open
-        if (lenis) {
-            lenis.stop();
-        }
     }
 
     function closeMenu() {
@@ -1135,11 +1229,6 @@ document.addEventListener('DOMContentLoaded', function() {
         body.style.position = '';
         body.style.width = '';
         body.style.top = '';
-        
-        // Restart Lenis when menu closes
-        if (lenis) {
-            lenis.start();
-        }
         
         if (scrollPositionBeforeMenu > 0) {
             window.scrollTo(0, scrollPositionBeforeMenu);
@@ -1158,7 +1247,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Handle navigation links with Lenis smooth scrolling
+    // Handle navigation links
     const navLinks = document.querySelectorAll('.nav-link');
     navLinks.forEach(link => {
         link.addEventListener('click', function(e) {
@@ -1174,10 +1263,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     if (isMobile) {
                         closeMenu();
                         setTimeout(() => {
-                            lenisScrollTo(targetElement);
+                            smoothScrollTo(targetElement);
                         }, 150);
                     } else {
-                        lenisScrollTo(targetElement);
+                        smoothScrollTo(targetElement);
                     }
                 }
             }
@@ -1226,63 +1315,87 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Initialize everything
-    initLenis();
-    initParticles();
-    initScrollAnimations();
-    initVideoHandling();
-});
+    window.addEventListener('scroll', () => {
+        updateNavbarBackground(window.scrollY);
+    });
+}
 
-// Enhanced particle system
-function initParticles() {
-    const particlesContainer = document.getElementById('particles');
-    if (!particlesContainer) return;
+// Smooth scrolling function
+function smoothScrollTo(targetElement, offset = 80) {
+    if (!targetElement) return;
     
-    const particleCount = 30; // Increased for more visual impact
+    const isMobile = window.innerWidth <= 768;
+    const navbarHeight = isMobile ? 70 : 80;
+    const elementRect = targetElement.getBoundingClientRect();
+    const absoluteElementTop = elementRect.top + window.scrollY;
+    const targetScrollPosition = Math.max(0, absoluteElementTop - navbarHeight);
     
-    function createParticle() {
-        const particle = document.createElement('div');
-        particle.className = 'particle';
-        particle.style.left = Math.random() * 100 + '%';
-        particle.style.bottom = '-10px';
+    window.scrollTo({
+        top: targetScrollPosition,
+        behavior: 'smooth'
+    });
+}
+
+// Initialize Lenis smooth scrolling (simplified)
+function initSmoothScrolling() {
+    if (window.Lenis) {
+        const lenis = new window.Lenis({
+            duration: 1.2,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            direction: 'vertical',
+            smooth: true,
+            mouseMultiplier: 1,
+            smoothTouch: false,
+            touchMultiplier: 2,
+            wheelMultiplier: 1,
+            normalizeWheel: true,
+            lerp: 0.1,
+            infinite: false,
+            orientation: 'vertical',
+            gestureOrientation: 'vertical'
+        });
         
-        const size = Math.random() * 4 + 2; // Slightly larger particles
-        particle.style.width = size + 'px';
-        particle.style.height = size + 'px';
+        function raf(time) {
+            lenis.raf(time);
+            requestAnimationFrame(raf);
+        }
+        requestAnimationFrame(raf);
         
-        const opacity = 0.1 + Math.random() * 0.3;
-        particle.style.background = `linear-gradient(45deg, 
-            rgba(139, 92, 246, ${opacity}), 
-            rgba(236, 72, 153, ${opacity * 0.8})
-        )`;
+        window.addEventListener('resize', () => {
+            lenis.resize();
+        });
         
-        particle.style.borderRadius = '50%';
-        particle.style.position = 'absolute';
-        particle.style.pointerEvents = 'none';
-        particle.style.zIndex = '1';
-        particle.style.boxShadow = `0 0 ${size * 2}px rgba(139, 92, 246, ${opacity * 0.5})`;
-        
-        const duration = Math.random() * 30 + 25; // Longer duration
-        const horizontalDrift = (Math.random() - 0.5) * 150;
-        particle.style.animation = `floatUp ${duration}s linear forwards`;
-        particle.style.setProperty('--horizontal-drift', horizontalDrift + 'px');
-        
-        particlesContainer.appendChild(particle);
-        
-        setTimeout(() => {
-            if (particle.parentNode) {
-                particle.parentNode.removeChild(particle);
+        console.log('✅ Lenis smooth scrolling initialized');
+    }
+}
+
+// Enhanced scroll animations
+function initScrollAnimations() {
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -100px 0px'
+    };
+
+    const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('animate-in');
+                // Add slight delay for staggered effect
+                const delay = Array.from(entry.target.parentNode.children).indexOf(entry.target) * 100;
+                entry.target.style.animationDelay = delay + 'ms';
             }
-        }, duration * 1000 + 1000);
-    }
-    
-    // Create initial burst
-    for (let i = 0; i < particleCount; i++) {
-        setTimeout(createParticle, Math.random() * 10000);
-    }
-    
-    // Continue creating particles
-    setInterval(createParticle, 600); // More frequent
+        });
+    }, observerOptions);
+
+    // Observe elements for animation
+    const animateElements = document.querySelectorAll(
+        '.card, .experience-item, .project-item, .contact-grid'
+    );
+
+    animateElements.forEach(el => {
+        el.classList.add('animate-element');
+        observer.observe(el);
+    });
 }
 
 // Video handling for autoplay looping with proper sizing
@@ -1293,7 +1406,7 @@ function initVideoHandling() {
         // Remove any default controls
         video.removeAttribute('controls');
         video.setAttribute('disablepictureinpicture', '');
-        video.setAttribute('controlslist', 'nodownload nofullscreen noremoteplayback');
+        video.setAttribute('controlslist', 'nodownload nofullscreen noremoteplaybook');
         
         // Force video to fit container properly
         video.addEventListener('loadedmetadata', function() {
@@ -1352,35 +1465,6 @@ function initVideoHandling() {
             this.currentTime = 0;
             this.play();
         });
-    });
-}
-
-// Enhanced scroll animations
-function initScrollAnimations() {
-    const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -100px 0px'
-    };
-
-    const observer = new IntersectionObserver(function(entries) {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('animate-in');
-                // Add slight delay for staggered effect
-                const delay = Array.from(entry.target.parentNode.children).indexOf(entry.target) * 100;
-                entry.target.style.animationDelay = delay + 'ms';
-            }
-        });
-    }, observerOptions);
-
-    // Observe elements for animation
-    const animateElements = document.querySelectorAll(
-        '.card, .experience-item, .project-item, .contact-grid'
-    );
-
-    animateElements.forEach(el => {
-        el.classList.add('animate-element');
-        observer.observe(el);
     });
 }
 
