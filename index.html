@@ -132,8 +132,8 @@
                     </div>
                 </div>
                 <div class="hero-cta">
-                    <a href="https://calendly.com/tony-opusautomations/30min" class="btn btn-primary" target="_blank">Let's talk strategy</a>
-                    <button class="btn btn-secondary" onclick="openAssessmentModal()">See what's possible for you</button>
+                    <a href="https://calendly.com/tony-opusautomations/30min" class="btn btn-primary" target="_blank">Let's talk about your goals</a>
+                    <button class="btn btn-secondary" onclick="openAssessmentModal()">Show me what's possible</button>
                 </div>
             </div>
             <div class="hero-visual">
@@ -254,7 +254,7 @@
             </div>
             <div class="services-cta">
                 <p>Every business is unique. Let's find the right solution for your stage and scale.</p>
-                <a href="https://calendly.com/tony-opusautomations/30min" class="btn btn-primary" target="_blank">Let's discuss your needs</a>
+                <a href="https://calendly.com/tony-opusautomations/30min" class="btn btn-primary" target="_blank">Let's explore your options</a>
             </div>
         </div>
     </section>
@@ -344,7 +344,7 @@
                             <button class="btn btn-secondary" disabled style="opacity: 0.6; cursor: not-allowed;">
                                 Demo Available Soon
                             </button>
-                            <a href="https://calendly.com/tony-opusautomations/30min" class="btn btn-secondary" target="_blank">Let's explore your project</a>
+                            <a href="https://calendly.com/tony-opusautomations/30min" class="btn btn-secondary" target="_blank">Let's make this happen</a>
                         </div>
                     </div>
                     <div class="product-visual">
@@ -593,7 +593,7 @@
                         <span><strong>ROI:</strong> 3x-15x depending on scale</span>
                     </div>
                     <a href="https://calendly.com/tony-opusautomations/30min" class="btn btn-primary" target="_blank">
-                        Let's build your solution
+                        Find what works for you
                     </a>
                 </div>
             </div>
@@ -644,7 +644,7 @@
                         <button class="btn btn-secondary" disabled style="opacity: 0.6; cursor: not-allowed;">
                             Case Study Available Soon
                         </button>
-                        <a href="https://calendly.com/tony-opusautomations/30min" class="btn btn-secondary" target="_blank">Let's talk about your project</a>
+                        <a href="https://calendly.com/tony-opusautomations/30min" class="btn btn-secondary" target="_blank">Let's solve this together</a>
                     </div>
                 </div>
                 <div class="case-visual">
@@ -761,7 +761,7 @@
         <div class="container">
             <div class="section-header">
                 <h2 class="section-title">Ready to <span class="gradient-text">Streamline Your Operations?</span></h2>
-                <p class="section-subtitle">Schedule a strategy session to discover how AI automation can help reduce your biggest operational bottlenecks</p>
+                <p class="section-subtitle">Book a free strategy session to discover how AI automation can help reduce your biggest operational bottlenecks</p>
             </div>
             <div class="contact-content">
                 <div class="contact-info">
@@ -835,7 +835,7 @@
                                 placeholder="What manual process consumes the most time in your business?"></textarea>
                     </div>
                     <button type="submit" class="btn btn-primary btn-full">
-                        Let's make it official
+                        Tell me about your challenges
                     </button>
                     <p class="form-note">I'll personally respond within 48 hours with a custom automation assessment</p>
                     <div class="calendly-inline-widget-container">
@@ -844,7 +844,7 @@
                            class="btn btn-secondary btn-full" 
                            target="_blank" 
                            style="margin-top: 10px;">
-                            📅 Save your seat
+                            📅 Let's talk right now
                         </a>
                     </div>
                 </form>
@@ -945,139 +945,206 @@
                         </div>
                     </div>
                 </div>
-                <button type="submit" class="btn btn-primary btn-full">Find what fits you best</button>
+                <button type="submit" class="btn btn-primary btn-full">Show me my potential</button>
             </form>
         </div>
     </div>
 
-    <!-- ENHANCED PARTICLES SYSTEM - HIGHER Z-INDEX AND MORE VISIBLE -->
+    <!-- ENHANCED CONNECTED PARTICLE NETWORK -->
     <script>
-        console.log('🎬 Starting ENHANCED particles system...');
+        console.log('🎬 Starting enhanced connected particle network...');
         
-        let particleCount = 0;
-        let animationRunning = false;
-        
-        // Create container with enhanced settings
-        function setupParticlesContainer() {
-            let container = document.getElementById('particles');
-            if (!container) {
-                container = document.createElement('div');
-                container.id = 'particles';
-                container.className = 'particles-container';
-                document.body.appendChild(container);
-                console.log('✅ Created particles container');
+        // Setup canvas for particle network
+        function initParticleNetwork() {
+            // Remove old particle container if it exists
+            const oldContainer = document.getElementById('particles');
+            if (oldContainer) {
+                oldContainer.remove();
             }
             
-            // Add debug border (remove in production)
-            // container.classList.add('particles-debug');
+            // Create canvas for particle network
+            const canvas = document.createElement('canvas');
+            canvas.id = 'particle-canvas';
+            canvas.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                z-index: 1;
+                pointer-events: none;
+                opacity: 0.7;
+            `;
+            document.body.appendChild(canvas);
             
-            return container;
-        }
-        
-        // Subtle particle creation (matching portfolio style)
-        function createEnhancedParticle() {
-            const container = setupParticlesContainer();
-            const particle = document.createElement('div');
-            particle.className = 'particle';
+            const ctx = canvas.getContext('2d');
+            let particles = [];
             
-            // Random positioning
-            particle.style.left = Math.random() * 100 + '%';
-            particle.style.bottom = '-10px'; // Start below viewport
-            
-            // Subtle size (matching portfolio)
-            const size = Math.random() * 4 + 2; // Slightly larger particles (2-6px)
-            particle.style.width = size + 'px';
-            particle.style.height = size + 'px';
-            
-            // Subtle opacity (matching portfolio)
-            const opacity = 0.1 + Math.random() * 0.3; // 0.1 to 0.4 opacity (subtle)
-            particle.style.background = `linear-gradient(45deg, 
-                rgba(139, 92, 246, ${opacity}), 
-                rgba(236, 72, 153, ${opacity * 0.8})
-            )`;
-            
-            particle.style.borderRadius = '50%';
-            particle.style.position = 'absolute';
-            particle.style.pointerEvents = 'none';
-            particle.style.zIndex = '5'; // FIXED: Higher z-index but keep subtle
-            particle.style.boxShadow = `0 0 ${size * 2}px rgba(139, 92, 246, ${opacity * 0.5})`;
-            
-            // Subtle animation properties (matching portfolio)
-            const duration = Math.random() * 30 + 25; // Longer duration (25-55 seconds)
-            const horizontalDrift = (Math.random() - 0.5) * 150; // Less horizontal movement
-            
-            particle.style.animation = `floatUp ${duration}s linear forwards`;
-            particle.style.setProperty('--horizontal-drift', horizontalDrift + 'px');
-            
-            // Add to container
-            container.appendChild(particle);
-            particleCount++;
-            
-            console.log(`✨ Created subtle particle #${particleCount}:`, {
-                size: size.toFixed(1) + 'px',
-                duration: duration.toFixed(1) + 's',
-                drift: horizontalDrift.toFixed(0) + 'px',
-                opacity: opacity.toFixed(2)
-            });
-            
-            // Remove particle after animation
-            setTimeout(() => {
-                if (particle.parentNode) {
-                    particle.parentNode.removeChild(particle);
-                    particleCount--;
+            function resizeCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+                
+                // Create subtle particles with brand colors
+                particles = [];
+                const particleCount = Math.floor((canvas.width * canvas.height) / 35000); // Fewer particles for subtlety
+                
+                for(let i = 0; i < particleCount; i++) {
+                    particles.push({
+                        x: Math.random() * canvas.width,
+                        y: Math.random() * canvas.height,
+                        vx: (Math.random() - 0.5) * 0.3, // Slower movement
+                        vy: (Math.random() - 0.5) * 0.3,
+                        radius: Math.random() * 1.5 + 0.5, // Smaller particles
+                        color: Math.random() > 0.5 ? 'rgba(139, 92, 246, 0.6)' : 'rgba(236, 72, 153, 0.5)', // Brand colors with transparency
+                        opacity: Math.random() * 0.5 + 0.2 // Variable opacity
+                    });
                 }
-            }, duration * 1000 + 1000);
-        }
-        
-        // Initialize subtle particles system (matching portfolio)
-        function startEnhancedParticles() {
-            if (animationRunning) return;
-            
-            console.log('🚀 Starting SUBTLE particles system (portfolio style)...');
-            animationRunning = true;
-            
-            const particleCreationCount = 30; // Matching portfolio count
-            
-            // Create initial burst with staggered timing (matching portfolio)
-            for (let i = 0; i < particleCreationCount; i++) {
-                setTimeout(createEnhancedParticle, Math.random() * 10000); // Spread over 10 seconds
             }
             
-            // Continue creating particles (matching portfolio frequency)
-            setInterval(createEnhancedParticle, 600); // Every 600ms
+            function updateParticles() {
+                particles.forEach(particle => {
+                    particle.x += particle.vx;
+                    particle.y += particle.vy;
+                    
+                    // Bounce off edges
+                    if (particle.x < 0 || particle.x > canvas.width) particle.vx *= -1;
+                    if (particle.y < 0 || particle.y > canvas.height) particle.vy *= -1;
+                    
+                    // Keep particles in bounds
+                    particle.x = Math.max(0, Math.min(canvas.width, particle.x));
+                    particle.y = Math.max(0, Math.min(canvas.height, particle.y));
+                });
+            }
             
-            console.log('✅ SUBTLE particles system initialized (portfolio style) with higher z-index fix');
+            function drawParticles() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                // Draw particles
+                particles.forEach(particle => {
+                    ctx.beginPath();
+                    ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
+                    ctx.fillStyle = particle.color;
+                    ctx.fill();
+                });
+                
+                // Draw subtle connections
+                for(let i = 0; i < particles.length; i++) {
+                    for(let j = i + 1; j < particles.length; j++) {
+                        const dx = particles[i].x - particles[j].x;
+                        const dy = particles[i].y - particles[j].y;
+                        const distance = Math.sqrt(dx * dx + dy * dy);
+                        
+                        if(distance < 100) { // Shorter connection distance for subtlety
+                            ctx.beginPath();
+                            ctx.moveTo(particles[i].x, particles[i].y);
+                            ctx.lineTo(particles[j].x, particles[j].y);
+                            ctx.strokeStyle = `rgba(139, 92, 246, ${(1 - (distance / 100)) * 0.15})`; // Very subtle connections
+                            ctx.lineWidth = 0.5;
+                            ctx.stroke();
+                        }
+                    }
+                }
+            }
+            
+            function animate() {
+                updateParticles();
+                drawParticles();
+                requestAnimationFrame(animate);
+            }
+            
+            // Handle window resize
+            window.addEventListener('resize', resizeCanvas);
+            
+            // Initialize
+            resizeCanvas();
+            animate();
+            
+            console.log('✅ Enhanced particle network initialized');
         }
         
-        // Debug function to check container
-        function debugParticlesContainer() {
-            const container = document.getElementById('particles');
-            console.log('🔍 Particles container debug:', {
-                exists: !!container,
-                className: container?.className,
-                zIndex: container ? getComputedStyle(container).zIndex : 'N/A',
-                position: container ? getComputedStyle(container).position : 'N/A',
-                display: container ? getComputedStyle(container).display : 'N/A',
-                width: container ? getComputedStyle(container).width : 'N/A',
-                height: container ? getComputedStyle(container).height : 'N/A',
-                childCount: container ? container.children.length : 0,
-                activeParticles: particleCount
-            });
-        }
-        
-        // Start immediately
-        startEnhancedParticles();
-        
-        // Also ensure it starts on DOM ready
+        // Start particle network
         if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', startEnhancedParticles);
+            document.addEventListener('DOMContentLoaded', initParticleNetwork);
+        } else {
+            initParticleNetwork();
+        }
+    </script>
+
+    <!-- SELECTIVE VISUAL EFFECTS - MAGNETIC CTA BUTTONS + GLOW CARDS -->
+    <script>
+        // MAGNETIC EFFECT FOR CTA BUTTONS ONLY
+        function initMagneticCTAButtons() {
+            // Only apply magnetic effect to CTA buttons (with href or onclick)
+            const ctaButtons = document.querySelectorAll('a.btn[href], button.btn[onclick], .btn[onclick]');
+            
+            ctaButtons.forEach(button => {
+                let isHovering = false;
+                
+                button.addEventListener('mouseenter', () => {
+                    isHovering = true;
+                });
+                
+                button.addEventListener('mouseleave', () => {
+                    isHovering = false;
+                    button.style.transform = 'translate(0, 0) scale(1)';
+                });
+                
+                button.addEventListener('mousemove', e => {
+                    if (!isHovering) return;
+                    
+                    const rect = button.getBoundingClientRect();
+                    const x = (e.clientX - rect.left - rect.width/2) * 0.15;
+                    const y = (e.clientY - rect.top - rect.height/2) * 0.15;
+                    
+                    button.style.transform = `translate(${x}px, ${y}px) scale(1.02)`;
+                });
+            });
+            
+            console.log('✅ Magnetic CTA button effects initialized');
+        }
+
+        // GLOW EFFECT FOR CARDS WITH ROTATING EMOJIS
+        function initGlowCards() {
+            const glowElements = document.querySelectorAll('.service-card, .product-card, .featured-product, .stat-card, .case-content');
+            
+            glowElements.forEach(card => {
+                card.addEventListener('mouseenter', () => {
+                    // Add glow class
+                    card.classList.add('card-glow');
+                    
+                    // Rotate emojis
+                    const emojis = card.querySelectorAll('.service-icon, .product-icon');
+                    emojis.forEach(emoji => {
+                        emoji.style.transform = 'rotate(360deg)';
+                    });
+                });
+                
+                card.addEventListener('mouseleave', () => {
+                    // Remove glow class
+                    card.classList.remove('card-glow');
+                    
+                    // Reset emoji rotation
+                    const emojis = card.querySelectorAll('.service-icon, .product-icon');
+                    emojis.forEach(emoji => {
+                        emoji.style.transform = 'rotate(0deg)';
+                    });
+                });
+            });
+            
+            console.log('✅ Glow card effects with rotating emojis initialized');
+        }
+
+        // Initialize effects when DOM is ready
+        function initVisualEffects() {
+            initMagneticCTAButtons();
+            initGlowCards();
         }
         
-        // Debug every 10 seconds
-        setInterval(debugParticlesContainer, 10000);
-        
-        // Initial debug after 2 seconds
-        setTimeout(debugParticlesContainer, 2000);
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initVisualEffects);
+        } else {
+            initVisualEffects();
+        }
     </script>
 
     <!-- Load Lenis for smooth scrolling (FIXED CDN) -->
