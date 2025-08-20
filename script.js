@@ -2,7 +2,7 @@
 const CONFIG = {
     API_BASE_URL: window.location.origin,
     ANALYTICS_ENABLED: true,
-    DEBUG_MODE: true, // ENABLED for debugging navigation
+    DEBUG_MODE: true,
     CALENDLY_URL: 'https://calendly.com/tony-opusautomations/30min'
 };
 
@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize visual effects
     initVisualEffects();
     
-    // Initialize navigation - FIXED MOBILE
+    // Initialize navigation
     initNavigation();
     
     // Initialize contact form
@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize assessment form
     initAssessmentForm();
     
-    // Initialize smooth scrolling - FIXED CDN ERRORS
+    // Initialize smooth scrolling
     initSmoothScrolling();
     
     // Initialize animations
@@ -91,7 +91,7 @@ function initMagneticCTAButtons() {
     debugLog('✅ Magnetic CTA button effects initialized for', ctaButtons.length, 'buttons');
 }
 
-// GLOW EFFECT FOR CARDS WITH ROTATING EMOJIS
+// GLOW EFFECT FOR CARDS (NO ROTATING TAGS)
 function initGlowCards() {
     const glowElements = document.querySelectorAll('.service-card, .product-card, .featured-product, .stat-card, .case-content, .card, .experience-item, .project-item');
     
@@ -100,7 +100,7 @@ function initGlowCards() {
             // Add glow class
             card.classList.add('card-glow');
             
-            // Rotate emojis
+            // Rotate service/product icons only (not tags)
             const emojis = card.querySelectorAll('.service-icon, .product-icon');
             emojis.forEach(emoji => {
                 emoji.style.transform = 'rotate(360deg)';
@@ -122,7 +122,7 @@ function initGlowCards() {
     debugLog('✅ Glow card effects with rotating emojis initialized');
 }
 
-// COMPLETELY FIXED Mobile Navigation Functionality - BULLETPROOF VERSION
+// FIXED Mobile Navigation Functionality - Based on Working Portfolio Version
 function initNavigation() {
     const navToggle = document.getElementById('nav-toggle');
     const navMenu = document.getElementById('nav-menu');
@@ -133,7 +133,7 @@ function initNavigation() {
         return;
     }
     
-    debugLog('Navigation elements found, initializing BULLETPROOF navigation...');
+    debugLog('Navigation elements found, initializing navigation...');
     
     // Store current scroll position when menu opens
     let scrollPositionBeforeMenu = 0;
@@ -173,7 +173,7 @@ function initNavigation() {
         debugLog('Mobile menu closed, restored scroll position:', scrollPositionBeforeMenu);
     }
     
-    // FIXED scroll to section function for mobile
+    // FIXED scroll to section function
     function scrollToSection(sectionId) {
         debugLog('🎯 Attempting to scroll to section:', sectionId);
         
@@ -193,44 +193,13 @@ function initNavigation() {
             
             // Wait for menu close animation to complete
             setTimeout(() => {
-                const elementRect = targetElement.getBoundingClientRect();
-                const absoluteElementTop = elementRect.top + window.scrollY;
-                const targetScrollPosition = Math.max(0, absoluteElementTop - navbarHeight);
-                
-                debugLog('🔍 Mobile scroll calculation:', {
-                    elementTop: absoluteElementTop,
-                    navbarHeight: navbarHeight,
-                    targetPosition: targetScrollPosition,
-                    currentScroll: window.scrollY
-                });
-                
-                // Use smooth scroll
-                window.scrollTo({
-                    top: targetScrollPosition,
-                    behavior: 'smooth'
-                });
-                
-                debugLog('✅ Mobile scroll executed to position:', targetScrollPosition);
-            }, 100); // Small delay for menu close animation
+                smoothScrollTo(targetElement, navbarHeight);
+                debugLog('✅ Mobile scroll executed');
+            }, 150);
         } else {
             // Desktop: immediate scroll
-            const elementRect = targetElement.getBoundingClientRect();
-            const absoluteElementTop = elementRect.top + window.scrollY;
-            const targetScrollPosition = Math.max(0, absoluteElementTop - navbarHeight);
-            
-            debugLog('🔍 Desktop scroll calculation:', {
-                elementTop: absoluteElementTop,
-                navbarHeight: navbarHeight,
-                targetPosition: targetScrollPosition,
-                currentScroll: window.scrollY
-            });
-            
-            window.scrollTo({
-                top: targetScrollPosition,
-                behavior: 'smooth'
-            });
-            
-            debugLog('✅ Desktop scroll executed to position:', targetScrollPosition);
+            smoothScrollTo(targetElement, navbarHeight);
+            debugLog('✅ Desktop scroll executed');
         }
     }
     
@@ -253,13 +222,9 @@ function initNavigation() {
     // BULLETPROOF navigation link handling
     const navLinks = document.querySelectorAll('.nav-link');
     navLinks.forEach(link => {
-        // Remove any existing event listeners first
-        link.removeEventListener('click', arguments.callee);
-        
         link.addEventListener('click', function(e) {
             e.preventDefault();
             e.stopPropagation();
-            e.stopImmediatePropagation(); // Stop ALL other handlers
             
             const href = this.getAttribute('href');
             debugLog('🔗 Nav link clicked:', {
@@ -313,10 +278,10 @@ function initNavigation() {
     });
     
     // Navbar scroll effect
-    window.addEventListener('scroll', function() {
+    function updateNavbarBackground(scrollY) {
         const navbar = document.querySelector('.navbar');
         if (navbar) {
-            if (window.scrollY > 100) {
+            if (scrollY > 100) {
                 navbar.style.background = 'rgba(10, 10, 10, 0.95)';
                 navbar.style.backdropFilter = 'blur(20px)';
             } else {
@@ -324,9 +289,181 @@ function initNavigation() {
                 navbar.style.backdropFilter = 'blur(10px)';
             }
         }
+        
+        // Update active nav states based on scroll position
+        updateActiveNavState(scrollY);
+    }
+    
+    window.addEventListener('scroll', function() {
+        updateNavbarBackground(window.scrollY);
     });
     
-    debugLog('🚀 BULLETPROOF navigation system initialized');
+    debugLog('🚀 Navigation system initialized');
+}
+
+// Enhanced smooth scroll function (Working Version from Portfolio)
+function smoothScrollTo(targetElement, offset = 80) {
+    if (!targetElement) return;
+    
+    const isMobile = window.innerWidth <= 768;
+    const navbarHeight = isMobile ? 70 : 80;
+    const elementRect = targetElement.getBoundingClientRect();
+    const absoluteElementTop = elementRect.top + window.scrollY;
+    const targetScrollPosition = Math.max(0, absoluteElementTop - navbarHeight);
+    
+    debugLog('🔍 Scroll calculation:', {
+        elementTop: absoluteElementTop,
+        navbarHeight: navbarHeight,
+        targetPosition: targetScrollPosition,
+        currentScroll: window.scrollY
+    });
+    
+    // Use Lenis if available, otherwise fallback to native smooth scroll
+    if (window.lenis && lenis) {
+        lenis.scrollTo(targetScrollPosition, {
+            duration: 1.5,
+            easing: (t) => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2,
+            immediate: false
+        });
+        debugLog('✅ Using Lenis smooth scroll');
+    } else {
+        window.scrollTo({
+            top: targetScrollPosition,
+            behavior: 'smooth'
+        });
+        debugLog('✅ Using native smooth scroll');
+    }
+}
+
+// Update active navigation state with purple glow
+function updateActiveNavState(scrollY) {
+    const navLinks = document.querySelectorAll('.nav-link');
+    const sections = [
+        { id: 'services', element: document.getElementById('services') },
+        { id: 'products', element: document.getElementById('products') },
+        { id: 'case-studies', element: document.getElementById('case-studies') },
+        { id: 'about', element: document.getElementById('about') },
+        { id: 'contact', element: document.getElementById('contact') }
+    ];
+    
+    // Remove all active states first
+    navLinks.forEach(link => {
+        link.classList.remove('nav-active-glow');
+    });
+    
+    // Determine which section is currently in view
+    let currentSection = '';
+    const viewportHeight = window.innerHeight;
+    const scrollPosition = scrollY + viewportHeight / 2; // Middle of viewport
+    
+    // Check if we're at the very top (hero section)
+    if (scrollY < 200) {
+        currentSection = 'home';
+    } else {
+        // Find the section that's currently in the center of the viewport
+        for (let i = 0; i < sections.length; i++) {
+            const section = sections[i];
+            if (section.element) {
+                const sectionTop = section.element.offsetTop;
+                const sectionBottom = sectionTop + section.element.offsetHeight;
+                
+                if (scrollPosition >= sectionTop && scrollPosition < sectionBottom) {
+                    currentSection = section.id;
+                    break;
+                }
+            }
+        }
+    }
+    
+    // Apply active glow to the current section's nav link
+    if (currentSection) {
+        const activeLink = document.querySelector(`.nav-link[href*="${currentSection}"]`);
+        if (activeLink) {
+            activeLink.classList.add('nav-active-glow');
+        }
+    }
+}
+
+// Initialize Lenis smooth scrolling (Working Version)
+function initSmoothScrolling() {
+    debugLog('🎬 Initializing smooth scrolling system...');
+    
+    // Initialize Lenis if available
+    function initLenis() {
+        if (!window.Lenis) {
+            debugLog('Lenis not available, using fallback');
+            initFallbackSmoothScroll();
+            return;
+        }
+        
+        try {
+            // Create Lenis instance with official API
+            lenis = new window.Lenis({
+                duration: 1.2,
+                easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+                direction: 'vertical',
+                smooth: true,
+                mouseMultiplier: 1,
+                smoothTouch: false,
+                touchMultiplier: 2,
+                wheelMultiplier: 1,
+                normalizeWheel: true,
+                lerp: 0.1,
+                infinite: false,
+                orientation: 'vertical',
+                gestureOrientation: 'vertical'
+            });
+            
+            // Lenis animation loop (required for Lenis to work)
+            function raf(time) {
+                lenis.raf(time);
+                requestAnimationFrame(raf);
+            }
+            requestAnimationFrame(raf);
+            
+            // Handle window resize
+            window.addEventListener('resize', () => {
+                lenis.resize();
+            });
+            
+            // Expose functions globally
+            window.lenis = lenis;
+            window.smoothScrollTo = smoothScrollTo;
+            
+            debugLog('🚀 Lenis smooth scrolling initialized successfully');
+            
+        } catch (error) {
+            console.error('❌ Error initializing Lenis:', error);
+            initFallbackSmoothScroll();
+        }
+    }
+    
+    // Enhanced fallback smooth scroll
+    function initFallbackSmoothScroll() {
+        window.smoothScrollTo = smoothScrollTo;
+        debugLog('🚀 Fallback smooth scrolling initialized');
+    }
+    
+    // Initialize everything
+    function initialize() {
+        // Small delay to ensure Lenis loads from CDN
+        setTimeout(() => {
+            if (window.Lenis) {
+                initLenis();
+                debugLog('✅ Using Lenis for smooth scrolling');
+            } else {
+                initFallbackSmoothScroll();
+                debugLog('⚠️ Lenis not loaded, using fallback');
+            }
+        }, 100);
+    }
+    
+    // Initialize when DOM is ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initialize);
+    } else {
+        initialize();
+    }
 }
 
 // Contact Form Functionality
@@ -520,283 +657,6 @@ function showNotification(message, type = 'info') {
     }, 5000);
 }
 
-// RESTORED Smooth Scrolling Implementation (WITH LENIS)
-function initSmoothScrolling() {
-    // Initialize Lenis smooth scrolling with correct API
-    function initLenis() {
-        if (!window.Lenis) {
-            debugLog('Lenis not available, using enhanced fallback');
-            initFallbackSmoothScroll();
-            return;
-        }
-        
-        try {
-            // Create Lenis instance with official API
-            lenis = new window.Lenis({
-                duration: 1.2,           // Duration for programmatic scrolls
-                easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // smooth easing
-                direction: 'vertical',   // Scroll direction
-                smooth: true,           // Enable smooth scrolling
-                mouseMultiplier: 1,     // Mouse wheel sensitivity
-                smoothTouch: false,     // Disable smooth scrolling for touch (better mobile experience)
-                touchMultiplier: 2,     // Touch scroll sensitivity
-                wheelMultiplier: 1,     // Wheel scroll sensitivity
-                normalizeWheel: true,   // Normalize wheel across browsers
-                lerp: 0.1,             // Linear interpolation intensity
-                infinite: false,        // Disable infinite scroll
-                orientation: 'vertical', // Scroll orientation
-                gestureOrientation: 'vertical' // Gesture orientation
-            });
-            
-            // Lenis animation loop (required for Lenis to work)
-            function raf(time) {
-                lenis.raf(time);
-                requestAnimationFrame(raf);
-            }
-            requestAnimationFrame(raf);
-            
-            // Enhanced smooth scroll to element function
-            function smoothScrollToElement(targetElement, offset = 80) {
-                if (!targetElement) return;
-                
-                // Calculate target position
-                const rect = targetElement.getBoundingClientRect();
-                const absoluteTop = rect.top + window.scrollY;
-                const targetPosition = absoluteTop - offset;
-                
-                // Use Lenis scrollTo method
-                lenis.scrollTo(targetPosition, {
-                    duration: 1.5,
-                    easing: (t) => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2,
-                    immediate: false
-                });
-            }
-            
-            // Add smooth scrolling to elements with data-scroll-to attribute
-            document.querySelectorAll('[data-scroll-to]').forEach(element => {
-                element.addEventListener('click', function() {
-                    const targetId = this.getAttribute('data-scroll-to');
-                    const targetElement = document.querySelector(targetId);
-                    
-                    if (targetElement) {
-                        smoothScrollToElement(targetElement, 80);
-                        debugLog('🎯 Lenis smooth scrolling to:', targetId);
-                    }
-                });
-            });
-            
-            // Update navbar background on scroll (Lenis event)
-            lenis.on('scroll', (e) => {
-                updateNavbarBackground(e.scroll);
-            });
-            
-            // Initialize nav click effects
-            addNavClickEffects();
-            
-            // Handle window resize
-            window.addEventListener('resize', () => {
-                lenis.resize();
-            });
-            
-            // Expose functions globally
-            window.smoothScrollToElement = smoothScrollToElement;
-            window.lenis = lenis;
-            window.getCurrentScrollY = () => lenis.scroll || 0;
-            
-            debugLog('🚀 Lenis smooth scrolling initialized successfully');
-            
-        } catch (error) {
-            console.error('❌ Error initializing Lenis:', error);
-            initFallbackSmoothScroll();
-        }
-    }
-    
-    // Enhanced fallback smooth scroll (if Lenis fails)
-    function initFallbackSmoothScroll() {
-        // Initialize nav click effects
-        addNavClickEffects();
-        
-        // Expose functions
-        window.smoothScrollToElement = smoothScrollToElement;
-        window.getCurrentScrollY = () => window.scrollY;
-        
-        debugLog('🚀 Fallback smooth scrolling initialized');
-    }
-    
-    // Update navbar background and active states based on scroll position
-    function updateNavbarBackground(scrollY) {
-        const navbar = document.querySelector('.navbar');
-        if (navbar) {
-            if (scrollY > 100) {
-                navbar.style.background = 'rgba(10, 10, 10, 0.95)';
-                navbar.style.backdropFilter = 'blur(20px)';
-            } else {
-                navbar.style.background = 'rgba(10, 10, 10, 0.9)';
-                navbar.style.backdropFilter = 'blur(10px)';
-            }
-        }
-        
-        // Update active nav states based on scroll position
-        updateActiveNavState(scrollY);
-    }
-    
-    // Update active navigation state with purple glow
-    function updateActiveNavState(scrollY) {
-        const navLinks = document.querySelectorAll('.nav-link');
-        const sections = [
-            { id: 'services', element: document.getElementById('services') },
-            { id: 'products', element: document.getElementById('products') },
-            { id: 'case-studies', element: document.getElementById('case-studies') },
-            { id: 'about', element: document.getElementById('about') },
-            { id: 'contact', element: document.getElementById('contact') }
-        ];
-        
-        // Remove all active states first
-        navLinks.forEach(link => {
-            link.classList.remove('nav-active-glow');
-        });
-        
-        // Determine which section is currently in view
-        let currentSection = '';
-        const viewportHeight = window.innerHeight;
-        const scrollPosition = scrollY + viewportHeight / 2; // Middle of viewport
-        
-        // Check if we're at the very top (hero section)
-        if (scrollY < 200) {
-            currentSection = 'home';
-        } else {
-            // Find the section that's currently in the center of the viewport
-            for (let i = 0; i < sections.length; i++) {
-                const section = sections[i];
-                if (section.element) {
-                    const sectionTop = section.element.offsetTop;
-                    const sectionBottom = sectionTop + section.element.offsetHeight;
-                    
-                    if (scrollPosition >= sectionTop && scrollPosition < sectionBottom) {
-                        currentSection = section.id;
-                        break;
-                    }
-                }
-            }
-        }
-        
-        // Apply active glow to the current section's nav link
-        if (currentSection) {
-            const activeLink = document.querySelector(`.nav-link[href*="${currentSection}"]`);
-            if (activeLink) {
-                activeLink.classList.add('nav-active-glow');
-            }
-        }
-    }
-    
-    // Add click glow effect to nav links
-    function addNavClickEffects() {
-        const navLinks = document.querySelectorAll('.nav-link');
-        
-        navLinks.forEach(link => {
-            // Add click effect
-            link.addEventListener('click', function(e) {
-                // Remove glow from all links
-                navLinks.forEach(l => l.classList.remove('nav-active-glow'));
-                
-                // Add glow to clicked link
-                this.classList.add('nav-active-glow');
-                
-                // Add temporary click pulse effect
-                this.classList.add('nav-click-pulse');
-                setTimeout(() => {
-                    this.classList.remove('nav-click-pulse');
-                }, 300);
-            });
-            
-            // Add hover effects
-            link.addEventListener('mouseenter', function() {
-                if (!this.classList.contains('nav-active-glow')) {
-                    this.classList.add('nav-hover-glow');
-                }
-            });
-            
-            link.addEventListener('mouseleave', function() {
-                this.classList.remove('nav-hover-glow');
-            });
-        });
-    }
-    
-    // Initialize everything - Check for Lenis first
-    function initialize() {
-        debugLog('🎬 Initializing Lenis smooth scrolling system...');
-        
-        // Small delay to ensure Lenis loads from CDN
-        setTimeout(() => {
-            if (window.Lenis) {
-                initLenis();
-                debugLog('✅ Using Lenis for smooth scrolling');
-            } else {
-                initFallbackSmoothScroll();
-                debugLog('⚠️ Lenis not loaded, using fallback');
-            }
-        }, 100);
-    }
-    
-    // Initialize when DOM is ready
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initialize);
-    } else {
-        initialize();
-    }
-}
-
-// Enhanced smooth scroll function for global use (fallback)
-function smoothScrollToElement(targetElement, offset = 80) {
-    if (!targetElement) return;
-    
-    const targetPosition = targetElement.offsetTop - offset;
-    const startPosition = window.scrollY;
-    const distance = targetPosition - startPosition;
-    const duration = Math.min(Math.abs(distance) * 1.2, 1500);
-    const startTime = Date.now();
-    
-    function easeInOutCubic(t) {
-        return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-    }
-    
-    function animateScroll() {
-        const currentTime = Date.now();
-        const elapsed = currentTime - startTime;
-        const progress = Math.min(elapsed / duration, 1);
-        
-        const easedProgress = easeInOutCubic(progress);
-        const currentPosition = startPosition + (distance * easedProgress);
-        
-        window.scrollTo(0, currentPosition);
-        
-        if (progress < 1) {
-            requestAnimationFrame(animateScroll);
-        }
-    }
-    
-    animateScroll();
-}
-
-// Scroll to Contact Function with Ultra-Smooth Scrolling
-function scrollToContact() {
-    const contactSection = document.getElementById('contact');
-    if (contactSection && window.smoothScrollToElement) {
-        window.smoothScrollToElement(contactSection, 80);
-        debugLog('Ultra-smooth scrolled to contact section');
-    }
-}
-
-// Schedule Call Function
-function scheduleCall() {
-    window.open(CONFIG.CALENDLY_URL, '_blank');
-    trackEvent('calendly_click', {
-        source: 'schedule_call_function',
-        url: CONFIG.CALENDLY_URL
-    });
-    debugLog('Opened Calendly link:', CONFIG.CALENDLY_URL);
-}
-
 // Animation on Scroll
 function initAnimations() {
     const observerOptions = {
@@ -813,7 +673,7 @@ function initAnimations() {
         });
     }, observerOptions);
     
-    // Observe elements for animation - ENHANCED for merged site
+    // Observe elements for animation
     const animateElements = document.querySelectorAll(
         '.service-card, .product-card, .case-content, .about-feature, .stat-card, .featured-product'
     );
@@ -873,7 +733,7 @@ function initAnalytics() {
         });
     });
     
-    // Track CTA clicks - ENHANCED for merged site
+    // Track CTA clicks
     document.querySelectorAll('.btn-primary, .btn-secondary').forEach(btn => {
         btn.addEventListener('click', function() {
             const buttonText = this.textContent.trim();
@@ -941,46 +801,6 @@ function trackEvent(eventName, properties = {}) {
         debugLog('Sent to Google Analytics:', eventName);
     }
 }
-
-// Utility Functions
-function debounce(func, wait) {
-    let timeout;
-    return function executedFunction(...args) {
-        const later = () => {
-            clearTimeout(timeout);
-            func(...args);
-        };
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-    };
-}
-
-// Error Handling
-window.addEventListener('error', function(e) {
-    console.error('JavaScript error:', e.error);
-    
-    // Track error
-    trackEvent('javascript_error', {
-        message: e.message,
-        filename: e.filename,
-        lineno: e.lineno,
-        colno: e.colno,
-        stack: e.error?.stack || 'No stack trace'
-    });
-});
-
-// Unhandled promise rejection handler
-window.addEventListener('unhandledrejection', function(e) {
-    console.error('Unhandled promise rejection:', e.reason);
-    showNotification('An unexpected error occurred. Please try again.', 'error');
-    
-    trackEvent('unhandled_promise_rejection', {
-        reason: e.reason?.toString() || 'Unknown reason',
-        stack: e.reason?.stack || 'No stack trace'
-    });
-    
-    e.preventDefault();
-});
 
 // Assessment Modal Functions
 function openAssessmentModal() {
@@ -1060,12 +880,12 @@ function calculateAssessment(data) {
     const hours = hoursMap[data.hours] || 0;
     const revenue = revenueMap[data.revenue] || 0;
     
-    // Calculate potential savings (hours * $50/hour * 52 weeks * efficiency gain)
+    // Calculate potential savings
     const hourlyRate = Math.min(50 + (revenue / 1000000) * 10, 150);
-    const efficiencyGain = 0.8; // 80% of manual work can be automated
+    const efficiencyGain = 0.8;
     const annualSavings = hours * hourlyRate * 52 * efficiencyGain;
     
-    // Calculate ROI timeline based on investment needed
+    // Calculate ROI timeline
     const estimatedInvestment = Math.max(15000, Math.min(annualSavings * 0.3, 150000));
     const roiMonths = Math.ceil((estimatedInvestment / annualSavings) * 12);
     
@@ -1088,7 +908,7 @@ function showAssessmentResults(results) {
     const complexityElement = document.getElementById('complexity');
     const resultContainer = document.getElementById('assessmentResult');
     
-    if (savingsElement) savingsElement.textContent = `$${results.savings.toLocaleString()}`;
+    if (savingsElement) savingsElement.textContent = `${results.savings.toLocaleString()}`;
     if (timelineElement) timelineElement.textContent = `${results.roiMonths} months`;
     if (complexityElement) complexityElement.textContent = results.complexity;
     if (resultContainer) resultContainer.style.display = 'block';
@@ -1139,10 +959,68 @@ function submitAssessment(data, results) {
     });
 }
 
+// Scroll to Contact Function
+function scrollToContact() {
+    const contactSection = document.getElementById('contact');
+    if (contactSection) {
+        smoothScrollTo(contactSection, 80);
+        debugLog('Scrolled to contact section');
+    }
+}
+
+// Schedule Call Function
+function scheduleCall() {
+    window.open(CONFIG.CALENDLY_URL, '_blank');
+    trackEvent('calendly_click', {
+        source: 'schedule_call_function',
+        url: CONFIG.CALENDLY_URL
+    });
+    debugLog('Opened Calendly link:', CONFIG.CALENDLY_URL);
+}
+
+// Utility Functions
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
+// Error Handling
+window.addEventListener('error', function(e) {
+    console.error('JavaScript error:', e.error);
+    
+    trackEvent('javascript_error', {
+        message: e.message,
+        filename: e.filename,
+        lineno: e.lineno,
+        colno: e.colno,
+        stack: e.error?.stack || 'No stack trace'
+    });
+});
+
+// Unhandled promise rejection handler
+window.addEventListener('unhandledrejection', function(e) {
+    console.error('Unhandled promise rejection:', e.reason);
+    showNotification('An unexpected error occurred. Please try again.', 'error');
+    
+    trackEvent('unhandled_promise_rejection', {
+        reason: e.reason?.toString() || 'Unknown reason',
+        stack: e.reason?.stack || 'No stack trace'
+    });
+    
+    e.preventDefault();
+});
+
 // Make functions globally available for HTML onclick handlers
 window.openAssessmentModal = openAssessmentModal;
 window.closeAssessmentModal = closeAssessmentModal;
 window.scrollToContact = scrollToContact;
 window.scheduleCall = scheduleCall;
 
-debugLog('Script.js fully loaded and configured with enhanced visual effects', CONFIG);
+debugLog('Script.js fully loaded and configured', CONFIG);
