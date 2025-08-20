@@ -53,7 +53,6 @@ function initVisualEffects() {
 
 // MAGNETIC EFFECT FOR CTA BUTTONS ONLY - FIXED SMOOTH ANIMATION
 function initMagneticCTAButtons() {
-    // Apply magnetic effect to ALL CTA buttons including submit buttons
     const ctaButtons = document.querySelectorAll(
         'a.btn[href], button.btn, .btn[onclick], button[type="submit"]'
     );
@@ -61,19 +60,12 @@ function initMagneticCTAButtons() {
     ctaButtons.forEach(button => {
         let isHovering = false;
         
-        // Set initial transition for smooth return animation
-        button.style.transition = 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
-        
         button.addEventListener('mouseenter', () => {
             isHovering = true;
-            // Remove transition during mouse move for immediate response
-            button.style.transition = 'none';
         });
         
         button.addEventListener('mouseleave', () => {
             isHovering = false;
-            // Restore smooth transition for return animation
-            button.style.transition = 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
             button.style.transform = 'translate(0, 0) scale(1)';
         });
         
