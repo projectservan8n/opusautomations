@@ -457,7 +457,7 @@
         margin: 0 auto;
     }
 
-    /* ENHANCED CARD STYLES WITH GLOW EFFECT */
+    /* ENHANCED CARD STYLES WITH GLOW EFFECT (NO TAG ROTATION) */
     .cards {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -552,8 +552,8 @@
         font-size: 0.875rem;
         font-weight: 600;
         border: 1px solid rgba(139, 92, 246, 0.3);
-        transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         display: inline-block;
+        /* NO rotation transition */
     }
 
     .external-link {
@@ -719,7 +719,7 @@
         <h1>Build once. <span class="gradient-text">Scale forever.</span></h1>
         <p class="hero-subtitle">
           I help ambitious businesses eliminate manual work through custom AI automation. 
-          From $100K startups to $50M+ enterprises — scalable solutions that grow with you.
+          From $100K startups to $50M+ enterprises – scalable solutions that grow with you.
         </p>
         <div class="hero-actions">
           <a class="btn btn-primary" href="#portfolio">See My Work</a>
@@ -748,15 +748,15 @@
       </div>
       <div class="cards">
         <div class="card animate-element">
-          <h3>🎯 Scale-Appropriate Solutions</h3>
+          <h3>Scale-Appropriate Solutions</h3>
           <p>Whether you need a $3K workflow improvement or a $150K enterprise transformation, I match the solution to your stage and budget.</p>
         </div>
         <div class="card animate-element">
-          <h3>🚀 Proven Track Record</h3>
-          <p>From bootstrapped startups to Fortune 500 companies — my automation strategies deliver 3x-15x ROI at any scale.</p>
+          <h3>Proven Track Record</h3>
+          <p>From bootstrapped startups to Fortune 500 companies – my automation strategies deliver 3x-15x ROI at any scale.</p>
         </div>
         <div class="card animate-element">
-          <h3>🛡️ Long-term Partnership</h3>
+          <h3>Long-term Partnership</h3>
           <p>I grow with your business. Start small, scale smart, and evolve your automation as you expand.</p>
         </div>
       </div>
@@ -769,7 +769,7 @@
       <div class="section-header">
         <h2 class="section-title">Core <span class="gradient-text">Capabilities</span></h2>
         <p class="section-subtitle">
-          Transform how your team works — measure, improve, excel.
+          Transform how your team works – measure, improve, excel.
         </p>
       </div>
       <div class="cards">
@@ -795,7 +795,7 @@
       <div class="section-header">
         <h2 class="section-title">Professional <span class="gradient-text">Experience</span></h2>
         <p class="section-subtitle">
-          From bootstrapped startups to Fortune 500 companies — my automation strategies deliver results at any scale.
+          From bootstrapped startups to Fortune 500 companies – my automation strategies deliver results at any scale.
         </p>
       </div>
 
@@ -852,7 +852,7 @@
       <div class="section-header">
         <h2 class="section-title">Project <span class="gradient-text">Portfolio</span></h2>
         <p class="section-subtitle">
-          Real results for real businesses — from startup efficiency to enterprise transformation.
+          Real results for real businesses – from startup efficiency to enterprise transformation.
         </p>
       </div>
 
@@ -864,7 +864,7 @@
                loading="lazy" />
         </div>
         <div class="item-content">
-          <h3>Jelly App — Operations Manager</h3>
+          <h3>Jelly App – Operations Manager</h3>
           <p>Operations Manager for a TikTok creator-brand deal platform. Managed creator onboarding, campaign 
           delivery, and outreach systems. Built repeatable UGC workflows (e.g., 30 videos in 30 days), structured brand 
           partnerships, and streamlined campaign execution with automated tracking and performance metrics.</p>
@@ -894,7 +894,7 @@
           </video>
         </div>
         <div class="item-content">
-          <h3>Shredder — Operations Manager</h3>
+          <h3>Shredder – Operations Manager</h3>
           <p>Operations Manager for a ski/snowboard social app. Oversaw timelines and coordinated directly with 
           developers to ensure feature delivery. Managed client-dev communication, tracked payments, and supported 
           post-launch planning to scale the ultimate mobile app that brings skiers and snowboarders together.</p>
@@ -924,7 +924,7 @@
           </video>
         </div>
         <div class="item-content">
-          <h3>Hera Ops — Co‑founder</h3>
+          <h3>Hera Ops – Co‑founder</h3>
           <p>Co-founder of a VA agency for startups and creators. Led ops, hiring, SOPs, pricing, and AI automation. Built 
           cold outreach systems (LinkedIn, Discord, email), managed VA deployment, and launched Whop subscriptions. 
           Specialized in Discord customer support and executive assistance to stop overpaying and overcomplicating operations teams.</p>
@@ -946,7 +946,7 @@
                loading="lazy" />
         </div>
         <div class="item-content">
-          <h3>Opus Automations — AI Systems Platform</h3>
+          <h3>Opus Automations – AI Systems Platform</h3>
           <p>My main automation consultancy featuring scalable solutions from $3K startup workflows to $150K+ 
           enterprise transformations. Current tool stack includes n8n, OpenAI integration, 
           and custom API development for businesses at every stage. Proven ROI of 3x-15x across all project sizes.</p>
@@ -1004,7 +1004,7 @@
 
 <footer>
   <div class="container">
-    © <span id="year"></span> Tony Herrera — Opus Automations
+    © <span id="year"></span> Tony Herrera – Opus Automations
   </div>
 </footer>
 
@@ -1032,7 +1032,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // ENHANCED CONNECTED PARTICLE NETWORK (SAME AS MAIN SITE)
 function initParticleNetwork() {
-    console.log('🎬 Starting enhanced connected particle network...');
+    console.log('Starting enhanced connected particle network...');
     
     // Create canvas for particle network
     const canvas = document.createElement('canvas');
@@ -1131,14 +1131,14 @@ function initParticleNetwork() {
     resizeCanvas();
     animate();
     
-    console.log('✅ Enhanced particle network initialized');
+    console.log('Enhanced particle network initialized');
 }
 
 // VISUAL EFFECTS INITIALIZATION
 function initVisualEffects() {
     initMagneticCTAButtons();
     initGlowCards();
-    console.log('✅ Visual effects initialized');
+    console.log('Visual effects initialized');
 }
 
 // MAGNETIC EFFECT FOR CTA BUTTONS ONLY
@@ -1169,10 +1169,10 @@ function initMagneticCTAButtons() {
         });
     });
     
-    console.log('✅ Magnetic CTA button effects initialized');
+    console.log('Magnetic CTA button effects initialized');
 }
 
-// GLOW EFFECT FOR CARDS WITH ROTATING EMOJIS
+// GLOW EFFECT FOR CARDS (NO ROTATING TAGS)
 function initGlowCards() {
     const glowElements = document.querySelectorAll('.card, .experience-item, .project-item, .contact-grid');
     
@@ -1180,27 +1180,15 @@ function initGlowCards() {
         card.addEventListener('mouseenter', () => {
             // Add glow class
             card.classList.add('card-glow');
-            
-            // Rotate emojis/tags
-            const emojis = card.querySelectorAll('.tag');
-            emojis.forEach(emoji => {
-                emoji.style.transform = 'rotate(360deg)';
-            });
         });
         
         card.addEventListener('mouseleave', () => {
             // Remove glow class
             card.classList.remove('card-glow');
-            
-            // Reset emoji rotation
-            const emojis = card.querySelectorAll('.tag');
-            emojis.forEach(emoji => {
-                emoji.style.transform = 'rotate(0deg)';
-            });
         });
     });
     
-    console.log('✅ Glow card effects with rotating emojis initialized');
+    console.log('Glow card effects initialized (no tag rotation)');
 }
 
 // Navigation functionality (simplified for portfolio)
@@ -1365,7 +1353,7 @@ function initSmoothScrolling() {
             lenis.resize();
         });
         
-        console.log('✅ Lenis smooth scrolling initialized');
+        console.log('Lenis smooth scrolling initialized');
     }
 }
 
