@@ -171,12 +171,8 @@ function initNavigation() {
         body.style.width = '';
         body.style.top = '';
         
-        // Restore scroll position immediately
-        if (scrollPositionBeforeMenu > 0) {
-            window.scrollTo(0, scrollPositionBeforeMenu);
-        }
-        
-        debugLog('Mobile menu closed, restored scroll position:', scrollPositionBeforeMenu);
+        // Don't restore scroll position - let navigation handle scrolling
+        debugLog('Mobile menu closed');
     }
     
     // FIXED scroll to section function
@@ -194,14 +190,14 @@ function initNavigation() {
         const navbarHeight = isMobile ? 70 : 80;
         
         if (isMobile) {
-            // For mobile: close menu first, then scroll with delay
+            // For mobile: close menu first, then scroll with minimal delay
             closeMenu();
             
-            // Wait for menu close animation to complete
+            // Small delay to let menu close animation start, then scroll immediately
             setTimeout(() => {
                 smoothScrollTo(targetElement, navbarHeight);
                 debugLog('✅ Mobile scroll executed');
-            }, 150);
+            }, 50);
         } else {
             // Desktop: immediate scroll
             smoothScrollTo(targetElement, navbarHeight);
@@ -327,7 +323,7 @@ function smoothScrollTo(targetElement, offset = 80) {
     // Use Lenis if available, otherwise fallback to native smooth scroll
     if (window.lenis && lenis) {
         lenis.scrollTo(targetScrollPosition, {
-            duration: 1.5,
+            duration: 1.2,
             easing: (t) => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2,
             immediate: false
         });
@@ -403,18 +399,18 @@ function initSmoothScrolling() {
         }
         
         try {
-            // Create Lenis instance with official API
+            // Create Lenis instance with optimized settings for both desktop and mobile
             lenis = new window.Lenis({
-                duration: 1.2,
+                duration: 1.0,
                 easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
                 direction: 'vertical',
                 smooth: true,
-                mouseMultiplier: 1,
+                mouseMultiplier: 1.8,
                 smoothTouch: false,
                 touchMultiplier: 2,
-                wheelMultiplier: 1,
+                wheelMultiplier: 1.8,
                 normalizeWheel: true,
-                lerp: 0.1,
+                lerp: 0.15,
                 infinite: false,
                 orientation: 'vertical',
                 gestureOrientation: 'vertical'
