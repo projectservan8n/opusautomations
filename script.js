@@ -51,34 +51,21 @@ function initVisualEffects() {
     debugLog('✅ Visual effects initialized');
 }
 
-// MAGNETIC EFFECT FOR CTA BUTTONS ONLY - FIXED SMOOTH ANIMATION
+// MAGNETIC EFFECT FOR CTA BUTTONS ONLY
 function initMagneticCTAButtons() {
-    const ctaButtons = document.querySelectorAll(
-        'a.btn[href], button.btn, .btn[onclick], button[type="submit"]'
-    );
+    // Only apply magnetic effect to CTA buttons (with href or onclick)
+    const ctaButtons = document.querySelectorAll('a.btn[href], button.btn[onclick], .btn[onclick], button[type="submit"]');
     
     ctaButtons.forEach(button => {
-        // Initialize CSS variables
-        button.style.setProperty('--mouse-x', '0px');
-        button.style.setProperty('--mouse-y', '0px');
-        button.style.setProperty('--hover-scale', '1');
-        
-        // Add magnetic class for CSS transitions
-        button.classList.add('magnetic-cursor-effect');
-        
         let isHovering = false;
         
         button.addEventListener('mouseenter', () => {
             isHovering = true;
-            button.style.setProperty('--hover-scale', '1.02');
         });
         
         button.addEventListener('mouseleave', () => {
             isHovering = false;
-            // Reset to original position - CSS will handle slow transition
-            button.style.setProperty('--mouse-x', '0px');
-            button.style.setProperty('--mouse-y', '0px');
-            button.style.setProperty('--hover-scale', '1');
+            button.style.transform = 'translate(0, 0) scale(1)';
         });
         
         button.addEventListener('mousemove', e => {
@@ -88,9 +75,7 @@ function initMagneticCTAButtons() {
             const x = (e.clientX - rect.left - rect.width/2) * 0.15;
             const y = (e.clientY - rect.top - rect.height/2) * 0.15;
             
-            // Update CSS variables instead of transform directly
-            button.style.setProperty('--mouse-x', `${x}px`);
-            button.style.setProperty('--mouse-y', `${y}px`);
+            button.style.transform = `translate(${x}px, ${y}px) scale(1.02)`;
         });
     });
     
@@ -99,7 +84,7 @@ function initMagneticCTAButtons() {
 
 // GLOW EFFECT FOR CARDS (NO ROTATING TAGS)
 function initGlowCards() {
-    const glowElements = document.querySelectorAll('.service-card, .product-card, .featured-product, .stat-card, .case-content, .card, .experience-item, .project-item');
+    const glowElements = document.querySelectorAll('.service-card, .product-card, .featured-product, .stat-card, .card, .experience-item, .project-item');
     
     glowElements.forEach(card => {
         card.addEventListener('mouseenter', () => {
@@ -160,7 +145,7 @@ function initNavigation() {
         debugLog('Mobile menu opened at scroll position:', scrollPositionBeforeMenu);
     }
     
-    function closeMenu() {
+    function closeMenu(preventScrollRestore = false) {
         navMenu.classList.remove('active');
         navToggle.classList.remove('active');
         body.classList.remove('menu-open');
@@ -171,8 +156,12 @@ function initNavigation() {
         body.style.width = '';
         body.style.top = '';
         
-        // Don't restore scroll position - let navigation handle scrolling
-        debugLog('Mobile menu closed');
+        // Only restore scroll position if not navigating to a section
+        if (!preventScrollRestore && scrollPositionBeforeMenu > 0) {
+            window.scrollTo(0, scrollPositionBeforeMenu);
+        }
+        
+        debugLog('Mobile menu closed', preventScrollRestore ? '(prevented scroll restore)' : '(restored scroll)');
     }
     
     // FIXED scroll to section function
@@ -190,8 +179,8 @@ function initNavigation() {
         const navbarHeight = isMobile ? 70 : 80;
         
         if (isMobile) {
-            // For mobile: close menu first, then scroll with minimal delay
-            closeMenu();
+            // For mobile: close menu without scroll restore, then navigate
+            closeMenu(true); // Pass true to prevent scroll restoration
             
             // Small delay to let menu close animation start, then scroll immediately
             setTimeout(() => {
@@ -677,7 +666,7 @@ function initAnimations() {
     
     // Observe elements for animation
     const animateElements = document.querySelectorAll(
-        '.service-card, .product-card, .case-content, .about-feature, .stat-card, .featured-product'
+        '.service-card, .product-card, .about-feature, .stat-card, .featured-product'
     );
     
     animateElements.forEach(el => {
