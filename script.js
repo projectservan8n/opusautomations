@@ -164,35 +164,6 @@ function initNavigation() {
         debugLog('Mobile menu closed', preventScrollRestore ? '(prevented scroll restore)' : '(restored scroll)');
     }
     
-    // FIXED scroll to section function
-    function scrollToSection(sectionId) {
-        debugLog('🎯 Attempting to scroll to section:', sectionId);
-        
-        const targetElement = document.getElementById(sectionId);
-        if (!targetElement) {
-            debugLog('❌ Target element not found:', sectionId);
-            return;
-        }
-        
-        // Calculate scroll position differently for mobile vs desktop
-        const isMobile = window.innerWidth <= 768;
-        const navbarHeight = isMobile ? 70 : 80;
-        
-        if (isMobile) {
-            // For mobile: close menu without scroll restore, then navigate
-            closeMenu(true); // Pass true to prevent scroll restoration
-            
-            // Small delay to let menu close animation start, then scroll immediately
-            setTimeout(() => {
-                smoothScrollTo(targetElement, navbarHeight);
-                debugLog('✅ Mobile scroll executed');
-            }, 50);
-        } else {
-            // Desktop: immediate scroll
-            smoothScrollTo(targetElement, navbarHeight);
-            debugLog('✅ Desktop scroll executed');
-        }
-    }
     
     // Mobile menu toggle
     navToggle.addEventListener('click', function(e) {
@@ -210,61 +181,29 @@ function initNavigation() {
         return false;
     });
     
-    // BULLETPROOF navigation link handling
+    // Simplified navigation link handling - let Lenis handle the scrolling
     const navLinks = document.querySelectorAll('.nav-link');
     navLinks.forEach(link => {
         link.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            
             const href = this.getAttribute('href');
-            
-            // Update URL hash for proper bookmarking/sharing
-            if (href && href.startsWith('#')) {
-                history.pushState(null, null, href);
-            }
             const isMobile = window.innerWidth <= 768;
-            const actualScrollPosition = isMobile && navMenu.classList.contains('active') 
-                ? scrollPositionBeforeMenu 
-                : window.scrollY;
             
             debugLog('🔗 Nav link clicked:', {
                 href: href,
                 text: this.textContent.trim(),
                 isMobile: isMobile,
-                scrollPosition: actualScrollPosition,
-                menuWasOpen: navMenu.classList.contains('active'),
-                storedScrollPosition: scrollPositionBeforeMenu
+                menuWasOpen: navMenu.classList.contains('active')
             });
             
-            // Extract section ID from href
-            let sectionId = '';
-            if (href && href.startsWith('#')) {
-                sectionId = href.substring(1); // Remove the #
+            // Close mobile menu if open, but allow natural anchor link behavior
+            if (isMobile && navMenu.classList.contains('active')) {
+                closeMenu(true); // Prevent scroll restore, let anchor link handle scroll
+                debugLog('📱 Mobile menu closed for anchor navigation');
             }
             
-            debugLog('🎯 Extracted section ID:', sectionId);
-            
-            if (sectionId) {
-                // Temporarily stop Lenis to prevent conflicts
-                if (window.lenis && lenis) {
-                    lenis.stop();
-                    debugLog('🛑 Lenis stopped for navigation');
-                }
-                
-                scrollToSection(sectionId);
-                
-                // Restart Lenis after navigation completes
-                setTimeout(() => {
-                    if (window.lenis && lenis) {
-                        lenis.start();
-                        debugLog('▶️ Lenis restarted after navigation');
-                    }
-                }, isMobile ? 100 : 50);
-            }
-            
-            return false;
-        }, true); // Use capture phase to run before other handlers
+            // Let the browser and Lenis handle the anchor link naturally
+            // Don't preventDefault() - this allows normal anchor link behavior + Lenis smooth scroll
+        });
     });
     
     // Close menu when clicking outside
@@ -283,18 +222,12 @@ function initNavigation() {
         }
     });
     
-    // Handle browser back/forward navigation with anchor links
+    // Handle browser back/forward navigation - let Lenis handle the scroll
     window.addEventListener('popstate', function(e) {
         const hash = window.location.hash;
         if (hash && hash.startsWith('#')) {
-            const sectionId = hash.substring(1);
-            const targetElement = document.getElementById(sectionId);
-            if (targetElement) {
-                setTimeout(() => {
-                    smoothScrollTo(targetElement, window.innerWidth <= 768 ? 70 : 80);
-                    debugLog('🔙 Browser navigation to anchor:', sectionId);
-                }, 50);
-            }
+            debugLog('🔙 Browser navigation to anchor:', hash);
+            // Lenis will automatically handle the scroll to the anchor
         }
     });
     
@@ -454,11 +387,7 @@ function initSmoothScrolling() {
                 gestureOrientation: 'vertical',
                 autoResize: true,
                 syncTouch: false,
-                touchInertiaMultiplier: 35,
-                // Disable automatic anchor link handling
-                prevent: (node, direction) => {
-                    return node.tagName === 'A' && node.hasAttribute('href') && node.getAttribute('href').startsWith('#');
-                }
+                touchInertiaMultiplier: 35
             });
             
             // Lenis animation loop (required for Lenis to work)
