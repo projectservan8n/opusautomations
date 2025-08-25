@@ -19,14 +19,11 @@ p, .description, .card-text {
     letter-spacing: -0.02em;
 }
 
-/* Professional Icon Styling */
-.service-icon i,
-.product-icon i,
-.feature-icon i,
-.contact-icon i {
+/* Professional Heroicon Styling */
+.heroicon {
     width: 2rem;
     height: 2rem;
-    color: #8b5cf6;
+    stroke: #8b5cf6;
     transition: all 0.3s ease;
 }
 
@@ -40,19 +37,19 @@ p, .description, .card-text {
 }
 
 /* Icon animations on hover */
-.service-card:hover .service-icon i,
-.product-card:hover .product-icon i,
-.about-feature:hover .feature-icon i {
+.service-card:hover .heroicon,
+.product-card:hover .heroicon,
+.about-feature:hover .heroicon {
     transform: scale(1.1) rotate(5deg);
-    color: #a855f7;
+    stroke: #a855f7;
 }
 
 /* List icons styling */
-li i {
+li .heroicon {
     width: 1rem;
     height: 1rem;
     margin-right: 0.5rem;
-    color: #8b5cf6;
+    stroke: #8b5cf6;
     flex-shrink: 0;
 }
 
@@ -62,20 +59,22 @@ li {
     margin-bottom: 0.5rem;
 }
 
-/* Demand indicator icons */
-.demand-high i,
-.demand-extreme i {
+/* Contact and badge icons */
+.contact-icon .heroicon,
+.product-badge .heroicon {
     width: 1rem;
     height: 1rem;
     margin-right: 0.25rem;
-    color: inherit;
+    stroke: currentColor;
 }
 
-/* Product badge icons */
-.product-badge i {
+/* Demand indicator icons */
+.demand-high .heroicon,
+.demand-extreme .heroicon {
     width: 1rem;
     height: 1rem;
     margin-right: 0.25rem;
+    stroke: inherit;
 }
 
 /* Body and Main Content Adjustments for Fixed Navbar */
