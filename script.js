@@ -218,11 +218,18 @@ function initNavigation() {
             e.stopPropagation();
             
             const href = this.getAttribute('href');
+            const isMobile = window.innerWidth <= 768;
+            const actualScrollPosition = isMobile && navMenu.classList.contains('active') 
+                ? scrollPositionBeforeMenu 
+                : window.scrollY;
+            
             debugLog('🔗 Nav link clicked:', {
                 href: href,
                 text: this.textContent.trim(),
-                isMobile: window.innerWidth <= 768,
-                scrollPosition: window.scrollY
+                isMobile: isMobile,
+                scrollPosition: actualScrollPosition,
+                menuWasOpen: navMenu.classList.contains('active'),
+                storedScrollPosition: scrollPositionBeforeMenu
             });
             
             // Extract section ID from href
@@ -299,14 +306,22 @@ function smoothScrollTo(targetElement, offset = 80) {
     const isMobile = window.innerWidth <= 768;
     const navbarHeight = isMobile ? 70 : 80;
     const elementRect = targetElement.getBoundingClientRect();
-    const absoluteElementTop = elementRect.top + window.scrollY;
+    
+    // Get the actual current scroll position (accounting for mobile menu fixed positioning)
+    const currentScrollY = document.body.style.position === 'fixed' 
+        ? Math.abs(parseInt(document.body.style.top) || 0)
+        : window.scrollY;
+    
+    const absoluteElementTop = elementRect.top + currentScrollY;
     const targetScrollPosition = Math.max(0, absoluteElementTop - navbarHeight);
     
     debugLog('🔍 Scroll calculation:', {
         elementTop: absoluteElementTop,
         navbarHeight: navbarHeight,
         targetPosition: targetScrollPosition,
-        currentScroll: window.scrollY
+        currentScroll: currentScrollY,
+        bodyIsFixed: document.body.style.position === 'fixed',
+        bodyTop: document.body.style.top
     });
     
     // Use Lenis if available, otherwise fallback to native smooth scroll
