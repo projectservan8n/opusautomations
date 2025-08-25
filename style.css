@@ -45,7 +45,8 @@ p, .description, .card-text {
 }
 
 /* List icons styling */
-li .heroicon {
+li .heroicon,
+.feature .heroicon {
     width: 1rem;
     height: 1rem;
     margin-right: 0.5rem;
@@ -53,7 +54,8 @@ li .heroicon {
     flex-shrink: 0;
 }
 
-li {
+li,
+.feature {
     display: flex;
     align-items: flex-start;
     margin-bottom: 0.5rem;

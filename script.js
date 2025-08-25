@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function() {
 function initVisualEffects() {
     initMagneticCTAButtons();
     initGlowCards();
-    debugLog('✅ Visual effects initialized');
+    debugLog('Visual effects initialized');
 }
 
 // MAGNETIC EFFECT FOR CTA BUTTONS ONLY
@@ -79,7 +79,7 @@ function initMagneticCTAButtons() {
         });
     });
     
-    debugLog('✅ Magnetic CTA button effects initialized for', ctaButtons.length, 'buttons');
+    debugLog('Magnetic CTA button effects initialized for', ctaButtons.length, 'buttons');
 }
 
 // GLOW EFFECT FOR CARDS (NO ROTATING TAGS)
@@ -110,7 +110,7 @@ function initGlowCards() {
         });
     });
     
-    debugLog('✅ Glow card effects with rotating emojis initialized');
+    debugLog('Glow card effects initialized');
 }
 
 // FIXED Mobile Navigation Functionality - Based on Working Portfolio Version
@@ -298,13 +298,13 @@ function smoothScrollTo(targetElement, offset = 80) {
             easing: (t) => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2,
             immediate: false
         });
-        debugLog('✅ Using Lenis smooth scroll');
+        debugLog('Using Lenis smooth scroll');
     } else {
         window.scrollTo({
             top: targetScrollPosition,
             behavior: 'smooth'
         });
-        debugLog('✅ Using native smooth scroll');
+        debugLog('Using native smooth scroll');
     }
 }
 
@@ -426,7 +426,7 @@ function initSmoothScrolling() {
         setTimeout(() => {
             if (window.Lenis) {
                 initLenis();
-                debugLog('✅ Using Lenis for smooth scrolling');
+                debugLog('Using Lenis for smooth scrolling');
             } else {
                 initFallbackSmoothScroll();
                 debugLog('WARNING: Lenis not loaded, using fallback');

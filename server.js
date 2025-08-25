@@ -140,9 +140,9 @@ app.post('/api/contact', contactLimiter, async (req, res) => {
                     }
                 });
                 
-                console.log('✅ n8n response status:', response.status);
-                console.log('✅ n8n response headers:', response.headers);
-                console.log('✅ n8n response data:', response.data);
+                console.log('n8n response status:', response.status);
+                console.log('n8n response headers:', response.headers);
+                console.log('n8n response data:', response.data);
                 
                 // Return n8n response or default success
                 res.status(200).json(response.data || { 
@@ -169,7 +169,7 @@ app.post('/api/contact', contactLimiter, async (req, res) => {
                 });
             }
         } else {
-            console.log('📧 n8n not configured - submission logged only');
+            console.log('n8n not configured - submission logged only');
             
             res.status(200).json({ 
                 success: true, 
