@@ -9,11 +9,11 @@ const axios = require('axios');
 const N8N_WEBHOOK_URL = 'https://primary-production-3ef2.up.railway.app/webhook/contact-form';
 
 // Add startup logging
-console.log('🚀 Starting Opus Automations server...');
-console.log('📍 Current directory:', __dirname);
-console.log('🔧 Node version:', process.version);
-console.log('🌍 Environment:', process.env.NODE_ENV || 'development');
-console.log('🔗 n8n Webhook URL:', N8N_WEBHOOK_URL);
+console.log('Starting Opus Automations server...');
+console.log('Current directory:', __dirname);
+console.log('Node version:', process.version);
+console.log('Environment:', process.env.NODE_ENV || 'development');
+console.log('n8n Webhook URL:', N8N_WEBHOOK_URL);
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -129,7 +129,7 @@ app.post('/api/contact', contactLimiter, async (req, res) => {
         if (N8N_WEBHOOK_URL) {
             try {
                 console.log('📤 Sending to n8n webhook...');
-                console.log('🔗 Webhook URL:', N8N_WEBHOOK_URL);
+                console.log('Webhook URL:', N8N_WEBHOOK_URL);
                 console.log('📦 Webhook Data:', JSON.stringify(webhookData, null, 2));
                 
                 const response = await axios.post(N8N_WEBHOOK_URL, webhookData, {
@@ -235,7 +235,7 @@ app.post('/api/analytics', (req, res) => {
         const { event, data } = req.body;
         
         // Log analytics event with enhanced data for merged site
-        console.log('📊 Analytics event:', event, {
+        console.log('Analytics event:', event, {
             ...data,
             site_type: 'merged_single_page',
             timestamp: new Date().toISOString()
@@ -243,7 +243,7 @@ app.post('/api/analytics', (req, res) => {
         
         // Enhanced analytics for product interactions
         if (event === 'product_interest') {
-            console.log('🛍️ Product Interest:', {
+            console.log('Product Interest:', {
                 product: data.product_name,
                 type: data.product_type,
                 timestamp: new Date().toISOString(),
@@ -253,7 +253,7 @@ app.post('/api/analytics', (req, res) => {
         
         // Track section engagement
         if (event === 'cta_click') {
-            console.log('🎯 CTA Click:', {
+            console.log('CTA Click:', {
                 button: data.button_text,
                 section: data.section,
                 is_calendly: data.is_calendly,
@@ -548,12 +548,12 @@ process.on('SIGINT', () => {
 });
 
 app.listen(PORT, '0.0.0.0', () => {
-    console.log(`🚀 Opus Automations server running on port ${PORT}`);
-    console.log(`🔗 n8n webhook: ${N8N_WEBHOOK_URL ? 'Configured' : 'Not configured'}`);
-    console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
-    console.log(`🔗 Health check: http://localhost:${PORT}/health`);
+    console.log(`Opus Automations server running on port ${PORT}`);
+    console.log(`n8n webhook: ${N8N_WEBHOOK_URL ? 'Configured' : 'Not configured'}`);
+    console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
+    console.log(`Health check: http://localhost:${PORT}/health`);
     console.log(`🏠 Homepage (merged): http://localhost:${PORT}/`);
-    console.log(`🎯 Portfolio (hidden): http://localhost:${PORT}/portfolio`);
+    console.log(`Portfolio (hidden): http://localhost:${PORT}/portfolio`);
     console.log(`📦 Products: http://localhost:${PORT}/#products`);
     console.log(`🔄 All old routes redirect to main page with anchors`);
     console.log('✅ Server startup complete - MERGED SITE + PORTFOLIO READY');
