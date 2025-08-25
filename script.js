@@ -9,7 +9,7 @@ const CONFIG = {
 // Debug logging function
 function debugLog(message, data = null) {
     if (CONFIG.DEBUG_MODE) {
-        console.log(`🛠 [DEBUG] ${message}`, data || '');
+        console.log(`[DEBUG] ${message}`, data || '');
     }
 }
 
@@ -188,7 +188,7 @@ function initNavigation() {
             const href = this.getAttribute('href');
             const isMobile = window.innerWidth <= 768;
             
-            debugLog('🔗 Nav link clicked:', {
+            debugLog('Nav link clicked:', {
                 href: href,
                 text: this.textContent.trim(),
                 isMobile: isMobile,
@@ -198,7 +198,7 @@ function initNavigation() {
             // Close mobile menu if open, but allow natural anchor link behavior
             if (isMobile && navMenu.classList.contains('active')) {
                 closeMenu(true); // Prevent scroll restore, let anchor link handle scroll
-                debugLog('📱 Mobile menu closed for anchor navigation');
+                debugLog('Mobile menu closed for anchor navigation');
             }
             
             // Let the browser and Lenis handle the anchor link naturally
@@ -263,7 +263,7 @@ function initNavigation() {
         updateNavbarBackground(window.scrollY);
     });
     
-    debugLog('🚀 Navigation system initialized');
+    debugLog('Navigation system initialized');
 }
 
 // Enhanced smooth scroll function (Working Version from Portfolio)
@@ -282,7 +282,7 @@ function smoothScrollTo(targetElement, offset = 80) {
     const absoluteElementTop = elementRect.top + currentScrollY;
     const targetScrollPosition = Math.max(0, absoluteElementTop - navbarHeight);
     
-    debugLog('🔍 Scroll calculation:', {
+    debugLog('Scroll calculation:', {
         elementTop: absoluteElementTop,
         navbarHeight: navbarHeight,
         targetPosition: targetScrollPosition,
@@ -359,7 +359,7 @@ function updateActiveNavState(scrollY) {
 
 // Initialize Lenis smooth scrolling (Working Version)
 function initSmoothScrolling() {
-    debugLog('🎬 Initializing smooth scrolling system...');
+    debugLog('Initializing smooth scrolling system...');
     
     // Initialize Lenis if available
     function initLenis() {
@@ -406,7 +406,7 @@ function initSmoothScrolling() {
             window.lenis = lenis;
             window.smoothScrollTo = smoothScrollTo;
             
-            debugLog('🚀 Lenis smooth scrolling initialized successfully');
+            debugLog('Lenis smooth scrolling initialized successfully');
             
         } catch (error) {
             console.error('❌ Error initializing Lenis:', error);
@@ -417,7 +417,7 @@ function initSmoothScrolling() {
     // Enhanced fallback smooth scroll
     function initFallbackSmoothScroll() {
         window.smoothScrollTo = smoothScrollTo;
-        debugLog('🚀 Fallback smooth scrolling initialized');
+        debugLog('Fallback smooth scrolling initialized');
     }
     
     // Initialize everything
@@ -429,7 +429,7 @@ function initSmoothScrolling() {
                 debugLog('✅ Using Lenis for smooth scrolling');
             } else {
                 initFallbackSmoothScroll();
-                debugLog('⚠️ Lenis not loaded, using fallback');
+                debugLog('WARNING: Lenis not loaded, using fallback');
             }
         }, 100);
     }

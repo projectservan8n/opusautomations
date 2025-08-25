@@ -310,79 +310,79 @@ app.get('/portfolio/', (req, res) => {
 
 // Handle old workflows routes - redirect to main page with anchor
 app.get('/workflows', (req, res) => {
-    console.log('🔄 Redirecting /workflows to /#products');
+    console.log('Redirecting /workflows to /#products');
     res.redirect('/#products');
 });
 
 app.get('/workflows/', (req, res) => {
-    console.log('🔄 Redirecting /workflows/ to /#products');
+    console.log('Redirecting /workflows/ to /#products');
     res.redirect('/#products');
 });
 
 // Serve individual sections from main page with anchors
 app.get('/services', (req, res) => {
-    console.log('🔄 Redirecting /services to /#services');
+    console.log('Redirecting /services to /#services');
     res.redirect('/#services');
 });
 
 app.get('/services/', (req, res) => {
-    console.log('🔄 Redirecting /services/ to /#services');
+    console.log('Redirecting /services/ to /#services');
     res.redirect('/#services');
 });
 
 app.get('/products', (req, res) => {
-    console.log('🔄 Redirecting /products to /#products');
+    console.log('Redirecting /products to /#products');
     res.redirect('/#products');
 });
 
 app.get('/products/', (req, res) => {
-    console.log('🔄 Redirecting /products/ to /#products');
+    console.log('Redirecting /products/ to /#products');
     res.redirect('/#products');
 });
 
 app.get('/case-studies', (req, res) => {
-    console.log('🔄 Redirecting /case-studies to /#case-studies');
+    console.log('Redirecting /case-studies to /#case-studies');
     res.redirect('/#case-studies');
 });
 
 app.get('/case-studies/', (req, res) => {
-    console.log('🔄 Redirecting /case-studies/ to /#case-studies');
+    console.log('Redirecting /case-studies/ to /#case-studies');
     res.redirect('/#case-studies');
 });
 
 app.get('/about', (req, res) => {
-    console.log('🔄 Redirecting /about to /#about');
+    console.log('Redirecting /about to /#about');
     res.redirect('/#about');
 });
 
 app.get('/about/', (req, res) => {
-    console.log('🔄 Redirecting /about/ to /#about');
+    console.log('Redirecting /about/ to /#about');
     res.redirect('/#about');
 });
 
 app.get('/contact', (req, res) => {
-    console.log('🔄 Redirecting /contact to /#contact');
+    console.log('Redirecting /contact to /#contact');
     res.redirect('/#contact');
 });
 
 app.get('/contact/', (req, res) => {
-    console.log('🔄 Redirecting /contact/ to /#contact');
+    console.log('Redirecting /contact/ to /#contact');
     res.redirect('/#contact');
 });
 
 // Serve material management case study (future expansion)
 app.get('/workflows/material-management', (req, res) => {
-    console.log('🔄 Redirecting /workflows/material-management to /#products');
+    console.log('Redirecting /workflows/material-management to /#products');
     res.redirect('/#products');
 });
 
 app.get('/workflows/material-management/', (req, res) => {
-    console.log('🔄 Redirecting /workflows/material-management/ to /#products');
+    console.log('Redirecting /workflows/material-management/ to /#products');
     res.redirect('/#products');
 });
 
 app.get('/workflows/material-management/demo', (req, res) => {
-    console.log('📋 Material management demo requested');
+    console.log('Material management demo requested');
     res.json({ 
         message: 'Material Management Demo coming soon',
         contact: 'tony@opusautomations.com',
@@ -393,27 +393,27 @@ app.get('/workflows/material-management/demo', (req, res) => {
 
 // Product-specific routes (for future individual product pages)
 app.get('/products/focusflow', (req, res) => {
-    console.log('🔄 Redirecting FocusFlow to /#products');
+    console.log('Redirecting FocusFlow to /#products');
     res.redirect('/#products');
 });
 
 app.get('/products/supplychain', (req, res) => {
-    console.log('🔄 Redirecting SupplyChain to /#products');
+    console.log('Redirecting SupplyChain to /#products');
     res.redirect('/#products');
 });
 
 app.get('/products/pulsekpi', (req, res) => {
-    console.log('🔄 Redirecting PulseKPI to /#products');
+    console.log('Redirecting PulseKPI to /#products');
     res.redirect('/#products');
 });
 
 app.get('/products/autocaption', (req, res) => {
-    console.log('🔄 Redirecting AutoCaption to /#products');
+    console.log('Redirecting AutoCaption to /#products');
     res.redirect('/#products');
 });
 
 app.get('/products/copyforge', (req, res) => {
-    console.log('🔄 Redirecting CopyForge to /#products');
+    console.log('Redirecting CopyForge to /#products');
     res.redirect('/#products');
 });
 
@@ -552,9 +552,9 @@ app.listen(PORT, '0.0.0.0', () => {
     console.log(`n8n webhook: ${N8N_WEBHOOK_URL ? 'Configured' : 'Not configured'}`);
     console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
     console.log(`Health check: http://localhost:${PORT}/health`);
-    console.log(`🏠 Homepage (merged): http://localhost:${PORT}/`);
+    console.log(`Homepage (merged): http://localhost:${PORT}/`);
     console.log(`Portfolio (hidden): http://localhost:${PORT}/portfolio`);
-    console.log(`📦 Products: http://localhost:${PORT}/#products`);
-    console.log(`🔄 All old routes redirect to main page with anchors`);
-    console.log('✅ Server startup complete - MERGED SITE + PORTFOLIO READY');
+    console.log(`Products: http://localhost:${PORT}/#products`);
+    console.log(`All old routes redirect to main page with anchors`);
+    console.log('Server startup complete - MERGED SITE + PORTFOLIO READY');
 });
