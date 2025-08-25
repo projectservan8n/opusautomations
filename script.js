@@ -217,12 +217,12 @@ function initNavigation() {
             e.preventDefault();
             e.stopPropagation();
             
-            // Prevent any URL hash changes
-            if (e.target.closest('a[href^="#"]')) {
-                history.replaceState(null, null, window.location.pathname + window.location.search);
-            }
-            
             const href = this.getAttribute('href');
+            
+            // Update URL hash for proper bookmarking/sharing
+            if (href && href.startsWith('#')) {
+                history.pushState(null, null, href);
+            }
             const isMobile = window.innerWidth <= 768;
             const actualScrollPosition = isMobile && navMenu.classList.contains('active') 
                 ? scrollPositionBeforeMenu 
@@ -280,6 +280,21 @@ function initNavigation() {
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape' && navMenu.classList.contains('active')) {
             closeMenu();
+        }
+    });
+    
+    // Handle browser back/forward navigation with anchor links
+    window.addEventListener('popstate', function(e) {
+        const hash = window.location.hash;
+        if (hash && hash.startsWith('#')) {
+            const sectionId = hash.substring(1);
+            const targetElement = document.getElementById(sectionId);
+            if (targetElement) {
+                setTimeout(() => {
+                    smoothScrollTo(targetElement, window.innerWidth <= 768 ? 70 : 80);
+                    debugLog('🔙 Browser navigation to anchor:', sectionId);
+                }, 50);
+            }
         }
     });
     
@@ -436,7 +451,14 @@ function initSmoothScrolling() {
                 lerp: 0.15,
                 infinite: false,
                 orientation: 'vertical',
-                gestureOrientation: 'vertical'
+                gestureOrientation: 'vertical',
+                autoResize: true,
+                syncTouch: false,
+                touchInertiaMultiplier: 35,
+                // Disable automatic anchor link handling
+                prevent: (node, direction) => {
+                    return node.tagName === 'A' && node.hasAttribute('href') && node.getAttribute('href').startsWith('#');
+                }
             });
             
             // Lenis animation loop (required for Lenis to work)
