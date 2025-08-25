@@ -217,6 +217,11 @@ function initNavigation() {
             e.preventDefault();
             e.stopPropagation();
             
+            // Prevent any URL hash changes
+            if (e.target.closest('a[href^="#"]')) {
+                history.replaceState(null, null, window.location.pathname + window.location.search);
+            }
+            
             const href = this.getAttribute('href');
             const isMobile = window.innerWidth <= 768;
             const actualScrollPosition = isMobile && navMenu.classList.contains('active') 
@@ -241,7 +246,21 @@ function initNavigation() {
             debugLog('🎯 Extracted section ID:', sectionId);
             
             if (sectionId) {
+                // Temporarily stop Lenis to prevent conflicts
+                if (window.lenis && lenis) {
+                    lenis.stop();
+                    debugLog('🛑 Lenis stopped for navigation');
+                }
+                
                 scrollToSection(sectionId);
+                
+                // Restart Lenis after navigation completes
+                setTimeout(() => {
+                    if (window.lenis && lenis) {
+                        lenis.start();
+                        debugLog('▶️ Lenis restarted after navigation');
+                    }
+                }, isMobile ? 100 : 50);
             }
             
             return false;
