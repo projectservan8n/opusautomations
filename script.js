@@ -29,8 +29,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize contact form
     initContactForm();
     
-    // Initialize assessment form
-    initAssessmentForm();
     
     // Initialize smooth scrolling
     initSmoothScrolling();
@@ -778,162 +776,7 @@ function trackEvent(eventName, properties = {}) {
     }
 }
 
-// Assessment Modal Functions
-function openAssessmentModal() {
-    const modal = document.getElementById('assessmentModal');
-    if (modal) {
-        modal.style.display = 'block';
-        document.body.style.overflow = 'hidden';
-        trackEvent('assessment_modal_open', { source: 'button_click' });
-        debugLog('Assessment modal opened');
-    }
-}
 
-function closeAssessmentModal() {
-    const modal = document.getElementById('assessmentModal');
-    if (modal) {
-        modal.style.display = 'none';
-        document.body.style.overflow = 'auto';
-        debugLog('Assessment modal closed');
-    }
-}
-
-// Close modal when clicking outside
-window.addEventListener('click', function(event) {
-    const modal = document.getElementById('assessmentModal');
-    if (event.target === modal) {
-        closeAssessmentModal();
-    }
-});
-
-// Assessment Form Functionality
-function initAssessmentForm() {
-    const assessmentForm = document.getElementById('assessmentForm');
-    if (!assessmentForm) {
-        debugLog('Assessment form not found');
-        return;
-    }
-    
-    assessmentForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        debugLog('Assessment form submitted');
-        
-        const formData = new FormData(assessmentForm);
-        const data = Object.fromEntries(formData);
-        
-        // Calculate assessment results
-        const results = calculateAssessment(data);
-        
-        debugLog('Assessment results calculated:', results);
-        
-        // Show results
-        showAssessmentResults(results);
-        
-        // Send to server
-        submitAssessment(data, results);
-    });
-    
-    debugLog('Assessment form initialized');
-}
-
-function calculateAssessment(data) {
-    const hoursMap = {
-        '5-10': 7.5,
-        '10-20': 15,
-        '20-40': 30,
-        '40+': 50
-    };
-    
-    const revenueMap = {
-        '100k-500k': 300000,
-        '500k-2m': 1250000,
-        '2m-10m': 6000000,
-        '10m-50m': 30000000,
-        '50m+': 75000000
-    };
-    
-    const hours = hoursMap[data.hours] || 0;
-    const revenue = revenueMap[data.revenue] || 0;
-    
-    // Calculate potential savings
-    const hourlyRate = Math.min(50 + (revenue / 1000000) * 10, 150);
-    const efficiencyGain = 0.8;
-    const annualSavings = hours * hourlyRate * 52 * efficiencyGain;
-    
-    // Calculate ROI timeline
-    const estimatedInvestment = Math.max(15000, Math.min(annualSavings * 0.3, 150000));
-    const roiMonths = Math.ceil((estimatedInvestment / annualSavings) * 12);
-    
-    // Determine complexity
-    let complexity = 'Medium';
-    if (hours < 15 && revenue < 2000000) complexity = 'Low';
-    if (hours > 30 || revenue > 10000000) complexity = 'High';
-    
-    return {
-        savings: Math.round(annualSavings),
-        roiMonths: Math.min(roiMonths, 24),
-        complexity,
-        investment: Math.round(estimatedInvestment)
-    };
-}
-
-function showAssessmentResults(results) {
-    const savingsElement = document.getElementById('savingsAmount');
-    const timelineElement = document.getElementById('roiTimeline');
-    const complexityElement = document.getElementById('complexity');
-    const resultContainer = document.getElementById('assessmentResult');
-    
-    if (savingsElement) savingsElement.textContent = `${results.savings.toLocaleString()}`;
-    if (timelineElement) timelineElement.textContent = `${results.roiMonths} months`;
-    if (complexityElement) complexityElement.textContent = results.complexity;
-    if (resultContainer) resultContainer.style.display = 'block';
-    
-    debugLog('Assessment results displayed:', results);
-}
-
-function submitAssessment(data, results) {
-    const assessmentData = {
-        ...data,
-        results,
-        timestamp: new Date().toISOString(),
-        type: 'assessment'
-    };
-    
-    debugLog('Submitting assessment to API:', assessmentData);
-    
-    fetch(`${CONFIG.API_BASE_URL}/api/contact`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(assessmentData)
-    })
-    .then(response => response.json())
-    .then(result => {
-        debugLog('Assessment submission result:', result);
-        
-        if (result.success) {
-            showNotification('Assessment complete! Check your email for detailed results.', 'success');
-            
-            trackEvent('assessment_completed', {
-                savings_potential: results.savings,
-                roi_months: results.roiMonths,
-                complexity: results.complexity,
-                process: data.process,
-                hours: data.hours,
-                revenue: data.revenue
-            });
-        } else {
-            showNotification('Assessment saved, but there was an issue sending results. We\'ll follow up manually.', 'warning');
-        }
-    })
-    .catch(error => {
-        console.error('Assessment submission error:', error);
-        showNotification('Assessment saved locally. We\'ll follow up via email.', 'warning');
-        debugLog('Assessment submission error:', error);
-    });
-}
 
 // Scroll to Contact Function
 function scrollToContact() {
@@ -994,8 +837,6 @@ window.addEventListener('unhandledrejection', function(e) {
 });
 
 // Make functions globally available for HTML onclick handlers
-window.openAssessmentModal = openAssessmentModal;
-window.closeAssessmentModal = closeAssessmentModal;
 window.scrollToContact = scrollToContact;
 window.scheduleCall = scheduleCall;
 

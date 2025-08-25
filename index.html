@@ -74,7 +74,6 @@
                 </div>
                 <div class="hero-cta">
                     <a href="https://calendly.com/tony-opusautomations/30min" class="btn btn-primary" target="_blank">Let's talk about your goals</a>
-                    <button class="btn btn-secondary" onclick="openAssessmentModal()">Show me what's possible</button>
                 </div>
             </div>
             <div class="hero-visual">
@@ -340,7 +339,7 @@
             <!-- Mini Automation Tier -->
             <div class="product-tiers">
                 <div class="tier-header mini-tier">
-                    <h3>🔌 Mini Automation Tier</h3>
+                    <h3>Mini Automation Tier</h3>
                     <p>Specialized workflows for rapid implementation and proven ROI</p>
                 </div>
                 <div class="products-grid">
@@ -452,7 +451,7 @@
                         <div class="monthly-maintenance">$30/mo optional</div>
                         
                         <div class="demand-indicator">
-                            <span class="demand-high"><svg class="heroicon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 18.657A8 8 0 716.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0720 13a7.975 7.975 0 01-2.343 5.657z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.879 16.121A3 3 0 1012.015 11L11 14H9c0 .768.293 1.536.879 2.121z"></path></svg> High demand: Marketing agencies, production studios, educators</span>
+                            <span class="demand-high">High demand: Marketing agencies, production studios, educators</span>
                         </div>
                     </div>
 
@@ -480,7 +479,7 @@
                         <div class="monthly-maintenance">$40-$80/mo optional</div>
                         
                         <div class="demand-indicator">
-                            <span class="demand-extreme"><svg class="heroicon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg> Extremely high demand: E-commerce brands, agencies, startups</span>
+                            <span class="demand-extreme">Extremely high demand: E-commerce brands, agencies, startups</span>
                         </div>
                     </div>
                 </div>
@@ -752,7 +751,7 @@
                            class="btn btn-secondary btn-full" 
                            target="_blank" 
                            style="margin-top: 10px;">
-                            📅 Let's talk right now
+                            Let's talk right now
                         </a>
                     </div>
                 </form>
@@ -791,72 +790,6 @@
         </div>
     </footer>
 
-    <!-- Assessment Modal -->
-    <div id="assessmentModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Quick Automation Assessment</h3>
-                <span class="modal-close" onclick="closeAssessmentModal()">&times;</span>
-            </div>
-            <form id="assessmentForm" class="assessment-form">
-                <div class="form-group">
-                    <label for="process">What's your biggest time-consuming manual process?</label>
-                    <select id="process" name="process" autocomplete="off" required>
-                        <option value="">Select process...</option>
-                        <option value="data-entry">Data entry and spreadsheets</option>
-                        <option value="customer-communication">Customer communication</option>
-                        <option value="inventory-ordering">Inventory/ordering management</option>
-                        <option value="reporting">Report generation</option>
-                        <option value="scheduling">Scheduling and coordination</option>
-                        <option value="other">Other</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="hours">How many hours per week does this consume?</label>
-                    <select id="hours" name="hours" autocomplete="off" required>
-                        <option value="">Select hours...</option>
-                        <option value="5-10">5-10 hours</option>
-                        <option value="10-20">10-20 hours</option>
-                        <option value="20-40">20-40 hours</option>
-                        <option value="40+">40+ hours</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="revenue-assessment">What's your annual revenue range?</label>
-                    <select id="revenue-assessment" name="revenue" autocomplete="off" required>
-                        <option value="">Select range...</option>
-                        <option value="100k-500k">$100K - $500K</option>
-                        <option value="500k-2m">$500K - $2M</option>
-                        <option value="2m-10m">$2M - $10M</option>
-                        <option value="10m-50m">$10M - $50M</option>
-                        <option value="50m+">$50M+</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="email-assessment">Your email for results:</label>
-                    <input type="email" id="email-assessment" name="email" autocomplete="email" required placeholder="your@email.com">
-                </div>
-                <div class="assessment-result" id="assessmentResult" style="display: none;">
-                    <h4>Your Automation Potential:</h4>
-                    <div class="result-stats">
-                        <div class="result-item">
-                            <span class="result-label">Potential Annual Savings:</span>
-                            <span class="result-value" id="savingsAmount">$0</span>
-                        </div>
-                        <div class="result-item">
-                            <span class="result-label">ROI Timeline:</span>
-                            <span class="result-value" id="roiTimeline">0 months</span>
-                        </div>
-                        <div class="result-item">
-                            <span class="result-label">Automation Complexity:</span>
-                            <span class="result-value" id="complexity">Medium</span>
-                        </div>
-                    </div>
-                </div>
-                <button type="submit" class="btn btn-primary btn-full">Show me my potential</button>
-            </form>
-        </div>
-    </div>
 
     <!-- Load Lenis for smooth scrolling -->
     <script src="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>

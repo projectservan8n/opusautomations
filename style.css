@@ -40,7 +40,6 @@ p, .description, .card-text {
 .service-card:hover .heroicon,
 .product-card:hover .heroicon,
 .about-feature:hover .heroicon {
-    transform: scale(1.1) rotate(5deg);
     stroke: #a855f7;
 }
 
